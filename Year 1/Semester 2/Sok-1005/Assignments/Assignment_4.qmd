@@ -1,0 +1,215 @@
+---
+title: "Assignment_4"
+author: "Daniel Nikolai Johannessen"
+format:
+  html: 
+    df-print: kable
+
+editor: visual
+warning: false
+message: false
+echo: false
+toc: true
+tof: true
+---
+
+```{r, warning=FALSE, message=FALSE}
+rm (list = ls())
+library(tidyverse)
+library(lubridate)
+library(quantmod)
+library(janitor)
+library(plotly)
+library(knitr)
+
+```
+
+# Task 1
+
+```{r}
+storedata <- read.csv("https://raw.githubusercontent.com/uit-sok-1005-v23/uit-sok-1005-v23.github.io/main/storedata.csv") %>% 
+  clean_names()
+```
+
+1: For the last 3 months of 2017, calculate the total Sales by month, for Region 1 and Region 9 in the Customer_Segment, Corporate, and Consumer. This output is Table 1.
+
+```{r}
+
+Table_1 <- storedata %>% 
+  mutate(order_date = as.Date(order_date)) %>% 
+  mutate(year = year(order_date), 
+         month = month(order_date), 
+         day = day(order_date)) %>% 
+  filter(year=="2017",
+         month >= 10,
+         customer_segment %in% c("Corporate", "Consumer"),
+         region %in% c("Region 1", "Region 9")) %>% 
+  group_by(region, month, customer_segment) %>% 
+  summarize(total_sales = sum(sales)) %>% 
+  rename("Region" = "region", "Month" = "month", "Customer segment" = "customer_segment", "Total sales" = "total_sales") %>% 
+  arrange(Region, Month)
+
+
+kable(Table_1)
+```
+
+2: Make a plot of the monthly total Sales in Region 1 and Region 13 in 2015, 2016, and 2017. This output is Figure 1.
+
+```{r, fig.width=8, fig.height=7}
+#| fig-cap: Figure for monthly sales in Region 1 and 13 in 2015-2017
+
+Figure_1 <- storedata %>% 
+  mutate(order_date = as.Date(order_date)) %>% 
+  mutate(year = year(order_date), 
+         month = month(order_date, label = TRUE), 
+         day = day(order_date)) %>% 
+  filter(year %in% c("2015", "2016", "2017"),
+         region %in% c("Region 1", "Region 13")) %>% 
+  group_by(region, month, year) %>% 
+  summarize(total_sales = sum(sales)) %>% 
+  mutate(date = make_date(year,month))
+
+Figure_1 %>% 
+  ggplot(aes(x=month, y=total_sales))+
+  geom_col(aes(fill=region), position="dodge")+
+  theme_bw()+
+  labs(x="", y="Total sales", title="Total monthly sales in Region 1 and Region 13", color="Region") +
+  scale_y_continuous(labels = scales::dollar) +
+  scale_fill_manual(values = c("Region 1" = "#8fc3f8", "Region 13" = "#567595"))+
+  theme(legend.position="right") +
+  scale_x_discrete(expand = c(0,0), labels = function(x) str_to_title(x))+
+  facet_wrap(~year, nrow=3)  
+
+
+
+```
+
+3: In Figure 1, identify the months where the total Sales in Region 13 is greater than the total Sales in Region 1. This output is Table 2.
+
+```{r}
+Table_2 <- Figure_1 %>% 
+  pivot_wider(names_from = region, values_from = total_sales) %>% 
+  filter(`Region 13` > `Region 1`) %>% 
+  select(-date) %>% 
+  rename("Month" = "month", "Year" = "year") %>% 
+  arrange(Year, Month)
+
+
+kable(Table_2)
+```
+
+4: Find the average Profit per Customer_Segment and Product_Category in 2017, for all regions except Region 3, 5 and 8. What segment produced the highest average profit? This output is Table 3.
+
+```{r}
+table3 <- storedata %>% 
+  mutate(year = year(order_date), 
+        month = month(order_date), 
+        day = day(order_date)) %>% 
+  filter(year == 2017, !region %in% c("Region 3", "Region 5", "Region 8")) %>% 
+  group_by(customer_segment, product_category) %>% 
+  summarise(average_profit = mean(profit)) %>% 
+  arrange(desc(average_profit)) %>% 
+  rename("Customer segment" = "customer_segment", "Product category" = "product_category", "Average profit" = "average_profit")
+
+kable(table3)
+```
+
+# Task 2
+
+In this task, feel free to use any API or package/library that downloads the data to your session. Use code and download daily stock prices for Exxon Mobil Corporation (XOM), traded at NYSE. The Yahoo! Finance site is a convenient place to find [the data](https://finance.yahoo.com/quote/XOM?p=XOM&.tsrc=fin-srch) . Use the Adjusted closing price from January 4th 2010 as the starting date. And calculate the monthly average using trading volume as a weight, and save this variable as  "exxon".
+
+Use code to download the daily Brent Crude Oil Price from [FRED](https://fred.stlouisfed.org/series/DCOILBRENTEU)  from January 4th 2010 as the starting date. And calculate the monthly arithmetic average. Save the monthly arithmetic average values as  "oil". 
+
+In both variables, take December 2022, or 2022:12 for shorthand as a last data point.
+
+```{r}
+
+xom <- data.frame(getSymbols("XOM", src = "yahoo", auto.assign = FALSE)) %>% 
+  clean_names() %>% 
+  rownames_to_column(var="date") %>% 
+  rename("adj_close" = "xom_adjusted", "volume" = "xom_volume") %>% 
+  select(date, adj_close, volume) %>% 
+  mutate(date = as.Date(date)) %>% 
+  filter(date >= "2010-01-04" & date <= "2022-12-31") %>% 
+  mutate(year = year(date), 
+         month = month(date), 
+         day = day(date)) %>% 
+  group_by(year, month) %>% 
+  summarise(exxon = weighted.mean(adj_close, volume)) %>% 
+  mutate(date = make_date(year,month)) %>% 
+  ungroup() %>% 
+  select(date, exxon)
+
+
+fredoil <- data.frame(getSymbols("DCOILBRENTEU", src = "FRED", auto.assign = FALSE))
+
+fredoil <- fredoil %>% 
+  mutate(date = ymd(rownames(fredoil))) %>% 
+  rename(price = 1) %>% 
+  select(date, price) %>% 
+  filter(date >="2010-01-04",date<"2022-12-31") 
+
+fredoil <- fredoil %>% 
+  mutate(year = year(date), 
+         month = month(date), 
+         day = day(date)) %>% 
+  group_by(year,month) %>% 
+  summarise(oil= mean(price, na.rm=TRUE)) %>% 
+  mutate(date = make_date(year,month)) %>% 
+  as_tibble() %>% 
+  ungroup() %>% 
+  select(date, oil)
+
+
+task2 <- xom %>% 
+  cbind(oil = fredoil$oil)
+
+
+rm(fredoil)
+rm(xom)
+```
+
+Plot both variables, i.e., exxon and oil " in the same plot window. Here, the x-axis should be the  "date" variable.  Comment on the plots. 
+
+```{r,fig.width=8, fig.height=7}
+#| fig-cap: Figure for Exxon share price and Oil price
+fig <- plot_ly(task2, x= ~date) %>% 
+  add_lines(y = ~ oil, name = 'Brent Crude Oil monthly arithmetic average', type='scatter', mode='lines', text = ~paste0("Brent crude oil price", "<br>", str_to_title(format(date, '%B , %Y')), "<br>Oil price per barrel: ", "$", round(oil,2)), hoverinfo = "text", line = list(color="#8fc3f8")) %>% 
+  add_trace(y = ~exxon, name = "Exxon monthly average share price weighted by trading volume", type='scatter', mode='lines', text = ~paste0("Exxon share price", "<br>", str_to_title(format(date, '%B , %Y')), "<br>Share price: ", "$", round(exxon,2)), hoverinfo = "text", line= list(color = "#567595")) %>% 
+  config(displayModeBar = FALSE) %>% 
+  layout(xaxis = list(tickangle = -45, title="", nticks=20), 
+         yaxis = list(title="", tickprefix = "$"),
+         legend = list(y = -0.3, x=0.15), 
+         title = "Brent crude oil prices compared to Exxon share price")
+fig
+```
+
+Exxon's stock price appears to correlate more closely to the oil price after 2015. We can see that they werent very effected by the drop in oil prices from 2014 to 2015 but after this year, they appear to be prices around the same as a barrel of oil.
+
+Now take "exxon" as a y-variable and "oil" as an x-variable. 
+
+```{r}
+#| fig-cap: Figure for exxon as y and oil as x
+task2 %>% 
+  ggplot(aes(x=oil, y=exxon)) + 
+  geom_line()+
+  scale_x_continuous(expand = c(0,0)) +
+  geom_smooth(method=lm)
+```
+
+Use R's  [lm() function](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/lm). Set the variable on the y-axis and x-axis, and specify the data set. 
+
+```{r}
+lm(exxon ~ oil, data = task2)
+
+```
+
+After "running" the code, how do you interpret the estimated coefficients? 
+
+The intercept coefficient shows the estimated value of exxon when oil is equal to 0, but it may now have a practical interpretation in this context since its unlikely for oil price to be 0.
+
+The slope coefficient of 0.1282 means that for every one increase in x, exxon's value will increase by 0.1282. This means there is a positive linear relationship between oil prices and Exxon's share price, indicating that higher oil prices are associated with higher share prices for Exxon.
+
+# Source file
+
+[Source is found on this link](https://github.com/Danieljoha/Sok-1005/blob/main/Assignments/Assignment_4.qmd)

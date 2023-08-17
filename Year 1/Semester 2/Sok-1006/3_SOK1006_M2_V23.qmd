@@ -1,0 +1,931 @@
+---
+title: "Mappeoppgave 2 - Innføring av bompenger i Tromsø: Effekt på bilisters atferd og velferd"
+subtitle: "Fakultet for biovitenskap, fiskeri og økonomi."
+author: "Kandidatnummer 3, SOK-1006 Vår 2023"
+date: last-modified 
+date-format: "DD-MM-YYYY"
+editor: visual
+toc: true
+toc-title: "Innholdsfortegnelse."
+abstract: | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+format: 
+  pdf:
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+echo: false
+bibliography: references.bib
+csl: norsk-apa-manual.csl
+crossref: 
+  lof-title: "Figurliste"
+  fig-title: "Figur"
+  lot-title: "Tabelliste"
+  tbl-title: "Tabell"
+header-includes:
+  - \usepackage{wrapfig}
+  - \usepackage{subcaption}
+nocite: |
+  @*
+---
+
+```{python}
+#Koden i dette dokumentet vil ikke kunne kjøres på forventet måte uten å fjerne ting som %%capture som er lagt i mange kodeblokker. Denne kommandoen er lagt til for å fortelle Jupyter engine som kjører python koden at den ikke skal putte plotsene der kodeblokkene er. Denne koden kjøres ved å trykke "Render". Det 
+
+import json
+import pandas as pd
+import requests
+from pyjstat import pyjstat
+import numpy as np
+import sympy as sp
+import datetime
+import statsmodels.api as sm
+import geopandas as gpd
+import contextily as ctx
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+from IPython.display import display, Math, Latex
+
+
+#import locale
+#locale.setlocale(locale.LC_ALL, 'no_NO.utf8')  #denne må kjøres om du får en feilmelding om "mened" eller slikt der den ikke klarer å lese norske bokstaver.
+```
+
+```{python}
+
+#kodeblokker til slutt
+
+```
+
+```{python}
+#TEMP
+
+
+#TEMP
+```
+
+```{python}
+
+
+
+
+```
+
+```{python}
+
+
+
+
+
+```
+
+```{python}
+
+
+
+
+```
+
+```{=tex}
+S\newpage
+\listoffigures
+\listoftables
+\renewcommand*{\figureautorefname}{Figur}
+\renewcommand*{\tableautorefname}{Tabell}
+\newpage
+```
+# Kapittel 1 - Innledning
+
+\
+
+## Bakrunn
+
+Tromsø er en by i vekst blabla
+
+Den 5 Januar 2023 så ble det innført bompenger på Tromsøya som en del av byutviklingsprosjektet Tenk Tromsø.\
+
+## Bompenger
+
+En bompengeavgift ofte bare sagt og skrevet som "bompenger" er en avgift som bilister må betale for å benytte seg av veier eller for eksempel innkjøring til områder som ofte er kalt "bomringer". Dette er en form for veiavgift eller veibruksavgift som da ikke er en skatt men heller omtalt som en brukeravgift. I Norge så har vi noe som heter AutoPASS[^1] som er en samlebetegnelse for alle tekniske løsninger relatert til bompengeinnkreving i Norge. Bomstasjon passeringer registreres ved at kjøretøyet identifiseres med brikke eller ved bilde av registreringsnummer for de som ikke har brikken. For de som har brikke så sendes dette til utstederselskap som tar betalt fra brukere, men for de som ikke har brikke så tar bompengeselskapene betalt. Det er flere fordeler ved å ha gyldig AutoPASS avtale og brikke i bilen som ved at du får 20% rabatt på bompenge pris. For å få en Autopass brikke så må du gå til et utstederselskap. Det er fritt valg hvilket utstederselskap du velger.
+
+[^1]: @autopass
+
+I Tromsø så er det innført 15 bomstasjoner der du blir belastet for opp til 80 passeringer per kalendermåner per kjøretøy tilknyttet AutoPASS avtalen. Det er innført 3 ganger takst under rushtid som er definert som mellom 06:30 til 09:00 og 15:00 til 17:00 på hverdager. Jeg blir å fokusere på Takstgruppe 1 som er kjøretøy under 3.5tonn. [^2]
+
+[^2]: @bompriser
+
+```{=tex}
+\begin{table}[h]
+\begin{tabular}{clrl}
+\multicolumn{4}{c}{\textbf{Takstgruppe 1- Kjøretøy under 3.5 tonn}}                                                                                                                                \\ \hline
+\multicolumn{2}{|c|}{\textbf{Bensin, diesel, ladbar hybrid}}                                    & \multicolumn{2}{c|}{\textbf{Nullslippskjøretøy}}                                                \\ \hline
+\multicolumn{1}{|c|}{\textbf{Fullpris}} & \multicolumn{1}{l|}{\textbf{Gyldig avtale og brikke}} & \multicolumn{1}{r|}{\textbf{Fulllpris}} & \multicolumn{1}{l|}{\textbf{Gyldig avtale og brikke}} \\ \hline
+\multicolumn{1}{|c|}{12kr}              & \multicolumn{1}{l|}{9kr 60øre}                        & \multicolumn{1}{r|}{12kr}               & \multicolumn{1}{l|}{4kr 80øre}                        \\ \hline
+\multicolumn{4}{|c|}{\textbf{Rustidsavgift 06:30-09:00 og 15:00-17:00}}                                                                                                                           \\ \hline
+\multicolumn{1}{|c|}{36kr}              & \multicolumn{1}{l|}{28kr 80øre}                       & \multicolumn{1}{r|}{36kr}               & \multicolumn{1}{l|}{14kr 40øre}                       \\ \hline
+\end{tabular}
+\caption{Bompengeavgifter}
+\label{table:1}
+\end{table} 
+```
+\
+
+## Begrunnelse
+
+I Tromsø så er det innført bompenger for å finansiere bypakken "Tenk Tromsø".
+
+I bypakken Tenk Tromsø er det et nullvekstmål[^3] i persontransport med bil. Dette betyr at vi skal kunne ha en økning i populasjon uten at vi øker antall biler på veien.
+
+[^3]: [@nullvekstml]
+
+Det skal også sikre bedre fremkommelighet for alle ved at biltrafikken går ned samtidig som kollektiv trafikken bedres. Ved at biltrafikk går ned så kan det blir tryggere for myke traffikanter generelt.
+
+I satsingsområdene[^4] til Tenk Tromsø så skal det trafikksikkerheten opp. Dette tildels ved å bygge trygge skoleveier, gode fortau osv. Kollektivtransport skal også investeres i slik at det kommer bedre bussterminaler, holdeplasser og knutepunkt. Det skal også hjelpe med å holde billettprisene nede på buss. Veier skal bli oppgradert i en form der veier blir tryggere og mer effektive for samfunnet. En nedgang i personbiltransport vil frigjøre kapasitet på veiene for kollektivtransport og næringsliv.
+
+[^4]: [@satsingsområder]\
+
+### Finansiering av bypakken
+
+Bypakken må finansieres og da denne oppgaven skrives så er det er bestemt at majoriteten skal komme fra bompenger. 58% av finansieringen av bypakken skal komme fra bompenger og resterene skal komme gjennom andre statlige, fylkeskommunale og kommunale midler.
+
+\
+
+## Erfaringer
+
+litt her\
+
+## Struktur i utredningen
+
+\
+
+### Kapittel 1
+
+Går igjennom hva som er skrevet\
+
+### Kapittel 2
+
+Går igjennom markedet\
+
+### Kapittel 3
+
+forklarer litt om konsumenens tilpasning.
+
+stone-geary ligning. konsumentpreferanser.
+
+vise konsumentens tilpasning før og etters prisøkning. forskjellige typer bilister. sykkel bil elbil osv.\
+
+### Kapittel 4
+
+konklusjon\
+
+\newpage
+
+# Kapittel 2 - Trafikkbildet i Tromsø før og etter innføring av bompenger
+
+\
+
+```{=tex}
+\begin{wrapfigure}{r}{0.5\textwidth} 
+    \centering
+    \includegraphics[width=0.5\textwidth]{kart.png}
+    \caption{Nye trafikk telle stasjoner i Tromsø fra 2018 til 2023}
+    \label{fig:fig1}
+\end{wrapfigure}
+```
+Som vi ser i \autoref{fig:fig1} så har det kommet flere trafikkregistreringsstasjoner i Tromsø fra 2018-2022 som gjør det litt vanskelig å få et komplett bilde av hvordan trafikken har endret seg men ved ved å se på stasjonene som har vært der siden 2018 så får vi trenden i \autoref{fig:fig2} der vi ser at trafikken har holdt seg stabilt frem til 2023 når innkreving av bompenger startet. Med denne dataen så har vi med 2020 og 2021 da koronapandemien fremdeles hadde stort intrykk på samfunnet. Siden vi kan se at trenden hvert år har vært veldig likt så blir vi videre å se på 2022 og 2023 for å se hvordan trafikken har endret seg etter innføringen av bompenger. \nameref{appendix:appendixkart}
+
+```{=tex}
+\begin{figure}[b!]
+    \centering
+    \includegraphics[width=\textwidth]{lm_bil_daglig_bompenger.png}
+    \caption{Lineær regresjonslinjer for biltrafikken i Tromsø fra 2018}
+    \label{fig:fig2}
+\end{figure}
+```
+\clearpage
+
+Hvis vi ser på alle trafikkregistreringsstasjonene i 2022 og 2023 så kan vi se bedre på hvordan trafikken var på de forskjellige stedene i Tromsø. I \autoref{fig:fig3} så er "Tilkoblinger til Tromsøya" er bruen til Tromsdalen, bruen til Kvaløya og tunnellen mellom Tromsøya og Tromsdalen. På venstre akse så kan vi se volumet for biltrafikk i Tromsø som er vist i tusener, og på høyre akse kan vi se volumet for sykkeltrafikk. Det vi da kan se er at det har vært en tydelig nedgang i biltrafikken i starten når bompenger ble innført men det ser ut som det har begynt å øke igjen.
+
+```{=tex}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{trafikkvolum_manedlig.png}
+    \caption{Månedtlig trafikkvolum i Tromsø 2022 og 2023}
+    \label{fig:fig3}
+\end{figure}
+```
+Siden vi ser at effekten på Kvaløya og Fastlandet er veldig liten så fjerner jeg disse fra videre analyse. Jeg velger å se på Tromsøya og Tromsdalen siden det er her det er mest trafikk og det er her det er innført bompenger.
+
+Siden det er flere trafikkregistreringsstasjoner i 2022 så får vi et bedre innblikk på de faktiske trafikkmønsterene siden det er et større mangfold av data. Ved å ha sett på trafikkendringen 2018-2022 så kan vi se at 2022 er tilnærmet et "normal år" siden trenden fra 2018 til 2021 hvert år utenom 2020 er veldig likt 2022. I de 2 regresjonslinjene her fra Januar til Mai 2022 og 2023 så kan vi se at det har vært et tydelig fall i biltrafikken i Tromsø etter innføringen av bompenger.
+
+```{=tex}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{lm_bil_manedlig_bompenger.png}
+    \caption{Lineær regresjonslinjer for biltrafikken i Tromsø 2022 og 2023.}
+    \label{fig:fig4}
+\end{figure}
+```
+\clearpage
+
+```{=tex}
+\begin{wrapfigure}{r}{0.5\textwidth} 
+    \centering
+    \includegraphics[width=0.5\textwidth]{sykkel_manedlig_tromsoya.png}
+    \caption{Månedtlig sykkel trafikkvolum i Tromsø 2022 og 2023.}
+    \label{fig:fig5}
+    \smallskip\par
+    \includegraphics[width=0.5\textwidth]{lm_sykkel_manedlig_bompenger.png}
+    \caption{Lineær regresjonslinjer for sykkeltrafikken i Tromsø 2022 og 2023}
+    \label{fig:fig6}
+    \smallskip\par
+    \includegraphics[width=0.5\textwidth]{elbil_andeler.png}
+    \caption{Andel elbiler i Tromsø 2018 til 2022.}
+    \label{fig:fig7}
+\end{wrapfigure}
+```
+Siden vi er i starten av juni så har vi ikke nokk data til å se den komplette effekten men som vi så i figurene på forrige side så kan vi anta at 2022 kan sammenlignes med 2023 uten å tenke for mye på korona effekt. Det vi ser ved å se på de første månedne av 2022 og 2023 på sykkeltrafikken i \autoref{fig:fig5} er at det er en økning til hvor mange passeringer på de forskjellige sykkelregistreringspunktene. Ved å sette en lineær regresjonslinje i \autoref{fig:fig6} så kan se en trend der det har vært en økning i trafikken. Det virker som det var mange som sykklet over bruene i Januar så her ser det da ut som det er en nedgående trend på sykler over bruene.
+
+Over de siste 5 årene så kan vi se at antall elbiler har økt, og det kan virke som denne økningen blir å fortsette som vi kan se i \autoref{fig:fig7}. Siden elbiler har en rabatt som vi så i \autoref{table:1} og dermed betaler mindre i bomringen så kan det hende at denne rabatten må omtenkes på sikt dersom alle prosjektene skal finansieres ved hjelp av bompenger.
+
+Det vi kan se på påstigninger på buss i \autoref{fig:fig8} er at rett etter innføring av bompenger så er det en tydelig økning i påstigninger på buss. Denne økningen ser ut til å ha vedvart så det kan hende at det nå er nødvendig med større investering i kollektivtransport
+
+```{=tex}
+
+\begin{wrapfigure}{l}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.5\textwidth]{buss_daglig.png}
+    \caption{Påstigninger på buss på hverdager og helger.}
+    \label{fig:fig8}
+\end{wrapfigure}
+```
+\clearpage
+
+\
+
+# Kapittel 3 - Bilisters tilpasning til bompenger
+
+\
+
+## Konsumentadferd
+
+### Modellforklaring
+
+Vi lager en modell med følgende antagelser:
+
+-   Konsumenten velger mellom to målbare goder med konstante preferanser.
+
+-   Fordelene fra forbruket er selvstendig.
+
+-   Konsumenten kjenner alle priser og egenskaper ved godene og kan ikke spare eller ta opp lån.
+
+-   Konsumenten søker å maksimere sin egen nytte.
+
+Vi bruker en funksjon til å representerer konsumentens preferanser, selv om nytte ikke kan måles presist.
+
+En generell nyttefunksjon kan skrives som $U = u(x_1, x_2)$, hvor $x_1$ og $x_2$ er godene.
+
+### Preferanser
+
+Konsumentens preferanser har tre hovedegenskaper:
+
+1.  Full rangering: Konsumenten kan rangere alle kombinasjoner mellom goder.
+
+2.  Transitivitet: Hvis $x_1$ er bedre enn $x_2$ og $x_2$ er bedre enn $x_3$, da foretrekker konsumenten $x_1$ over $x_3$.
+
+3.  Ikke-metning: Konsumenten foretrekker alltid mer av et gode fremfor mindre og mer er alltid bedre.
+
+Grensenytte er hvor mye nytte øker ved en ekstra enhet av et gode. Vi antar at grensenytten avtar med økende forbruk.
+
+Sett inn appendix del her for at chatgpt hjalp meg omskrive det jeg hadde å bedret strukturen min.
+
+### Indifferansekurver
+
+Indifferansekurve betyr at konsumenten er likegyldig mellom to kombinasjoner av goder. Indifferansekurvene er konvekse mot origo. Dette betyr at konsumenten er villig til å bytte mellom godene. Den marginale substitusjonsbrøken (MSB) er den relative endringen i mengden av et gode som konsumenten er villig til å bytte for en enhet av et annet gode. MSB er gitt ved forholdet mellom grensenytten av gode 1 og grensenytten av gode 2. MSB er også lik forholdet mellom prisene på gode 1 og gode 2. Dette betyr at konsumenten er villig til å bytte mellom godene til prisen på gode 1 er lik prisen på gode 2. Dette er fordi konsumenten vil maksimere nytten sin og vil derfor velge den kombinasjonen av godene som gir mest nytte. Dette er der MSB er lik forholdet mellom prisene på gode 1 og gode 2. Dette er fordi konsumenten vil maksimere nytten sin og vil derfor velge den kombinasjonen av godene som gir mest nytte. Dette er der MSB er lik forholdet mellom prisene på gode 1 og gode 2. Dette er fordi konsumenten vil maksimere nytten sin og vil derfor velge den kombinasjonen av godene som gir mest nytte.[^5]
+
+[^5]: @kandidatnummer_2022_sok1004
+
+### Nyttefunksjon
+
+Jeg velger å bruke Stone-Geary fremfor Cobb-Douglas fordi Cobb-Douglas har ikke muligheten for minimumskonsum og jeg antar at det er et minimumskonsum på andre goder og minimum kilometer bilkjøring for de med bil for å oppnå noe mer nytte.\
+$$U(x_1, x_2) = \beta_1 ln (x_1-\gamma_1) + \beta_2 ln (x_2-\gamma_2)$$
+
+Denne består av $x_1$, $x_2$, $\beta_1$, $\beta_2$, $\gamma_1$ og $\gamma_2$.\
+$\beta_1+\beta_2=1$, og logaritmen til et negativt tall er ikke definert og da må $x_1 - \gamma_1>0$, $x_2 -\gamma_2>0$.\
+
+Når $\gamma_1$ øker, ser vi at for alle inntektsnivåer, øker etterspørselen etter vare 1. Dette skyldes at minimumskonsumet av vare 1 har steget, noe som fører til en økning i etterspørselen etter vare 1. Derimot, hvis $\gamma_2$ øker, viser det seg at for hvert inntektsnivå reduseres etterspørselen etter vare 1. Dette er fordi minimumskonsumet av vare 2 har økt, noe som resulterer i en nedgang i etterspørselen etter vare 1.
+
+Ved en økning i $\beta_1$, vil vi se en økning i etterspørselen etter vare 1 for alle inntektsnivåer. Dette skyldes at forbrukerens preferanse for vare 1 har blitt styrket, noe som igjen fører til en økning i etterspørselen etter denne varen.
+
+Når $p_1$ øker, vil vi observere en nedgang i etterspørselen etter vare 1 for alle inntektsnivåer. Dette er fordi vare 1 har blitt relativt dyrere. En ekstra krone i inntekt fører fortsatt til en økning i etterspørselen etter vare 1, men denne økningen er mindre enn før prisøkningen. Hvis $p_2$ øker, vil vi se en nedgang i etterspørselen etter vare 1 for alle inntektsnivåer. Grunnen til dette er at kostnaden ved å oppnå minimumskonsumet øker, noe som fører til en reduksjon i etterspørselen etter vare 1.
+
+\clearpage
+
+
+### Priser
+
+```{=tex}
+\begin{table}[t!]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Kostnader (Inkludert alle avgifter)} & \textbf{Elbiler} & \textbf{Biler med forbrenningsmotor} \\
+\hline
+\textbf{Drivstoff} & 0.27kr & 1.19kr \\
+\hline
+\textbf{Dekk og Olje} & 0.25kr & 0.33kr \\
+\hline
+\textbf{Reparasjoner} & 0.37kr & 0.55kr \\
+\hline
+\textbf{Kapital} & 1.10kr & 1.98kr \\
+\hline
+\textbf{Totalt} & 1.98kr & 3.03kr \\
+\hline
+\textbf{Kjørelengde per år} & 11334km & 12131km \\
+\hline
+\textbf{Bompenge priser gitt med AutoPASS} & & \\
+\hline
+\textbf{Scenario 1 (30\% rush, 70\% utenfor rush)} & 0.49kr & 0.91kr \\
+\textbf{Totalsum per km} & 2.47kr & 3.94kr \\
+\hline
+\textbf{Scenario 2 (100\% rush)} & 0.93kr & 1.71kr \\
+\textbf{Totalsum per km} & 2.91kr & 4.74kr \\
+\hline
+\textbf{Scenario 3 (0\% rush)} & 0.31kr & 0.57kr \\
+\textbf{Totalsum per km} & 2.29kr & 3.60kr \\
+\hline
+\end{tabular}
+\caption{Kostnader for Elbiler og Biler med forbrenningsmotor per kilometer kjørt}
+\label{table:2}
+\end{table}
+```
+$p_1$ blir gitt av totalsum per km vist i \autoref{table:2}. $p_2$ blir gitt som 1 slik at vi får antall kroner på Y aksen.
+
+Jeg hentet data fra SSB som kommer frem til at elbiler i Troms og Finnmark kjørte ca 11334km og biler med forbrenningsmotor kjørte ca 12321km i 2022. Jeg gjør en forenkling der jeg sier billister kjører bil 2 ganger daglig hver dag så jeg kan regne en kilometerpris på bompenger. Jeg lager 3 scenarioer. For å komme frem til kostnaden per kilometer så går jeg ut ifra at hver person kjører bil hver dag og de kjører igjennom bom 2 ganger dagen. Jeg går også ut ifra at alle har AutoPASS avtale, og jeg antar at de ikke kjører innenfor timesgrensen.
+
+I Scenario 1 så bruker jeg data fra trafikkvolumet i Tromsø og deler trafikken slik at 30% av bompasseringene er i rush, og 70% er utenom rush. I scenario 2 sier jeg at alle bompasseringene er i rush, og i scenario 3 så er ingen i rushtid. Dette gir meg kilometerprisene som vist i \autoref{table:2}.
+
+Prisene gitt for andre kostnader er hentet fra Transportøkonomisk institutt. Konseptvalgutredning veibruksavgift og bompenger tabell 4.16[^6]
+
+[^6]: @steinsland_2022_konseptvalgutredning
+
+Inntektselasisitet er hentet fra Understanding Transport Demands and Elasticities How Prices and Other Factors Affect Travel Behavior Tabell 13[^7]
+
+[^7]: @litman_2019_understanding
+
+Priselasisitet er hentet fra Konsumfordelingssystemet i KVARTS og MODAG tabell 2[^8]
+
+[^8]: @jansen_2013_konsumfordelingssystemet
+
+\clearpage
+
+## Utregning \label{kapittel:utregning}
+
+```{python}
+
+kjorelengde_2022_elbil = 11334
+kjorelengde_2022_bensinbil = 12321
+lonn = 627240
+
+komp_elbil_sc1 = 632792
+komp_elbil_sc2 = 637581
+komp_elbil_sc3 = 630722
+komp_bensinbil_sc1 = 638326
+komp_bensinbil_sc2 = 647870
+komp_bensinbil_sc3 = 634196
+
+
+
+
+#gjennomsnittlig kjørelengde per år
+#elbil 11500
+#bensinbil 13500
+#rushtid 28.8 bensin, 14,4 el
+#ikke rushtid 9.6 bensin, 4,8 el
+#30 prosent av trafikk er i rush
+#70 prosent av trafikk er ikke i rush
+
+
+#går vi ut ifra at folk kjører hver dag i rush
+#elbil 11500 / 365 = 31.5 km per dag
+#bensinbil 13500 / 365 = 37 km per dag
+elbil_kjorelengde = kjorelengde_2022_elbil / 365
+elbil_rushpris = 14.4
+elbil_ikkerushpris = 4.8
+elbilrush_30 = (elbil_rushpris*2)/elbil_kjorelengde * 0.3
+elbilikkerush_30 = (elbil_ikkerushpris*2)/elbil_kjorelengde * 0.7
+ 
+
+elbilrush_100 = (elbil_rushpris*2)/elbil_kjorelengde * 1
+elbilikkerush_100 = (elbil_ikkerushpris*2)/elbil_kjorelengde * 0
+
+elbilrush_0 = (elbil_rushpris*2)/elbil_kjorelengde * 0
+elbilikkerush_0 = (elbil_ikkerushpris*2)/elbil_kjorelengde * 1
+
+elbil_kilometerkost30 = elbilrush_30 + elbilikkerush_30
+elbil_kilometerkost100 = elbilrush_100 + elbilikkerush_100
+elbil_kilometerkost0 = elbilrush_0 + elbilikkerush_0
+
+
+bensinbil_kjorelengde = kjorelengde_2022_bensinbil / 365
+bensinbil_rushpris = 28.8
+bensinbil_ikkerushpris = 9.6
+bensinbilrush_30 = (bensinbil_rushpris*2)/bensinbil_kjorelengde * 0.3
+bensinbilikkerush_30 = (bensinbil_ikkerushpris*2)/bensinbil_kjorelengde * 0.7
+
+bensinbilrush_100 = (bensinbil_rushpris*2)/bensinbil_kjorelengde * 1
+bensinbilikkerush_100 = (bensinbil_ikkerushpris*2)/bensinbil_kjorelengde * 0
+
+bensinbilrush_0 = (bensinbil_rushpris*2)/bensinbil_kjorelengde * 0
+bensinbilikkerush_0 = (bensinbil_ikkerushpris*2)/bensinbil_kjorelengde * 1
+
+
+bensinbil_kilometerkost30 = bensinbilrush_30 + bensinbilikkerush_30
+bensinbil_kilometerkost100 = bensinbilrush_100 + bensinbilikkerush_100
+bensinbil_kilometerkost0 = bensinbilrush_0 + bensinbilikkerush_0
+
+
+
+elbil_p_1 = 1.98
+elbil_p_1_sc1 = elbil_p_1 + elbil_kilometerkost30
+elbil_p_1_sc2 = elbil_p_1 + elbil_kilometerkost100
+elbil_p_1_sc3 = elbil_p_1 + elbil_kilometerkost0
+
+bensinbil_p_1 = 3.03
+bensinbil_p_1_sc1 = bensinbil_p_1 + bensinbil_kilometerkost30
+bensinbil_p_1_sc2 = bensinbil_p_1 + bensinbil_kilometerkost100
+bensinbil_p_1_sc3 = bensinbil_p_1 + bensinbil_kilometerkost0
+
+
+
+
+
+
+bta_1, bta_2, gma_1, gma_2 = sp.symbols('\u03B2_1 \u03B2_2 \gamma_1 \gamma_2', real=True, positive=True)
+x_1, x_2, p_1, p_2, m=sp.symbols("x_1 x_2 p_1 p_2 m", real=True, positive=True)
+x_1_eq = gma_1 + (bta_1/p_1)*(m-p_1*gma_1-p_2*gma_2)
+x_2_eq = gma_2 + (bta_2/p_2)*(m-p_1*gma_1-p_2*gma_2)
+
+#for å huske sg ligningen
+nytte_sg = bta_1*sp.log(x_1-gma_1) + (1-bta_1)*sp.log(x_2-gma_2)
+V = nytte_sg.subs([(x_1, x_1_eq), (x_2, x_2_eq)]) 
+
+
+def budsjett(M, x_1, p_1, p_2):
+    return M/p_2 - (p_1*x_1/p_2)
+
+
+def ind_k_fn(bta_1,gma_1,gma_2,x_1,U_0):
+    return gma_2 + np.exp((bta_1*np.log(x_1-gma_1)-U_0)/(bta_1-1))
+
+
+
+
+
+beta_1 = 0.20*0.249  #andel av inntekt ganger inntektselastisitet
+beta_2 = 1-beta_1    #beta 2 = beta1+beta2 = 1
+
+
+gma_1_elbil_eq = (gma_1*(1-beta_1)/kjorelengde_2022_elbil*elbil_p_1)-1
+gma_1_elbil_eq = (gma_1*(1-beta_1)/kjorelengde_2022_elbil)-1
+
+#solving for gma_1 
+gma_1_elbil = sp.Eq(gma_1_elbil_eq, -0.14)
+
+#solve
+gma_1_elbil = sp.solve(gma_1_elbil, gma_1)
+gma_1_elbil = float(gma_1_elbil[0])
+
+
+gma_1_bensinbil_eq = (gma_1*(1-beta_1)/kjorelengde_2022_bensinbil*bensinbil_p_1)-1
+gma_1_bensinbil_eq = (gma_1*(1-beta_1)/kjorelengde_2022_bensinbil)-1
+
+#solving for gma_1
+gma_1_bensinbil = sp.Eq(gma_1_bensinbil_eq, -0.14)
+
+
+#solve
+gma_1_bensinbil = sp.solve(gma_1_bensinbil, gma_1)
+gma_1_bensinbil = float(gma_1_bensinbil[0])
+
+
+
+
+elbil = x_1_eq.subs([(bta_1, beta_1), (m, lonn), (p_1, elbil_p_1), (p_2, 1), (gma_1, gma_1_elbil)]) - kjorelengde_2022_elbil
+bensinbil = x_1_eq.subs([(bta_1, beta_1), (m, lonn), (p_1, bensinbil_p_1), (p_2, 1), (gma_1, gma_1_bensinbil)]) - kjorelengde_2022_bensinbil
+
+
+gma_2_elbil = sp.solve(elbil, gma_2)
+gma_2_elbil = float(gma_2_elbil[0])
+
+gma_2_bensinbil = sp.solve(bensinbil, gma_2)
+gma_2_bensinbil = float(gma_2_bensinbil[0])
+
+
+
+x_1_elbil_bil = float(x_1_eq.subs([(bta_1, beta_1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1), (p_2, 1)]))
+x_2_elbil_bil = float(x_2_eq.subs([(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1), (p_2, 1)]))
+elbil_nytte = float(V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1), (p_2, 1)]))
+
+x_1_elbil_bil_sc1 = float(x_1_eq.subs([(bta_1, beta_1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1_sc1), (p_2, 1)]))
+x_2_elbil_bil_sc1 = float(x_2_eq.subs([(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1_sc1), (p_2, 1)]))
+elbil_nytte_sc1 = float(V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1_sc1), (p_2, 1)]))
+
+x_1_elbil_bil_sc2 = float(x_1_eq.subs([(bta_1, beta_1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1_sc2), (p_2, 1)]))
+x_2_elbil_bil_sc2 = float(x_2_eq.subs([(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1_sc2), (p_2, 1)]))
+elbil_nytte_sc2 = float(V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1_sc2), (p_2, 1)]))
+
+
+x_1_elbil_bil_sc3 = float(x_1_eq.subs([(bta_1, beta_1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1_sc3), (p_2, 1)]))
+x_2_elbil_bil_sc3 = float(x_2_eq.subs([(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1_sc3), (p_2, 1)]))
+elbil_nytte_sc3 = float(V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (m, lonn), (p_1, elbil_p_1_sc3), (p_2, 1)]))
+
+
+
+x_1_bensin_bil = float(x_1_eq.subs([(bta_1, beta_1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1), (p_2, 1)]))
+x_2_bensin_bil = float(x_2_eq.subs([(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1), (p_2, 1)]))
+bensinbil_nytte = float(V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1), (p_2, 1)]))
+
+x_1_bensin_bil_sc1 = float(x_1_eq.subs([(bta_1, beta_1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1_sc1), (p_2, 1)]))
+x_2_bensin_bil_sc1 = float(x_2_eq.subs([(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1_sc1), (p_2, 1)]))
+bensinbil_nytte_sc1 = float(V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1_sc1), (p_2, 1)]))
+
+
+x_1_bensin_bil_sc2 = float(x_1_eq.subs([(bta_1, beta_1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1_sc2), (p_2, 1)]))
+x_2_bensin_bil_sc2 = float(x_2_eq.subs([(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1_sc2), (p_2, 1)]))
+bensinbil_nytte_sc2 = float(V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1_sc2), (p_2, 1)]))
+
+x_1_bensin_bil_sc3 = float(x_1_eq.subs([(bta_1, beta_1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1_sc3), (p_2, 1)]))
+x_2_bensin_bil_sc3 = float(x_2_eq.subs([(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1_sc3), (p_2, 1)]))
+bensinbil_nytte_sc3 = float(V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (m, lonn), (p_1, bensinbil_p_1_sc3), (p_2, 1)]))
+
+
+
+
+
+
+x_1_elbil_komp_sc1 = x_1_eq.subs([(bta_1, beta_1), (m, komp_elbil_sc1), (p_1, elbil_p_1_sc1), (p_2, 1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil)])
+x_2_elbil_komp_sc1 = x_2_eq.subs([(bta_2, beta_2), (m, komp_elbil_sc1), (p_1, elbil_p_1_sc1), (p_2, 1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil)])
+
+x_1_elbil_komp_sc2 = x_1_eq.subs([(bta_1, beta_1), (m, komp_elbil_sc2), (p_1, elbil_p_1_sc2), (p_2, 1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil)])
+x_2_elbil_komp_sc2 = x_2_eq.subs([(bta_2, beta_2), (m, komp_elbil_sc2), (p_1, elbil_p_1_sc2), (p_2, 1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil)])
+
+x_1_elbil_komp_sc3 = x_1_eq.subs([(bta_1, beta_1), (m, komp_elbil_sc3), (p_1, elbil_p_1_sc3), (p_2, 1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil)])
+x_2_elbil_komp_sc3 = x_2_eq.subs([(bta_2, beta_2), (m, komp_elbil_sc3), (p_1, elbil_p_1_sc3), (p_2, 1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil)])
+
+x_1_bensin_komp_sc1 = x_1_eq.subs([(bta_1, beta_1), (m, komp_bensinbil_sc1), (p_1, bensinbil_p_1_sc1), (p_2, 1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil)])
+x_2_bensin_komp_sc1 = x_2_eq.subs([(bta_2, beta_2), (m, komp_bensinbil_sc1), (p_1, bensinbil_p_1_sc1), (p_2, 1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil)])
+
+x_1_bensin_komp_sc2 = x_1_eq.subs([(bta_1, beta_1), (m, komp_bensinbil_sc2), (p_1, bensinbil_p_1_sc2), (p_2, 1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil)])
+x_2_bensin_komp_sc2 = x_2_eq.subs([(bta_2, beta_2), (m, komp_bensinbil_sc2), (p_1, bensinbil_p_1_sc2), (p_2, 1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil)])
+
+x_1_bensin_komp_sc3 = x_1_eq.subs([(bta_1, beta_1), (m, komp_bensinbil_sc3), (p_1, bensinbil_p_1_sc3), (p_2, 1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil)])
+x_2_bensin_komp_sc3 = x_2_eq.subs([(bta_2, beta_2), (m, komp_bensinbil_sc3), (p_1, bensinbil_p_1_sc3), (p_2, 1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil)])
+
+
+elbil_nytte_komp_sc1 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (p_1, elbil_p_1_sc1), (p_2, 1)])
+elbil_nytte_komp_sc2 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (p_1, elbil_p_1_sc2), (p_2, 1)])
+elbil_nytte_komp_sc3 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (p_1, elbil_p_1_sc3), (p_2, 1)])
+
+bensinbil_nytte_komp_sc1 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (p_1, bensinbil_p_1_sc1), (p_2, 1)])
+bensinbil_nytte_komp_sc2 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (p_1, bensinbil_p_1_sc2), (p_2, 1)])
+bensinbil_nytte_komp_sc3 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (p_1, bensinbil_p_1_sc3), (p_2, 1)])
+
+```
+
+### Antagelser
+
+Jeg ser på SSB at nordmenn gjennomsnittlig bruker ca 15% av sin inntekt på transport og jeg går ut ifra at det er villig til å bruke opp til 20%. https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/artikler/dette-bruker-nordmenn-penger-pa
+
+Det virker som det er noen skjulte preferanser på bompenger. Ved bensinpris endring så er det lite til ingen endring i bilkjøring men ved bompenger så har folk reagert.
+
+Antagelse 1. årslønn 627240kr. Tatt etter gjennomsnittslønn Tromsø 2022, og gjennomsnittlig kjørte kilometer per år i Troms og Finnmark.
+
+Antagelse 2. Gjennomsnittlig antall kilometer kjørt i dag gir konsumenten maksimal nytte.
+
+Antagelse 3. 20% av lønn kan brukes på bil, 80% brukes på andre goder. inkluderer mat, bolig osv.
+
+\clearpage
+
+Vi regner beta fra $\beta = w_i e_i$ Vi setter inn for $w_i$ som er 0.2 siden vi sier at konsumenten er villig til å bruke 20% av budsjettet sitt på bilkjøring, og $e_i$ som er inntektselastisiteten for bilkjøring som er -0.249[^9]. Vi får da $\beta = 0.2 * -0.249 = -0.0498$
+
+[^9]: @jansen_2013_konsumfordelingssystemet
+
+For å kunne estimere en $\gamma_1$ og $\gamma_2$ for elbiler og bensinbiler så setter vi først opp våre 2 ligninger fra artikkelen The estimation of LES demand elasticities for CGE models[^10].
+
+[^10]: @jussila_2012_the
+
+$e_{ii} = \frac{\gamma_i(1-\beta_i)}{x_i} - 1 < 0$
+
+Vi setter inn for ligningen lik -0.14 som er priselasisiteten funnet i MODAG dokumentet.
+
+Vi får da $-0.14 = \frac{\gamma_i(1-0.0498)}{x_i}-1 - 1$ og for $x_i$ setter jeg inn kjørelengden i 2022 for elbiler og gjør det igjen med en ny ligning for bensinbiler.
+
+Dette betyr at jeg går ut ifra at dagens tall på kjøring er det optimale for konsumenten.
+
+For å estimere $\gamma_2$ så bruker jeg svaret på $\gamma_1$, gjennomsnittlig årslønn og prisene i \autoref{table:2} og setter dette inn i en ligning $\gamma_2 = \gamma_1 + \frac{\beta_1(-\gamma_1 p_1 - \gamma_2 p_2 + m)}{p_1}$ Dette gjør jeg for elbiler og biler med forbrenningsmotor.
+
+```{python}
+display(Math(r'Elbil\> sin\> \gamma_1 = %g' % gma_1_elbil))
+display(Math(r'Elbil\> sin\> \gamma_2 = %g' % gma_2_elbil))
+display(Math(r'Bensinbil\> sin\> \gamma_1 = %g' % gma_1_bensinbil))
+display(Math(r'Bensinbil\> sin\> \gamma_2 = %g' % gma_2_bensinbil))
+
+```
+
+Det vi nå ser er at $\gamma$ verdiene er forskjellig fra elbil og bensinbil, dette er fordi de i gjennomsnitt kjører forskjellige antall kilometer per år. Dette betyr at de har forskjellige minimumskonsum av bilkjøring og andre goder. Begrunnelsen til hvorfor det er sånn kan være at flere av de som kjører bensinbil kjører lengre distanser enn de som kjører elbil. Dette kan være fordi de som kjører elbil har en elbil som er en familiebil og de kjører derfor ikke så langt. De som kjører bensinbil kan ha en bil som er en arbeidsbil og de kjører derfor lengre distanser. Dette er bare en antagelse og det kan være flere grunner til at det er sånn og det vil være nødvendig med ny analyse for å finne dette ut.
+
+Med dette så kan vi nå regne og tegne indifferansekurven. $U$ er nytten vi regner ut ved å sette inn tallene våre i vår nytte funksjon, når vi har dette, så setter vi det inn i denne funksjonen for å tegne indifferansekurven
+
+$$(\beta_1, \gamma_1, \gamma_2, x_1, U) = \gamma_2 + e^{(\beta_1 * \log(x_1 - \gamma_1) - U) / (\beta_1 - 1)}$$
+
+\clearpage
+
+```{python}
+
+
+km11 = np.round(float(x_1_elbil_komp_sc1-x_1_elbil_bil),2)
+km21 = np.round(float(x_1_elbil_bil_sc1-x_1_elbil_komp_sc1),2)
+km31 = np.round(float(x_1_elbil_bil_sc1-x_1_elbil_bil),2)
+
+km12 = np.round(float(x_1_elbil_komp_sc2-x_1_elbil_bil),2)
+km22 = np.round(float(x_1_elbil_bil_sc2-x_1_elbil_komp_sc2),2)
+km32 = np.round(float(x_1_elbil_bil_sc2-x_1_elbil_bil),2)
+
+km13 = np.round(float(x_1_elbil_komp_sc3-x_1_elbil_bil),2)
+km23 = np.round(float(x_1_elbil_bil_sc3-x_1_elbil_komp_sc3),2)
+km33 = np.round(float(x_1_elbil_bil_sc3-x_1_elbil_bil),2)
+
+kr11 = np.round(float(x_2_elbil_komp_sc1-x_2_elbil_bil),2)
+kr21 = np.round(float(x_2_elbil_bil_sc1-x_2_elbil_komp_sc1),2)
+kr31 = np.round(float(x_2_elbil_bil_sc1-x_2_elbil_bil),2)
+
+kr12 = np.round(float(x_2_elbil_komp_sc2-x_2_elbil_bil),2)
+kr22 = np.round(float(x_2_elbil_bil_sc2-x_2_elbil_komp_sc2),2)
+kr32 = np.round(float(x_2_elbil_bil_sc2-x_2_elbil_bil),2)
+
+kr13 = np.round(float(x_2_elbil_komp_sc3-x_2_elbil_bil),2)
+kr23 = np.round(float(x_2_elbil_bil_sc3-x_2_elbil_komp_sc3),2)
+kr33 = np.round(float(x_2_elbil_bil_sc3-x_2_elbil_bil),2)
+
+bkm11 = np.round(float(x_1_bensin_komp_sc1-x_1_bensin_bil),2)
+bkm21 = np.round(float(x_1_bensin_bil_sc1-x_1_bensin_komp_sc1),2)
+bkm31 = np.round(float(x_1_bensin_bil_sc1-x_1_bensin_bil),2)
+
+bkm12 = np.round(float(x_1_bensin_komp_sc2-x_1_bensin_bil),2)
+bkm22 = np.round(float(x_1_bensin_bil_sc2-x_1_bensin_komp_sc2),2)
+bkm32 = np.round(float(x_1_bensin_bil_sc2-x_1_bensin_bil),2)
+
+bkm13 = np.round(float(x_1_bensin_komp_sc3-x_1_bensin_bil),2)
+bkm23 = np.round(float(x_1_bensin_bil_sc3-x_1_bensin_komp_sc3),2)
+bkm33 = np.round(float(x_1_bensin_bil_sc3-x_1_bensin_bil),2)
+
+
+
+tbl1 = rf"""
+\begin{{table}}[h]
+\begin{{tabular}}{{|l|l|l|l|}}
+\hline
+\textbf{{Effekt i scenario 1}} & \textbf{{Substitusjonseffekt}} & \textbf{{Inntektseffekt}} & \textbf{{Total effekt}} \\ \hline
+Årlige kjørte kilometer      & ${km11}~km$                  & ${km21}~km$             & ${km31}~km$           \\ \hline
+Penger brukt på andre goder  & ${kr11}~kr$                  & ${kr21}~kr$             & ${kr31}~kr$           \\ \hline
+\end{{tabular}}
+\caption{{Subsitusjons,inntekt og total effekt for elbiler i scenario 1}}
+\label{{table:3}}
+\end{{table}}
+
+
+"""
+tbl2=rf"""
+\begin{{table}}[h]
+\begin{{tabular}}{{|l|l|l|l|l|}}
+\hline
+\textbf{{Effekt}} & \textbf{{Elbil}} & \textbf{{Substitusjonseffekt}} & \textbf{{Inntektseffekt}} & \textbf{{Total effekt}} \\ \hline
+Årlige kjørte kilometer & Scenario 1 & ${km11}~km$                  & ${km21}~km$             & ${km31}~km$           \\ \hline
+Penger brukt på andre goder & Scenario 1 & ${kr11}~kr$                  & ${kr21}~kr$             & ${kr31}~kr$           \\ \hline
+Årlige kjørte kilometer & Scenario 2 & ${km12}~km$                  & ${km22}~km$             & ${km32}~km$           \\ \hline
+Penger brukt på andre goder & Scenario 2 & ${kr12}~kr$                  & ${kr22}~kr$             & ${kr32}~kr$           \\ \hline
+Årlige kjørte kilometer & Scenario 3 & ${km13}~km$                  & ${km23}~km$             & ${km33}~km$           \\ \hline
+Penger brukt på andre goder & Scenario 3 & ${kr13}~kr$                  & ${kr23}~kr$             & ${kr33}~kr$           \\ \hline
+\textbf{{Effekt}} & \textbf{{Bensinbil}} & \textbf{{Substitusjonseffekt}} & \textbf{{Inntektseffekt}} & \textbf{{Total effekt}} \\ \hline
+Årlige kjørte kilometer & Scenario 1 & ${bkm11}~km$                  & ${bkm21}~km$             & ${bkm31}~km$           \\ \hline
+Penger brukt på andre goder & Scenario 1 & ${bkm11}~kr$                  & ${bkm21}~kr$             & ${bkm31}~kr$           \\ \hline
+Årlige kjørte kilometer & Scenario 2 & ${bkm12}~km$                  & ${bkm22}~km$             & ${bkm32}~km$           \\ \hline
+Penger brukt på andre goder & Scenario 2 & ${bkm12}~kr$                  & ${bkm22}~kr$             & ${bkm32}~kr$           \\ \hline
+Årlige kjørte kilometere & Scenario 3 & ${bkm13}~km$                  & ${bkm23}~km$             & ${bkm33}~km$           \\ \hline
+Penger brukt på andre goder & Scenario 3 & ${bkm13}~kr$                  & ${bkm23}~kr$             & ${bkm33}~kr$           \\ \hline
+\end{{tabular}}
+\caption{{Subsitusjons,inntekt og total effekt for elbiler og bensinbiler}}
+\label{{table:4}}
+\end{{table}}
+
+"""
+```
+
+## Konsumentets budsjettlinje og mulighetsområde
+
+```{=tex}
+\begin{wrapfigure}{r}{0.5\textwidth} 
+    \centering
+    \includegraphics[width=0.5\textwidth]{elbil_budsjett.png}
+    \caption{Konsumentens budsjettlinje og mulighetsområde elbil}
+    \label{fig:fig9}
+    \smallskip\par
+    \includegraphics[width=0.5\textwidth]{elbil_budsjett_sc1.png}
+    \caption{Konsumentens budsjettlinje og mulighetsområde elbil scenario 1}
+    \label{fig:fig10}
+    \smallskip\par
+    \includegraphics[width=0.5\textwidth]{Indifferansekurve.png}
+    \caption{Indifferansekurve}
+    \label{fig:fig11}
+\end{wrapfigure}
+```
+I \autoref{fig:fig9} så ser vi på elbilister i scenario 1 og i den blåe linjen er konsumentens budsjett. På venstre akse så går linjen ned fra gjennomsnittslønnen i Tromsø mot høyre som i dette tilfellet er antall kilometer på x aksen. Det som er fylt inn er konsumentens mulighetsområde. Dette er alle steder hvor konsumenten kan velge mellom sine 2 goder som i dette tilfellet er kjørte kilometer på X aksen og andre goder på Y aksen.
+
+I \autoref{fig:fig10} så kan vi se at ved innføring av bompenger så øker prisen på bilkjøring og dermed taper konsumenten noe av sitt mulighetsområde. Dette kan vi se markert i svart. Det gjenværende grønne området er det nye mulighetsområdet.
+
+I \nameref{kapittel:utregning} over så har vi kommet frem til noen betingelser om hvor mye konsumenten ønsker av hver gode, og dermed kan vi tegne en Indifferensekurve.
+
+Langs denne kurven i \autoref{fig:fig11} så får konsumenten like mye nytte. Vi kan regne ut hvor mye konsumenten ønsker å gi fra seg av hver gode for å flytte seg på kurven for å få mer av det andre godet. I figuren så ser vi at alle punkter på kurven er så langt "nordøst" i figuren og vi kan se at dersom konsumenten kjører veldig lite og bruker veldig mye på andre goder så vil de gi veldig mye av de andre godene for å få litt av gode 1.
+
+\clearpage
+
+```{=tex}
+\begin{wrapfigure}{r}{0.5\textwidth} 
+    \centering
+    \includegraphics[width=0.5\textwidth]{elbil_sc1.png}
+    \caption{Budsjett og indifferanse kurver elbil scenario 1}
+    \label{fig:fig12}
+    \smallskip\par
+    \includegraphics[width=0.5\textwidth]{elbil_sc1_komp.png}
+    \caption{Kompensert budsjett elbil scenario 1}
+    \label{fig:fig13}
+    \smallskip\par
+    \includegraphics[width=0.5\textwidth]{inntekt_sub.png}
+    \caption{Inntekts og Substitusjonseffekt}
+    \label{fig:fig14}
+\end{wrapfigure}
+```
+## Konsumentens tilpasning
+
+Når vi tegner inn både budsjettlinjene og indifferansekurvene i \autoref{fig:fig12} så er punkt A konsumentens optimale tilpasning. I dette punktet kjører konsumenten 11334km i året og bruker 604800kr på andre goder som betaling av skatt, huslån, mat osv. Ved økning i pris på det ene godet så kan vi se skiftet i et nytt budsjett for konsumenten. Vi får nå en ny optimal tilpasning for konsumenten i punkt B. Her kjører da konsumenten 11017km i året, og bruker nå 600000kr på andre goder. Det er også et tydelig fall i mot sør-vestlig retning i figuren som betyr at konsumenten har fått redusert nytte.
+
+Dersom konsumenten skal få økt sin nytte tilbake til original nytte så må vi kompensere budsjettet til konsumenten. I \autoref{fig:fig13} så kan vi se en lilla strek som er det kompenserte budsjettet for å nå opprinnelig nytte. Den nye tilpasningen vises i punkt C. Det vi kan se er at denne er lengere til venstre og høyere i figuren. Dette kommer av inntekts og substitusjonseffekten. Vi kan dekomponere disse effektene for å se hva som faktisk har skjedd. Da starter vi med å zoome inn i \autoref{fig:fig13} og kommer da til \autoref{fig:fig14}.
+
+De blåe striplete er substitusjonseffekten som kommer av at gode 2 ble billigere i forhold til før. De gule striplete linjene er inntektseffekten. I den horisontale linjen så viser den hvordan endringen i inntekt nå har tatt tilpasningen i scenario 1 og forflyttet den til høyre som nå er punktet C. På de vertikale linjene så kan vi se at det er en liten substitusjonseffekte på gode 2, det vil si at konsumenten hadde allerede mye av gode 2 før og var dermed mer villig til å gi fra seg større andeler av denne for å få mer av gode 1 som var kjørte kilometer. Den blåe som kommer over er substitusjonseffekten og dette viser oss at det ikke var en like stor effekt på andre goder.
+
+\clearpage
+
+## Subsitusjons- og inntektseffekt
+
+Da har vi den totale effekten som går fra A til B. Etterspørselen etter begge godene reduseres.\
+Substitusjonseffekten går fra punkt A til C og er negativ for gode 1 som er blitt relativt dyrere, og positiv for gode 2 men inntektseffekten er negativ for begge godene (C til B).
+
+Vi ser at både inntekts- og substitusjonseffekten er negativ for gode 1, mens den positive substitusjonseffekten for gode 2 er mindre enn den negative inntektseffekten slik at den totale effekten er negativ. [^11]
+
+[^11]: @clark_2023_sok1006
+
+```{python}
+display(Latex(tbl1))
+```
+
+\autoref{table:3} viser oss de faktiske tallene for de striplete linjene. De horisontale linjene er vist i første rad og de vertikale i andre rad. Her kan vi se at selv med kompensert budsjett så er den totale effekten fremdeles at elbilisten kjører mindre i scenario 1 og får mindre av begge goder da den økte kostnaden går til bompenger. Dette er når 70% av kjøring skjer utenfor rushtid og 30% er i rushtid.
+
+I \autoref{table:4} så ser vi nå på hvordan effekten er for alle billister. Det vi nå kan se er at uansett hvordan billister tilpasser seg så er det en reduksjon i kilometer kjørt. Spesielt vises dette i \autoref{fig:fig15c}
+
+Scenario 2 er når all kjøring er i rushtid og Scenario 3 er når ingen kjøring er i rushtid.
+
+```{python}
+display(Latex(tbl2))
+```
+
+\clearpage
+
+```{=tex}
+\begin{figure}[h!]
+\begin{subfigure}{.475\linewidth}
+  \includegraphics[width=\linewidth]{elbil_sc1_komp.png}
+  \caption{Elbil scenario 1}
+\end{subfigure}\hfill % <-- "\hfill"
+\begin{subfigure}{.475\linewidth}
+  \includegraphics[width=\linewidth]{bensin_sc1.png}
+  \caption{Forbrenningsmotor scenario 1}
+\end{subfigure}\hfill % <-- "\hfill"
+\begin{subfigure}{.475\linewidth}
+  \includegraphics[width=\linewidth]{bensin_sc2.png}
+  \caption{Forbrenningsmotor scenario 2}
+  \label{fig:fig15c}
+\end{subfigure}\hfill % <-- "\hfill"
+\begin{subfigure}{.475\linewidth}
+  \includegraphics[width=\linewidth]{elbil_sc2.png}
+  \caption{Elbil scenario 2}
+\end{subfigure}\hfill % <-- "\hfill"
+\begin{subfigure}{.475\linewidth}
+  \includegraphics[width=\linewidth]{bensin_sc3.png}
+  \caption{Forbrenningsmotor scenario 3}
+\end{subfigure}
+\begin{subfigure}{.475\linewidth}
+  \includegraphics[width=\linewidth]{elbil_sc3.png}
+  \caption{Elbil scenario 3}
+\end{subfigure}
+\caption{Inntekt og substitusjonseffekter i alle scenario}
+\end{figure}
+```
+\clearpage
+
+# Kapittel 4 - Konklusjon
+
+Bompenger har stor effekt på kjøremønsteret til billister. Busstrafikk økes, det blir flere sykklister og det blir mindre bilkjøring. Det er samtidig en økning i inntekter til myndighetene.
+
+Som vi har sett i Kapittel 1 så var et av formålene å ha nullvekst i biltrafikken. Innføringen av bompenger virker ihvertfall til å ha fungert mot det formålet, ihvertfall på kort sikt. Det er ulike elasisiteter på bilkjøring og jeg fokuserte på en der det på både medium og lang sikt hadde samme elasisitet men det er andre studier som viser høyere elasisitet på lang sikt. Dersom det viser seg at bilkjøring er mer elastisk på lang sikt så vil dette resultere i en enda større nedgang i biltrafikken. Det vi så i Kapittel 2 var derimot at biltrafikken redusertes raskt men har en trender opp, noe som kan tyde på at trafikken går mot normalen eller noe under normalen.
+
+må kildehenvise statens vegvesen og ssb
+
+
+
+
+Bompenger har en betydelig innvirkning på bilistenes kjøremønster. Det observeres en økning i busstrafikken, flere syklister, og en reduksjon i bilkjøring. Samtidig er det en økning i inntektene til myndighetene. Som vi så i Kapittel 1, var ett av målene å oppnå nullvekst i biltrafikken. Innføringen av bompenger ser ut til å ha fungert mot dette målet, i det minste på kort sikt. Det er ulike elastisiteter for bilkjøring, og jeg fokuserte på en der det på både medium og lang sikt hadde samme elastisitet. Det er imidlertid andre studier som viser høyere elastisitet på lang sikt. Hvis det viser seg at bilkjøring er mer elastisk på lang sikt, vil dette resultere i en enda større nedgang i biltrafikken. Det vi så i Kapittel 2, var derimot at biltrafikken redusertes raskt, men har en trend opp, noe som kan tyde på at trafikken går mot normalen eller noe under normalen.
+
+Videre viser studien at uansett hvordan bilister tilpasser seg, er det en reduksjon i kjørte kilometer. Dette er spesielt tydelig i Figur 15c. Scenario 2 er når all kjøring er i rushtid, og Scenario 3 er når ingen kjøring er i rushtid. I alle scenarier er det en reduksjon i kjørte kilometer og en reduksjon i penger brukt på andre goder, da den økte kostnaden går til bompenger. Dette er når 70% av kjøring skjer utenfor rushtid og 30% er i rushtid.
+
+I konklusjon, viser denne studien at innføringen av bompenger har en betydelig effekt på bilisters atferd, og kan bidra til å redusere biltrafikken og øke inntektene til myndighetene. Imidlertid er det viktig å merke seg at effekten kan variere avhengig av forskjellige faktorer, inkludert tidsperioden og bilistenes tilpasningsevne. Videre indikerer studien at effektene av bompenger kan være mer merkbare over tid, noe som tyder på at langvarige tiltak kan være nødvendig for å oppnå varige endringer i bilistenes atferd.
+
+
+
+
+
+
+
+
+
+\newpage
+
+# Referanser
+
+::: {#refs}
+:::
+
+\clearpage
+
+\appendix
+
+```{=tex}
+\section {Kapittel 1 KI bruk}
+
+\label{appendix:appendix1}
+```
+I løpet av kapittel 1 så er ChatGPT brukt til hjelp av setningsstruktur. Jeg har selv skrevet teksten, og noe av den er blitt lagt i ChatGPT for å bearbeides mer for å fjerne setninger som starter på og, og slikt. Jeg har prøvd å luke ut generelle skrivefeil.
+
+\section {Kapittel 2 KI bruk}
+
+Til innhenting av data så er Vegvesenet sin API brukt. Her har jeg funnet ut selv ved graphql.org/learn men jeg fikk hjelp av ChatGPT til å komme frem til en løsning på et problem der API'en bare ga 100 verdier om gangen. Dette var en enkel løsning som var å lage en While loop. Dette er kommentert i koden.
+
+I løpet av kode så er det brukt en form for KI som heter Github Copilot som modul i Visual Studio Code. Dette vil ses i at det ofte er kommentarer som #plotting
+
+Ved å bruke slike kommentarer så fyller den modulen i Visual Studio Code inn repetetivt arbeid. Men disse er beholdt i kode der jeg har prøvd å se om den finner løsning. Det har noen ganger funket men har trengt bearbeiding men har vært enkle ting denne har ordnet så det er ikke godt kommentert i kode når det er ren Github Copilot kode, eller ikke.
+
+\subsection{KI bruk S21 appendix} \label{appendix:appendixkart}
+
+Side 7 Kart. #KODELINJER# her er det brukt Chatgpt. Jeg har selv lest mye på https://contextily.readthedocs.io/en/latest/intro_guide.html#TL;DR men da jeg ikke fikk helt til, så fikk jeg da hjelp av ChatGPT til å legge inn verdier for å få se Tromsø på et kart. Jeg kommenterer dette i kode der jeg legger ##CHATGPT## over kodelinjen og under kodelinjen når chatgpt har skrevet dette.
+
+\label{appendix:appendix22}
+
+Jeg måtte spørre ChatGPT om å spesifikt bruke de pakkene jeg ville og jeg måtte fortsette å be den forandre, jeg endte med å bruke de linjene i kode som er kommentert med ##CHATGPT##
+
+Jeg fikk også noe hjelp av ChatGPT til å lage regresjonslinjer originalt men disse var feil og jeg har siden endret hvordan jeg gjorde dette. Det kan hende det er noen deler igjen fra ChatGPT som jeg ikke husker. Viste seg å være mer plagsomt enn ikke å bruke ChatGPT
+
+\section {Kapittel 3 KI bruk} \\label{appendix:appendix3}
+
+Ved konstruering av tabell 3 og 4 så hadde jeg lagt disse i Markdown men dette viste seg å ikke kunne se bra ut i PDF. Jeg spurte så ChatGPT om hjelp, den mente så at det ikke var noe latex support og den ba meg fylle verdier selv men den ga meg ide om å se etter noe i IPython.display der jeg fant Latex. ChatGPT fortalte meg om at jeg måtte ha dobbel {{}} rundt verdier, dette var feil men det trengtes for latex kommandoer.

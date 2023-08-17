@@ -1,0 +1,216 @@
+---
+title: "Assignment_3"
+format: html
+editor: visual
+warning: false
+message: false
+echo: false
+toc: true
+---
+
+**Assignment 3: Reading json data from a web page**
+
+On the website of the New York Times: <https://www.nytimes.com/interactive/2021/12/28/us/covid-deaths.html?referrer=masthead>
+
+We find a figure showing the relationship between vaccination rates and the number of deaths from COVID-19 in the various states in the US.
+
+# Task 1
+
+```{r}
+rm (list = ls())
+library(tidyverse)
+library(jsonlite)
+library(plotly)
+```
+
+```{r}
+df <-fromJSON("https://static01.nyt.com/newsgraphics/2021/12/20/us-coronavirus-deaths-2021/ff0adde21623e111d8ce103fedecf7ffc7906264/scatter.json")
+
+df <- df %>% 
+  mutate(stateabb = state.abb[match(name, state.name)])
+
+df[9, 7] = "D.C"
+
+
+```
+
+```{r, fig.width=8, fig.height=9, fig.cap="Source: [New York Times database](https://www.nytimes.com/interactive/2021/us/covid-cases.html) of reports from state and local health agencies, Centers for Disease Control and Prevention • Notes: Chart shows deaths reported since universal vaccine eligibility on April 19, 2021. Vaccination rate is the percentage of the total population fully vaccinated as of Dec. 20, 2021."}
+
+
+
+p <- df %>% 
+  ggplot(aes(x = fully_vaccinated_pct_of_pop, y = deaths_per_100k))+ 
+  
+  geom_point(color= "#6b9d92", fill = "#9abdb5", size=3) + 
+  
+  geom_text(aes(label = stateabb),
+            hjust=0.45, vjust=-0.45, size = 3) +
+  
+  labs(title = "Covid-19 deaths since universal adult vaccine eligibility compared with 
+       vaccination rates",
+       y = " Average monthly deaths per 100 000",
+       x = "Share of total population fully vaccinated") +
+  
+  scale_x_continuous(
+    labels = scales::percent, 
+    limits=c(0.45, 0.80),
+    breaks=seq(0.45, 0.80, by = 0.05),
+    expand = c(0,0)) + 
+  
+  scale_y_continuous(limits=c(0,20),
+                     expand = c(0,0))+
+  
+  theme_bw()+
+  
+  theme(
+    plot.title = element_text(size=14, vjust=3, 
+                                  face = "bold", hjust=0.4),
+        panel.border = element_rect(color = "gray50", linetype="dotted", size=0.5),
+    axis.title.y = element_text(vjust = 1.023, angle=0, size=8,
+                                margin=margin(l=15,r=-150)))
+
+
+
+
+
+p2 <- p +  annotate("text", x=0.57, y=18, 
+           label= "Lower vaccination rate, \nhigher death rate") +
+
+
+  geom_segment(x=0.545, xend=0.53, y= 18.5, yend=19.37, arrow=arrow(type="closed"),color="black", lwd=1.5) +
+  
+  
+  annotate("text", x=0.74, y=10, 
+          label= "Higher vaccination rate,\nlower death rate") +
+  
+  geom_segment(x=0.74, xend=0.755, y= 9.5, yend=8.63, arrow=arrow(type="closed"),color="black", lwd=1.5)
+
+
+p2
+```
+
+# 
+
+# Task 2
+
+```{r}
+
+
+
+summary(lm(deaths_per_100k ~ fully_vaccinated_pct_of_pop, data = df))
+
+
+```
+
+This gives us a coefficient that shows us that it estimates a -0.37 per per x, value this tells us that there would be 0.37 less in deaths per 100 000 for every 1% increase in vaccine coverage.
+
+The intercept tells us that it would be roughly 31.15 deaths per 100 000 if there were no one vaccinated.
+
+```{r, fig.width=10, fig.height=10, fig.cap="Source: [New York Times database](https://www.nytimes.com/interactive/2021/us/covid-cases.html) of reports from state and local health agencies, Centers for Disease Control and Prevention • Notes: Chart shows deaths reported since universal vaccine eligibility on April 19, 2021. Vaccination rate is the percentage of the total population fully vaccinated as of Dec. 20, 2021."}
+
+
+p2 + geom_smooth(method = lm, se=FALSE) 
+
+
+```
+
+# Extra:
+
+Finally i made this using plotly.
+
+```{r plot, fig.width=10, fig.height=10, fig.cap="Source: [New York Times database](https://www.nytimes.com/interactive/2021/us/covid-cases.html) of reports from state and local health agencies, Centers for Disease Control and Prevention • Notes: Chart shows deaths reported since universal vaccine eligibility on April 19, 2021. Vaccination rate is the percentage of the total population fully vaccinated as of Dec. 20, 2021."}
+
+
+p <- df %>% 
+  ggplot(aes(x = fully_vaccinated_pct_of_pop, y = deaths_per_100k)) + 
+  
+  geom_point(aes(text = paste0(name,
+                           "<br>","Fully vaccinated: ",
+                           fully_vaccinated_pct_of_pop*100,"%",
+                           "<br>","Deaths per 100k: ", round(deaths_per_100k,2),
+                           "<br>", "Average monthly deaths ",
+                           "<br>", "Before universal availability: ", deaths_before,
+                           "<br>", "After universal availability: ", deaths)),color= "#6b9d92", fill = "#9abdb5", size=3) + 
+  
+  geom_smooth(method = lm, se = FALSE)+
+  
+  geom_text(aes(label = stateabb),
+            hjust=0.45, vjust=-0.45, size = 3) +
+  
+  labs(title = "Covid-19 deaths since universal adult vaccine eligibility compared with 
+       vaccination rates",
+       y = " Average monthly deaths per 100 000",
+       x = "Share of total population fully vaccinated") +
+  
+  scale_x_continuous(
+    labels = scales::percent, 
+    limits=c(0.45, 0.80),
+    breaks=seq(0.45, 0.80, by = 0.05),
+    expand = c(0,0)) + 
+  
+  scale_y_continuous(limits=c(0,20),
+                     expand = c(0,0))+
+  
+  theme_bw()+
+  
+  theme(
+    plot.title = element_text(size=14, vjust=3, 
+                                  face = "bold", hjust=0.4),
+        panel.border = element_rect(color = "gray50", linetype="dotted", size=0.5),
+    axis.title.y = element_text(vjust = 1.023, angle=0, size=8,
+                                margin=margin(l=15,r=-150)))
+
+
+
+annoyingtoworkwith <- ggplotly(p, highlight = "closest-x", tooltip = c("text"))
+
+annoyingtoworkwith <- layout(
+  annoyingtoworkwith,
+  title = list("<b>Covid-19 deaths since universal adult vaccine eligibility compared with
+               vaccination rates</b>", font=list(size=12)),
+
+  margin = list(l=80, r=50, b=50, t=80),
+  hoverlabel = list(bgcolor = "white", bordercolor = "gray"))
+
+
+
+
+annoyingtoworkwith <- add_annotations(annoyingtoworkwith,
+    # x and y specify the coordinates of the text annotation
+    x = 0.48,
+    y = 19,
+    # xref and yref specify the reference coordinates for the arrow
+    xref = "x",
+    yref = "y",
+    ax = 0.55, 
+    ay = 17,
+    axref = "x",
+    ayref = "y",
+    # Text to be displayed in the annotation box
+    text = "Lower vaccination rate, \nhigher death rate",
+    # Changing the appearance of the arrow
+    arrowcolor = "black",
+    arrowsize=2,
+    arrowhead=2)
+
+
+
+annoyingtoworkwith <- add_annotations(annoyingtoworkwith,
+    x = 0.79,
+    y = 7,
+    xref = "x",
+    yref = "y",
+    ax = 0.72, 
+    ay = 9,
+    axref = "x",
+    ayref = "y",
+    text = "Higher vaccination rate,\nlower death rate",
+    arrowcolor = "black",
+    arrowsize=2,
+    arrowhead=2)
+
+
+
+
+annoyingtoworkwith
+```

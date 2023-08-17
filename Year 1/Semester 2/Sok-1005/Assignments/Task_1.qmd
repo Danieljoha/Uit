@@ -1,0 +1,57 @@
+---
+title: "Task_1"
+format: html
+editor: visual
+---
+
+Task 1
+
+FRED daily Brent Crude Oil Price January 4th 2010 to dec 30 2022.
+
+```{r}
+rm (list = ls())
+library(tidyverse)
+library(lubridate)
+library(quantmod)
+```
+
+```{r}
+
+df <- data.frame(getSymbols("DCOILBRENTEU", src = "FRED", auto.assign = FALSE))
+
+#'DCOILBRENTEU' is the FRED ID for the Brent Crude Oil data.
+#' The 'src = "FRED"' argument specifies that the data should be downloaded from FRED
+
+#The data.frame command converts this into a dataframe. The original data is downloaded as a 'xts' object which i dont know how to work with. 
+#finally the auto.assign=false makes it so the downloaded data isnt assigned to a variable autoamtically. When i had it as TRUE, it sent all into one column and one row. 
+```
+
+```{r, message=FALSE}
+df <- df %>% 
+  mutate(date = ymd(rownames(df))) %>% 
+  rename(price = 1) %>% 
+  select(date, price) %>% 
+  filter(date >="2010-01-04",date<"2022-12-30") 
+
+
+df1 <- df %>% 
+  mutate(year = year(date), 
+         month = month(date), 
+         day = day(date)) %>% 
+  group_by(year,month) %>% 
+  summarise(price_monthly_avg= mean(price, na.rm=TRUE)) %>% 
+  mutate(date = make_date(year,month)) %>% 
+  as_tibble() 
+```
+
+```{r, warning=FALSE}
+df1 %>% 
+  mutate(Year=year(date)) %>% 
+  ggplot(aes(x=date, y=price_monthly_avg)) + 
+  geom_line(linewidth=1, size=1)+
+  labs(y="Price", x="Year", title="Brent Crude Oil prices in Europe", caption="Source=FRED", subtitle="Prices are in arithmetic monthly averages")+
+  theme_bw()+
+  scale_x_date(limits = c(as.Date("2010-01-01"), as.Date("2022-12-01")),date_breaks = "year", date_labels = "%Y", expand = c(0,0))+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.3))
+
+```

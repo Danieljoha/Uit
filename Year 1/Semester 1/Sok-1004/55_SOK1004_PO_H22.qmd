@@ -1,0 +1,492 @@
+---
+title: "Prosjektoppgave: De harde 1920-årene"
+author: "55, 122"
+format: pdf
+editor: visual
+echo: true
+warning: false
+---
+
+Denne oppgaven er skrevet av kandidatnummer 55 og 122.
+
+# Laster inn pakker og data
+
+```{r, output: false}
+rm(list=ls()) 
+library(tidyverse)
+library(ggthemes)
+library(openxlsx)
+library(ggpubr)
+url <- "https://modals.li/downloads/gini_series_norway.xlsx"
+df_gini <- url %>%  
+  read.xlsx(sheet=1) %>% 
+  as_tibble()
+df_gini_navn <- df_gini %>% 
+  names()
+df_gini<- df_gini %>%
+  pivot_longer(!year,
+               names_to = "var", 
+               values_to = "verdi")
+url <- "https://github.com/uit-sok-1004-h22/uit-sok-1004-h22.github.io/blob/main/rkode/inntektsandeler.xlsx?raw=true"
+  
+df_andeler <- url %>%  
+  read.xlsx() %>% 
+  as_tibble()  
+df_andeler_navn <- df_gini %>% 
+  names()
+df_andeler <- df_andeler %>%
+  pivot_longer(!year,
+               names_to = "var", 
+               values_to = "verdi")
+df_andeler <- df_andeler %>% 
+  filter(year>=1875)
+url <- "https://github.com/uit-sok-1004-h22/uit-sok-1004-h22.github.io/blob/e36b270c865e077f797e9426e32b47740f2f3847/rkode/bnp.xlsx?raw=true"
+df_bnp <- url %>%  
+  read.xlsx(sheet=1) %>% 
+  as_tibble()
+navn_BNP <- df_bnp %>% 
+  names()
+df_bnp <- df_bnp %>% 
+  rename(BNP = navn_BNP[2],
+         year = navn_BNP[1])
+df_bnp <- df_bnp %>% 
+  mutate(DLBNP = 100*(log(BNP)-lag(log(BNP))))
+df_bnp <- df_bnp %>% 
+  filter(year >= 1875)
+```
+
+# 
+
+# Oppgave I - 20%
+
+Betrakt følgende figurer.
+
+```{r}
+df_gini %>%
+  #filter(year >= 1875) %>%
+  filter(year %in% c(1940:1955)) %>% #endrer til 1920-1930
+  filter(var %in% df_gini_navn[4]) %>%
+  ggplot(aes(x=year,y=verdi)) +
+  geom_line() +
+  geom_smooth() +
+  ylim(0.35,0.7) +
+  theme_bw() +
+  labs(title = "Gini-koeffisienter for inntektsfordelingen i Norge",
+       subtitle = "1875–2017. Gjennomsnitt av øvre og nedre grense.",
+       y="Gini-koeffisient",
+       x="År",
+       caption = "Kilde: Modalsli, Aaberge og Atkinson (2021)")
+```
+
+```{r}
+df_bnp %>%
+  #filter(year >= 1875) %>%
+  filter(year %in% c(1940:1955)) %>% #endrer til 1920-1930
+  mutate(BNP = log(BNP)) %>% 
+  ggplot(aes(x=year,y=BNP)) +
+  geom_line() +
+  geom_smooth() +
+  theme_bw() +
+  labs(title = "BNP per person",
+     subtitle = "Log faste-2005 kroner. 1875-2017.",
+     y="BNP per person",
+     x="År",
+     caption = "Kilde: Norges Bank")
+```
+
+```{r}
+df_bnp %>%
+  #filter(year >= 1875) %>%
+  filter(year %in% c(1945:1955)) %>% #endrer til 1920-1930
+  ggplot(aes(x=year,y=DLBNP)) +
+  geom_line() +
+  geom_smooth() +
+  theme_bw() +
+  labs(title = "BNP per person",
+     subtitle = "Årlig endring. Log faste-2005 kroner. 1875-2017",
+     y="BNP per person",
+     x="År",
+     caption = "Kilde: Norges Bank")
+```
+
+**Spørsmål:** Beskriv hvordan ulikheten og veksten i inntekter utviklet seg i 1920-årene sammenlignet med øvrige perioder.
+
+Økonomien i 1920 årene var ustabil. I figurene ser vi økning i gini koeffisient i store årlige endringer i BNP per person, men også vekst i BNP per person. Det er på grunn av økningen i kroneverdien. Figuren med BNP viser en relativt stabil økning fra 1920 der verdien i log faste 2005 kroner ligger på 10.7, hvor den har steget til 10.9 i 1930. Inntektsulikheten øker fra 0.56 til 0.575 i samme periode. Vi tror dette er fordi arbeidsledigheten i perioden var stor. I tillegg vil de som har penger i banken dra god nytte av at kronen øker i verdi, som igjen vil bety mest for de øvrige desilene.
+
+I 1931 gikk Norge vekk i fra "parikursen" på kronen og det vises i figurene med positiv årlig økning i BNP, gini koeffisienten jevner seg også noenlunde ut. Inntektsulikheten fortsetter å øke frem til krigen
+bryter ut i 1939. Etter 1945 ser vi at inntektsulikheten reduseres med at gini koeffisienten minker jevnt fra omntrent 0.50 til det laveste på 0.40 i 1980.
+
+# Oppgave II - 20%
+
+```{r}
+#| output: false
+# ny tabell hvor vi skal beregne inntekter
+df <- df_andeler 
+# lagrer en liste med årene hvor vi har observasjoner med inntektsandeler
+years_list <- df$year %>% 
+  unique()
+# wide-format er enklere
+df <- df %>% 
+  pivot_wider(names_from = var, values_from = verdi) 
+# ny tabell med bnp-tall for årene hvor vi har observasjoner
+df_temp <- df_bnp %>% 
+  filter(year %in% years_list)
+# anstendige navn
+df <- df %>%
+  rename("0-10" = "share_0_10",
+         "10-20" = "share_10_20",
+         "20-30" = "share_20_30",
+         "30-40" = "share_30_40",
+         "40-50" = "share_40_50",
+         "50-60" = "share_50_60",
+         "60-70" = "share_60_70",
+         "70-80" = "share_70_80",
+         "80-90" = "share_80_90",
+         "90-100" = "share_90_100",
+         "90-99" = "share_90_99",
+         "99-100" = "share_99_100")
+# lagrer navn
+df_navn <- df %>% 
+  names()
+df <- df %>% 
+  mutate(`0-10`=10*`0-10`*df_temp$BNP,
+         `10-20`  = (100/10)*`10-20`*df_temp$BNP,
+         `20-30`  = (100/10)*`20-30`*df_temp$BNP,
+         `30-40`  = (100/10)*`30-40`*df_temp$BNP,
+         `40-50`  = (100/10)*`40-50`*df_temp$BNP,
+         `50-60`  = (100/10)*`50-60`*df_temp$BNP,
+         `60-70`  = (100/10)*`60-70`*df_temp$BNP,
+         `70-80`  = (100/10)*`70-80`*df_temp$BNP,
+         `80-90`  = (100/10)*`80-90`*df_temp$BNP,
+         `90-100` = (100/10)*`90-100`*df_temp$BNP,
+         `90-99`  = (100/9)*`90-99`*df_temp$BNP,
+         `99-100` = (100/1)*`99-100`*df_temp$BNP,)
+df <- df %>%
+  pivot_longer(!year,
+               names_to = "var", 
+               values_to = "verdi")
+andeler <- df$var %>% 
+  unique()
+```
+
+```{r}
+df %>% 
+  filter(year %in% c(1920:1930)) %>% #endrer til 1920-1930
+  filter(var %in% andeler[1:10]) %>% 
+  mutate(verdi=verdi/(10^5)) %>%
+  ggplot(aes(x=year,y=verdi,color=var)) +
+  geom_line(linewidth=1.25) +
+  labs(title = "BNP per person",
+       subtitle = "Hundretusener faste 2005-kroner. Fordelt på inntektsdesiler. 1920-1930", #sett il 1930 da figuren viser bare 1900-1930 og ikke 1900-1950. #endrer også til 1920-1930
+       y = "BNP per person",
+       x = "År",
+       color = "Desil",
+       caption = "Kilder: Modalsli, Aaberge og Atkinson (2021), Norges Bank") +
+theme_bw() 
+```
+
+```{r}
+df %>% 
+  filter(year %in% c(1920:1930)) %>% #skifte til 1920-1930
+  mutate(verdi=log(verdi)) %>% 
+  filter(var %in% andeler[1:10]) %>% 
+  
+  ggplot(aes(x=year,
+             y=verdi,
+             color=var)) +
+  
+  geom_line(size=1.25) +
+  
+  labs(title = "Log BNP per person", 
+       subtitle = "Faste 2005-kroner. Fordelt på inntektsdesiler. 1920 - 1930",#skifte til 1920-1930
+       y = "Log BNP per person",
+       x = "År",
+       color =  "Desil",
+       caption = "Kilder: Modalsli, Aaberge og Atkinson (2021), Norges Bank") +
+theme_bw() 
+```
+
+**Spørsmål:** Beskriv hvordan endringen i reelle inntekter fordelte seg på inntektsdesiler mellom 1920 og 1930.
+
+1920 årene bydde på store utfordringer som følge av første verdenskrig, arbeidsledighet og problematisk pengepolitikk . Men likevell ser vi økning lønn hos de aller fleste desiler. Dette er ikke en årsak av at økonomien i Norge forbedredt seg særlig, men heller at pengepolitikken førte kronens verdi opp.
+
+Vi ser at på figuren at forskjellen blant arbeiderklassen og overklassen blir stadig større. Desil 9 hadde relativt stabil økning i inntekt fra 70 000 kr i 1920 til ca 110 000 kr i 1930. Desil 10 går fra 150 000kr til ca 250 000kr i 1930.
+
+Arbeidsledigheten var stor, men til tross for dette, ser vi økning i inntektsdesilene hos arbeiderklassen. I 1920 er desil 1 og 2 på omlag 5 000 kr inntekt, desil 3 på ca 10 000 kr. I 1930 er alle 3 desilene på omlag samme inntektsnivå. Desil 4, 5 og 6 har også økning, selv om økningen ikke er stor. Desil 7 og 8 er de inntektsdesilene som viser tydeligst nedgang i perioden. Der desil 7 faller fra inntektsnivå på omlag 45 000 til 30 000 kr i perioden, og desil 8 faller fra omlag 55 000 kr til 49 000 kr.
+
+# Oppgave III - 60%
+
+Dere skal nå presentere og beskrive utviklingen i to ytterligere økonomiske forhold som kjennetegnet de harde 1920-årene. Jeg anbefaler å bruke følgende kilder til å finne data:
+
+-   [Historisk statistikk fra Norges Bank](https://www.norges-bank.no/en/topics/Statistics/Historical-monetary-statistics/)
+
+-   [Historisk statistikk fra SSB](https://www.ssb.no/a/histstat/)
+
+Her følger fire eksempler på tema dere kan, men ikke nødvendigvis må velge. Lenkene leder til definisjonen i SNL, og dataene finnes i de ovennevnte kildene.
+
+-   [Realrente](https://snl.no/realrente)
+
+-   [Utlån (kreditt) fra banker](https://snl.no/utlån)
+
+-   [Arbeidsledighet](https://snl.no/arbeidsledighet)
+
+-   [Arbeidskonflikter og streik](https://snl.no/streik)
+
+I besvarelsen skal dere forklare hvorfor dataene er relevante og gi en grundig beskrivelse av deres utvikling. Lengden på besvarelsen skal være på 750 - 1500 ord.
+
+De harde tjueårene kjennetegnes fort med høy rente samtidig
+som det var deflasjon. Vi hadde Nikolai Rygg som ønsket av kronen skulle komme
+til før krigs tiden og være bunnet til gull. Pengepolitikken han drev på blir
+kalt «paripolitikkk». Målet til paripolitkk i Norge var å få markedsverdien til
+kronen tilbake til «gullpariteten». Det vil si verdien av pengene skulle være
+verdt det samme som før første verdenskrig målt i gull. I denne teksten igjennom går vi igjennom effekten pengepolitikken hadde på økonomien i Norge.
+
+```{r}
+suppressPackageStartupMessages(library(jsonlite))
+```
+
+```{r}
+
+kpiurl <- "https://www.norges-bank.no/globalassets/upload/hms/data/cpi.xlsx"
+
+df_kpi <- kpiurl %>%  
+  read.xlsx(sheet=13) %>% 
+  as_tibble() 
+
+#Price Index for Norway   From 1516    (2015=100)
+df_kpi <- df_kpi[-(1:16),] %>%  #fjerner første 16 rekker
+  rename(year= "Source:") %>% #Skifter navn fra Source til year
+  rename(kpi="X2")  #Skifter navn fra X2 til KPI
+df_kpi <- df_kpi[,-3] #fjerner kolonne
+
+
+
+df_kpi <- df_kpi %>% 
+  filter(year >= 1915) %>% 
+  filter(year <= 1935) %>%  #vi henter bare dataen vi er ute etter 
+  mutate(year = as.integer(year)) %>% 
+  mutate(kpi = as.numeric(kpi))
+
+```
+
+Starten av 1920 tallet kjennetegnes med den økonomiske krisen som ledet til at økonomien i Norge bremset nesten helt opp. Vi kan se dette i grafen der vi ser på total endring i Konsumprisindeks fra 1920 til 1930.
+
+```{r}
+liste <- c("1920", "1930")
+
+kpifall <- df_kpi %>% 
+  filter(year %in% liste) %>% 
+  mutate(fall = lag(kpi, n=1L)) %>% 
+  mutate(fall = 100*(kpi-fall)/(fall)) #regner ut prosentvis nedgang i kpi
+  
+fall = kpifall$fall[2]
+
+fall = round(fall, 2) #runder det til 2 desimaler
+
+fall = as.character(fall) #Forandrer tallet til "character"
+
+fall <- paste(fall, "%")#legger til prosent tegn
+
+
+
+
+
+df_kpi %>% 
+  filter(between(year, "1920","1930")) %>% 
+  ggplot(aes(x=year, y=kpi))+
+  geom_line()+
+  
+  geom_segment(x=1920,y=5.552495,               
+               xend=1930, yend=2.985519, 
+               linetype ="dashed", color="red")+
+  annotate("text",x=1925,y=4.7, label=fall, color="red")+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 11))+
+  labs(x="År", y="KPI", title="Konsumprisindeksen 2015=100", subtitle="Grafen viser forandring i KPI fra 1920 til 1930")
+```
+
+Konsumprisindeksen har et fall på over 46% over 1920 årene. Det vil si at prisen for å opprettholde samme standard gikk ned. Men det er ikke slik at alt ble billigere. Vi hadde samtidig et fall i gjennomsnittlig lønn som er veldig lik fallet i KPI som vi ser på nå.
+
+```{r}
+wages_url <- "https://www.norges-bank.no/globalassets/upload/hms/data/wages_ind.xlsx"
+
+df_wages <- wages_url %>% 
+  read.xlsx(sheet=6) %>% 
+  as_tibble()
+
+df_wages <- df_wages %>% 
+  rename(year= "Annual.wages.from.1726,.in.NOK") %>% 
+  rename(wages_fast_1998_kroner = "X3") %>% 
+  mutate (X2 = as.numeric(X2)) %>% 
+  rename(wages_løpende = X2) %>% 
+  mutate(year = as.integer(year)) %>% 
+  mutate(wages_fast_1998_kroner = as.numeric(wages_fast_1998_kroner)) %>% 
+  mutate(wagespros = lag(wages_løpende, n=1L)) %>% 
+  mutate(wagespros = 100*(wages_løpende-wagespros)/(wagespros)) %>% 
+  filter(year >= 1915) %>% 
+  filter(year <= 1935)  #vi henter bare dataen vi er ute etter 
+
+
+```
+
+```{r}
+kpiindex <- df_kpi %>% 
+  filter(between(year, "1920", "1930"))
+kpiindex <- transform(kpiindex, kpi.index=100*kpi/kpi[1])
+
+lønnindex <- df_wages %>% 
+  filter(between(year, "1920", "1930"))
+lønnindex <- transform(lønnindex, wages_løpende.index=100*wages_løpende/wages_løpende[1])
+
+ggplot() + #ggplot med 2 datasett blir lagt til
+  geom_line(data = lønnindex, aes(x=year, y=wages_løpende.index, group=1, color="lønn"))+ 
+  geom_point(data = lønnindex, aes(x=year, y=wages_løpende.index, group=1))+
+  
+  geom_line(data = kpiindex, aes(x=year,y=kpi.index, group=2, color="kpi"))+
+  geom_point(data = kpiindex, aes(x=year,y=kpi.index, group=2))+
+  
+  labs(y= "Lønn og KPI index 1920=100", x="År", title="KPI og Lønnstall", subtitle="Grafen viser endring i KPI og løpende årslønn fra 1920-1930")+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 11))
+
+
+
+```
+
+Det vi kan se her i grafen er at lønn falt raskere enn KPI så den gjennomsnittlige nordmann hadde dårligere råd selv om prisene på varer falt. Kjøpekraften til den gjennomsnittlige nordmann falt.
+
+Dette ledet igjen til at nordmenn ikke kunne opprettholde konsumet sitt slik at det ble dårligere omsetning for bedriftene som igjen ledet til dårligere lønn. "Det tapte tiåret" var altså i en ond sirkel der vi hadde en nedgang i lønn, nedgang i kpi og en sentralbank som ønsket at kronekursen skulle gå opp uansett kostnad.
+
+I 1920 årene så hadde vi en pengepolitikk som strevde etter gull standarden og som hadde mål om at kronen skulle nå samme verdi som den hadde før første verdenskrig. Selv om det var økonomisk krise så hadde vi en høy rente som til dels ledet oss inn i en periode med deflasjon. Renten på bankinnskudd endret seg lite men siden det var periode med mye valutakurs endring samt fall i KPI så ser vi i grafen at den "realrenten" endte med å være en god del høyere enn rentekursen. Realrente her er forskjellen mellom renten som banken utbetalte og hvordan inflasjonen forandret seg. Altså verdien av pengene.
+
+```{r}
+Rente_kpi <- "https://www.norges-bank.no/globalassets/upload/hms/data/shortterm_ir.xlsx"
+
+df_real_pros <- Rente_kpi %>% 
+  read.xlsx(sheet=12) %>% 
+  as_tibble() 
+
+names(df_real_pros) <- lapply(df_real_pros[13, ], as.character) #setter kolonne navn til row13
+df_real_pros <- df_real_pros[-(1:13),] #fjerner kolonne
+df_real_pros[] <- sapply(df_real_pros, as.numeric) #setter alle kolonner til numeric istedet for characters
+
+df_pros <- Rente_kpi %>% 
+  read.xlsx(sheet=11) %>% 
+  as_tibble() 
+
+names(df_pros) <- lapply(df_pros[12, ], as.character) #setter kolonne navn til row13
+df_pros <- df_pros[-(1:15),] #fjerner rader
+df_pros[] <- sapply(df_pros, as.numeric) #setter kolonner til numeric istedet for characters
+
+
+df_pros <- df_pros %>% 
+  rename(year = Year) %>% 
+  mutate(year = as.integer(year)) %>% 
+  filter(between(year, "1920", "1930")) %>% 
+  rename(bankrente = (3)) 
+
+df_real_pros <- df_real_pros %>% 
+  rename(year = Year) %>% 
+  mutate(year = as.integer(year)) %>% 
+  filter(between(year, "1920", "1930")) %>% 
+  rename(real_bankrente = (3)) 
+
+
+ggplot() + 
+  geom_line(data = df_pros, aes(x=year, y=bankrente, group=1,color="løpende"))+ 
+  geom_point(data = df_pros, aes(x=year, y=bankrente, group=1))+
+  
+  geom_line(data = df_real_pros, aes(x=year,y=real_bankrente, group=2, color="real"))+
+  geom_point(data = df_real_pros, aes(x=year,y=real_bankrente, group=2)) +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 11))+
+  labs(x="År", y="Rente på bankinnskudd", title="Løpende og real rente", subtitle="Grafen viser løpende og realrente justert for inflasjon")
+
+
+```
+
+I den andre halvdel av 1920 årene så hadde vi begynt å nå målet om "pari kurs" men en konsekvens av viljen om å nå pengeverdien som før første verdenskrig er at det var svært lite penger som kunne gå til investeringer. Under deflasjon så har heller ikke investorer lyst å investere penger i prosjekter som er mer risikofylt når kjøpekraften demmes øker bare de holder pengene sine. Samtidig som det var høy rente utbetalt så hadde de en svært høy realrente da kursen på kronen gikk mye opp.
+
+```{r}
+Styringsrente_json= '[{\"x\": \"1920\",\"y\":\"6.58\"},{\"x\": \"1921\",\"y\":\"6.75\"},{\"x\": \"1922\",\"y\":\"5.46\"},{\"x\": \"1923\",\"y\":\"5.83\"},{\"x\": \"1924\",\"y\":\"6.92\"},{\"x\": \"1925\",\"y\":\"5.79\"},{\"x\": \"1926\",\"y\":\"5.33\"},{\"x\": \"1927\",\"y\":\"4.58\"},{\"x\": \"1928\",\"y\":\"5.5\"},{\"x\": \"1929\",\"y\":\"5.54\"},{\"x\": \"1930\",\"y\":\"4.5\"}]'
+
+#Styringsrente hentet fra https://www.norges-bank.no/tema/Om-Norges-Bank/historien/?tab=2&from=1920&to=1930
+#Json hentet fra https://www.norges-bank.no/api/TimelineMain/GetStatistics og er hentet ut manuelt data da det var en GraphJson 
+
+
+df_styringsrente= fromJSON(Styringsrente_json)
+df_styringsrente <- df_styringsrente %>% 
+  mutate(x = as.integer(x)) %>% 
+  mutate(y = as.numeric(y)) %>% 
+  rename(year = x) %>% 
+  rename(styringsrente = y)
+
+
+
+df_styringsrente %>% 
+  ggplot(aes(x=year, y=styringsrente))+
+  geom_line()+
+  geom_point()+
+  ylim(4,8)+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 11))+
+  labs(x="År", y="Styringsrente", title="Norges bank styringsrente", subtitle="Grafen viser hvordan Norges bank endret renten år for år")
+```
+
+Sentralbanken i Norge bruker Styringsrente til å kjøle ned eller stimulere vekst i økonomien men under 1920 årene så brukte vi den i stor grad til å redusere mengden penger i omløp for å få kronekursen opp. Dette gjorde de selv om det var stor nødvendighet for penger i sirkulasjon og dette til dels ledet til større ustabilitet.
+
+```{r}
+
+Moneycredit <- "https://www.norges-bank.no/globalassets/upload/hms/data/money_credit.xlsx"
+
+df_gjeld <- Moneycredit %>%  
+  read.xlsx(sheet=8) %>% 
+  as_tibble() 
+
+df_konkurs <- Moneycredit %>%  
+  read.xlsx(sheet=7) %>% 
+  as_tibble() %>% 
+  rename(year = "When.using.these.data,.please.cite:") %>% 
+  rename(Number_of_bankruptcies = "X2")
+
+
+df_gjeld <- df_gjeld[-(1:13),] 
+df_konkurs <- df_konkurs[-(1:10),] %>% 
+  mutate(year = as.numeric(year)) %>%   
+  filter(between( year, "1920", "1930")) %>% 
+  rename(bankruptcies = (2)) %>% 
+  mutate(bankruptcies = as.numeric(bankruptcies))
+
+df_konkurs %>% 
+  ggplot(aes(x=year, y=bankruptcies))+
+  geom_line()+
+  labs(x="År", y="Konkurser", title="Antall konkurser per år")+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 11))
+
+```
+
+I grafen over så kan vi se hva denne pengepolitikken bidro til. Nikolai Rygg ønsket at kronekurset skulle opp så styringsrente forble høy samtidig som sentralbanken hadde restriktiv utlånspolitikk. Realrentens effekt kan tydlig vises i 1926 når det var ny stor nedgang under streiken når sentralbanken ikke ville stimulere økonomien. Høy realrente kombinert med deflasjon og streik ledet til at veldig mange bedrifter måtte legge opp å gå konkurs.
+
+Vi kan konkludere med at pengepolitikken som ble ført av Nikolai Rygg ledet til lite til ingen vekst samtidig som at den gjennomsnittlige nordmann fikk dårligere levestandard. Effekten av deflasjon på økonomien gjorde at veldig mange mistet jobbene sine og det var et stort fall i investeringer og nybygging. Fallet i konsumprisindeksen på 46% med enda større fall i lønninger gjorde at vi sto enda dårligere an for det neste tiår.
+
+Litteraturliste:
+
+<https://www.norgeshistorie.no/forste-verdenskrig-og-mellomkrigstiden/1610-okonomisk-politkk-uten-politikere.html>
+
+<https://www.norgeshistorie.no/forste-verdenskrig-og-mellomkrigstiden/1609-verdenskrise-og-okonomisk-omstilling.html>
+
+<https://snl.no/Nicolai_Rygg>
+
+<https://ndla.no/nb/subject:cc109c51-a083-413b-b497-7f80a0569a92/topic:138d9cdb-7246-4e72-804e-13235929248b/topic:2bde3b3c-e75a-45b8-a27b-7f3846fac4b4/topic:4b5f7fb9-68b3-41a3-b080-728614dbfce6/resource:a91b7516-978b-47ac-916c-bd2c25ea846c>
+
+<http://www.kildenett.no/portal/artikler/2008/1225702044.27>
+
+<https://www.ssb.no/kultur-og-fritid/artikler-og-publikasjoner/okonomisk-utvikling-og-verdiskaping>
+
+<https://no.wikipedia.org/wiki/Den_store_depresjonen>
+
+<https://snl.no/utl%C3%A5n>
+
+<https://www.norges-bank.no/contentassets/de6b294d63d94b1a859408c33c1b3b5a/hele.pdf?v=03/09/2017122252&ft=.pdf>
+
+<https://www.nb.no/items/URN:NBN:no-nb_digibok_2007071700097?page=127>
+
+<https://www.norges-bank.no/tema/Om-Norges-Bank/historien/?tab=2&from=1920&to=1930>
+
+<https://www.norges-bank.no/api/TimelineMain/GetStatistics>

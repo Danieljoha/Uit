@@ -1,0 +1,88 @@
+---
+title: "Assignment_2"
+format: html
+editor: visual
+---
+
+**Assignment - 2:  Scraping an html table from a web page**
+
+<https://www.motor.no/aktuelt/motors-store-vintertest-av-rekkevidde-pa-elbiler/217132>
+
+```{r, message=false}
+rm (list = ls())
+library(tidyverse)
+library(rvest) 
+library(janitor) 
+library(lubridate)
+library(dplyr)
+```
+
+Task 1
+
+```{r, warning=false}
+url <- "https://www.motor.no/aktuelt/motors-store-vintertest-av-rekkevidde-pa-elbiler/217132"
+
+
+
+
+df_motor <- url %>% 
+  read_html() %>% 
+  html_element("table") %>% 
+  html_table() %>% 
+  row_to_names(row_number = 1)
+
+
+df_motor <- df_motor %>% 
+  separate(`WLTP-tall`, into=c("wltp_km", "wltp_kwh"), sep="/") %>% 
+  separate(wltp_km, into="wltp_km", sep=" ") %>% 
+  separate("STOPP", into=c("stopp_km"), sep=" ")
+  
+df_motor <- df_motor %>% 
+  na_if("x") %>% 
+  drop_na()
+
+
+df_motor <- df_motor %>% 
+  mutate_at(c('wltp_km', 'stopp_km'), as.numeric)
+
+
+df_motor %>% 
+  ggplot(aes(x=wltp_km, y=stopp_km))+
+  geom_point()+
+  geom_abline(slope=1, color="red")+
+  scale_x_continuous(limits = c(200, 700))+
+  scale_y_continuous(limits = c(200, 700))+
+  theme_bw()+
+  labs(caption="Source: https://www.motor.no/aktuelt/motors-store-vintertest-av-rekkevidde-pa-elbiler/217132", title="Range of electric cars", subtitle="The red line shows stated range in the Red line.
+The dots are the actual milage in Motor's Range test", x="Motor's range test in kilometers", y="Stated range in kilometers")
+
+```
+
+Task 2
+
+```{r}
+lm(stopp_km ~ wltp_km, data = df_motor)
+```
+
+The linear line would intercept the y axis at -26.645.\
+The line would increase at a rate of 0.8671 which is lower than the red line in the plot.
+
+```{r, message=FALSE}
+blue = "Rate of increase of 0.8671"
+red = "Rate of increase of 1"
+df_motor %>% 
+  ggplot(aes(x=wltp_km, y=stopp_km))+
+  geom_point()+
+  geom_abline(slope=1, color="red")+
+  geom_smooth(method=lm)+
+  scale_x_continuous(limits = c(200, 700))+
+  scale_y_continuous(limits = c(200, 700))+
+  theme_bw()+
+  annotate("text",x=645,y=450, label=blue, color="blue")+
+  annotate("text",x=450,y=550, label=red, color="red")+
+  labs(caption="Source: https://www.motor.no/aktuelt/motors-store-vintertest-av-rekkevidde-pa-elbiler/217132", title="Range of electric cars", subtitle="The red line shows stated range in the Red line.
+The dots are the actual milage in Motor's Range test
+The blue line plots the linear regression from the data points from the range test", x="Motor's range test in kilometers", y="Stated range in kilometers")
+```
+
+We can see that the blue line is flatter than the red line showing that the higher the stated range is, the larger the deviation will be in the range test.
