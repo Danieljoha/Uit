@@ -1,0 +1,780 @@
+---
+title: "Utfordring 3"
+subtitle: "Fakultet for biovitenskap, fiskeri og økonomi."
+author: "Kandidatnummer 7, SOK-2008 Høst 2023"
+date: last-modified 
+date-format: "DD-MM-YYYY"
+editor: visual
+toc-title: "Innholdsfortegnelse."
+format: 
+  pdf:
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+echo: false
+warning: false
+message: false
+bibliography: references.bib
+csl: norsk-apa-manual.csl
+crossref: 
+  lof-title: "Figurliste"
+  fig-title: "Figur"
+  lot-title: "Tabelliste"
+  tbl-title: "Tabell"
+header-includes:
+  - \usepackage{wrapfig}
+  - \usepackage{subcaption}
+  - \usepackage[utf8]{inputenc}
+  - \usepackage{amsmath}
+nocite: |
+  @*
+encoding: UTF-8
+---
+
+```{=tex}
+\newpage
+\renewcommand*{\figureautorefname}{Figur}
+\renewcommand*{\tableautorefname}{Tabell}
+\renewcommand*\contentsname{Innholdsfortegnelse}
+\tableofcontents
+\listoffigures
+\newpage
+```
+```{r}
+rm(list=ls()) 
+library(tidyverse)
+library(httr)
+library(rjstat)
+library(rgl)
+```
+
+```{r}
+url <- "https://data.ssb.no/api/v0/no/table/12441/"
+
+
+query <- '{
+  "query": [
+    {
+      "code": "Kjonn",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "0"
+        ]
+      }
+    },
+    {
+      "code": "NACE2007",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "10-33"
+        ]
+      }
+    },
+    {
+      "code": "Sykefraver2",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "E"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2002",
+          "2003",
+          "2004",
+          "2005",
+          "2006",
+          "2007",
+          "2008",
+          "2009",
+          "2010",
+          "2011",
+          "2012",
+          "2013",
+          "2014",
+          "2015",
+          "2016",
+          "2017",
+          "2018",
+          "2019",
+          "2020",
+          "2021",
+          "2022"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+
+hent_indeks.tmp <- url %>% 
+  POST(body = query, encode = "json")
+
+df <- hent_indeks.tmp %>% 
+  content("text") %>% 
+  fromJSONstat() %>% 
+  as_tibble()
+
+
+df<-df %>% 
+  transmute(year = as.integer(år), value)
+
+
+plot <- df %>% 
+  ggplot(aes(x=year, y=value))+
+  geom_point()+
+  geom_smooth(method=lm, se=FALSE)+
+  labs(title="Sykefravær for lønnstakere", y="Sykefraværsprosent", x="", caption="SSB 12441")+
+  scale_x_continuous(n.breaks = 12, expand=c(0.03,0.03))+
+  scale_y_continuous(labels=scales::percent_format(scale=1), n.breaks = 8)+
+  theme_bw()+
+  theme(panel.grid.major = element_line(colour = "grey"))
+ggsave("egenmeldinger.png", width=7, height=5)
+
+```
+
+```{python include=FALSE}
+import matplotlib.pyplot as plt
+import sympy as sp
+import numpy as np
+#\u03B1
+#w, theta, l_0, f_t, s, l, f, m, u, c = sp.symbols('w \u03B8 l_0 f_t, s l f m u c', positive=True, real=True)
+
+w, theta, l_0, u, s, c, l, m  = sp.symbols('w \u03B8 l_0 u s c l m', positive=True, real=True)
+
+l_x = np.linspace(0.01, 60, 1000)
+theta_num = 0.5
+m_num = 100
+l_0_num = 60
+s_num = 100 #subsidie
+l_num = 40 #arbeid 40 timer i uka
+f_num = 20 #fritid. 20 timer i uka
+
+
+nytte = sp.Eq(u, c**theta * l**(1-theta))
+nytte
+
+
+konsum_func = sp.solve(nytte, c)[0]
+
+
+#l_func = sp.solve(nytte, l)[0]
+
+#c_func, l_func
+
+konsum_func = sp.lambdify((u, theta, l), konsum_func)
+
+
+
+nytte_tilfelle_1 = (m)**theta * l_0**(1-theta)           
+nytte_tilfelle_2 = (m + s)**theta * l_0**(1-theta) 
+
+eq_tilfelle1 = sp.Eq((m + w*l)**theta * (l_0-l)**(1-theta), nytte_tilfelle_1)
+eq_tilfelle2 = sp.Eq((m + w*l)**theta * (l_0-l)**(1-theta), nytte_tilfelle_2)
+
+lonn_tilfelle_1 = sp.solve(eq_tilfelle1, w)[0]
+lonn_tilfelle_1_num = lonn_tilfelle_1.subs([(theta, theta_num), (l_0, l_0_num), (l, l_num), (m, m_num)])
+
+
+lonn_tilfelle_2 = sp.solve(eq_tilfelle2, w)[0]
+lonn_tilfelle_2_num = lonn_tilfelle_2.subs([(theta, theta_num), (l_0, l_0_num), (l, l_num), (m, m_num), (s, s_num)])
+
+
+
+
+nytte_tilfelle_1_num = nytte_tilfelle_1.subs([(theta, theta_num), (l_0, l_0_num), (m, m_num)])
+nytte_tilfelle_2_num = nytte_tilfelle_2.subs([(theta, theta_num), (l_0, l_0_num), (m, m_num) ,(s, s_num)])
+
+
+indiff_tilfelle1 = konsum_func(nytte_tilfelle_1_num, theta_num, l_x)
+indiff_tilfelle2 = konsum_func(nytte_tilfelle_2_num, theta_num, l_x)
+
+
+
+konsum_tilfelle1 = m_num + lonn_tilfelle_1_num*(l_0_num - l_x)
+konsum_tilfelle2 = m_num + lonn_tilfelle_2_num*(l_0_num - l_x)
+
+
+
+
+#Ved å runne koden under som er kommentert ut så vil du få svarene 5 og 12.5.
+#lonn_tilfelle_1_num, lonn_tilfelle_2_num
+
+
+
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+
+ax.plot(l_x, indiff_tilfelle1, color="#0F045B")
+
+
+
+
+ax.plot(l_x, konsum_tilfelle1, color = "#1B01C0")
+
+
+ax.text(1, 415, '$w^r$', fontsize=18)
+
+
+
+ax.vlines(20, 0, 1000, linestyles='dashed', color="grey")
+ax.text(20, +3, '$l^{FT}$', fontsize=18)
+
+
+ax.vlines(60, 0, 100, linestyles='dashed', color="grey")
+ax.text(60, +3, '$l_0$', fontsize=18)
+
+
+#hlines at 100
+ax.hlines(m_num, 0, l_0_num, linestyles='dashed', color="grey")
+ax.text(.5, m_num, 'm', fontsize=18)
+#Arbeidsfri inntekt => m=100
+
+#Arbeidsfri inntekt + stønad => m+s=200
+
+
+#scatter
+ax.scatter(l_0_num, m_num, color="black")
+
+ax.text(l_0_num+1, m_num+1, '$U_0$', fontsize=12)
+
+
+
+
+#axis labels
+ax.set_xlabel('Fritid($l$)', loc="right", fontsize=15)
+
+#ylabel position. moving it a little right
+ax.set_ylabel('Konsum($c$)', rotation=0, loc="top", fontsize=15, labelpad=-50)
+
+
+
+
+#VI kan se at dersom Tone kunne jobbet deltid så hadde hun fått høyere nytte enn når hun er tvunget til fulltid.
+#ax.plot(l_x, konsum_tilfelle1+100, label='test')
+ax.set_xlim(0, 70)
+ax.set_ylim(0, 1100)
+
+
+
+
+
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+ax.scatter(20, (m_num + lonn_tilfelle_1_num*(40)), color="black")
+ax.text(21, (m_num + lonn_tilfelle_1_num*(40))+5, 'A', fontsize=18)
+
+
+#pltsavefig
+plt.savefig('nytte_1.png', dpi=300, bbox_inches='tight')
+
+
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+
+ax.plot(l_x, indiff_tilfelle1, color="#0F045B")
+ax.plot(l_x, indiff_tilfelle2, color="#146508")
+
+
+
+ax.plot(l_x, konsum_tilfelle1, color = "#1B01C0")
+ax.plot(l_x, konsum_tilfelle2, color = "#21C309")
+
+ax.text(-3, 415, '$w^r$', fontsize=18)
+
+ax.text(-3, 850, '$w_s^r$', fontsize=18)
+
+ax.vlines(20, 0, (m_num + lonn_tilfelle_2_num*(40)), linestyles='dashed', color="grey")
+ax.text(20, -65, '$l^{FT}$', fontsize=18)
+
+
+ax.vlines(60, 0, 200, linestyles='dashed', color="grey")
+ax.text(60, -65, '$l_0$', fontsize=18)
+
+
+#hlines at 100
+ax.hlines(m_num, 0, l_0_num, linestyles='dashed', color="grey")
+ax.text(-2.5, m_num-5, 'm', fontsize=18)
+#Arbeidsfri inntekt => m=100
+
+ax.hlines(m_num+s_num, 0, l_0_num, linestyles='dashed', color="grey")
+ax.text(-5.5, m_num+s_num-5, 'm+s', fontsize=18)
+#Arbeidsfri inntekt + stønad => m+s=200
+
+
+#scatter
+ax.scatter(l_0_num, m_num, color="black")
+ax.scatter(l_0_num, m_num+s_num, color="black")
+ax.text(l_0_num+1, m_num+1, '$U_0$', fontsize=12)
+ax.text(l_0_num+1, m_num+s_num+1, '$U_1$', fontsize=12)
+
+
+
+#axis labels
+ax.set_xlabel('Fritid($l$)', loc="right", fontsize=15)
+
+#ylabel position. moving it a little right
+ax.set_ylabel('Konsum($c$)', rotation=0, loc="top", fontsize=15, labelpad=-50)
+
+
+
+
+#VI kan se at dersom Tone kunne jobbet deltid så hadde hun fått høyere nytte enn når hun er tvunget til fulltid.
+#ax.plot(l_x, konsum_tilfelle1+100, label='test')
+ax.set_xlim(0, 70)
+ax.set_ylim(0, 1100)
+
+
+
+
+ax.set_xticks([])
+ax.set_yticks([])
+
+
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+ax.scatter(20, (m_num + lonn_tilfelle_1_num*(40)), color="black")
+ax.text(21, (m_num + lonn_tilfelle_1_num*(40))+5, 'A', fontsize=18)
+
+
+ax.scatter(20, (m_num + lonn_tilfelle_2_num*(40)), color="black")
+ax.text(21, (m_num + lonn_tilfelle_2_num*(40))+5, 'B', fontsize=18)
+
+
+
+#pltsavefig
+plt.savefig('nytte_2.png', dpi=300, bbox_inches='tight')
+
+
+
+
+
+
+```
+
+```{python include=FALSE}
+
+
+
+w, alpha, l_0, u, s, c, l, m, lam, beta, k  = sp.symbols('w \u03B1 l_0 u s c l m lamda beta k', positive=True, real=True)
+
+l_x = np.linspace(0.01, 60, 100000)
+alpha_num = 2/7
+
+m_num = 100
+l_0_num = 60
+
+w_num = 10
+#alpha = 2/7
+beta_num = 0.6
+#charlie = 0
+
+nytte1 = sp.Eq(u, c**(1-alpha) * l**alpha)
+nytte2 = sp.Eq(u, c**(1-beta) * l**beta)
+
+
+bibet1 = ((m+w*l_0) - w*l)
+bibet2 = ((m+((1+k)*w*l_0)) - ((1-k)*w*l))
+
+k_num = 0.75
+
+#700-w_num*l
+nytte1 = c**(1-alpha) * l**alpha + lam*(bibet1-c)
+
+diffc = sp.diff(nytte1, c)
+diffl = sp.diff(nytte1, l)
+difflam = sp.diff(nytte1, lam)
+
+eq1 = sp.Eq(diffc, 0).subs([(alpha, alpha_num)])
+eq2 = sp.Eq(diffl, 0).subs([(alpha, alpha_num), (w, w_num)])
+eq3 = sp.Eq(difflam, 0).subs([(alpha, alpha_num), (w, w_num), (m, m_num), (l_0, l_0_num)])
+
+#sol = diffc/diffl
+#sol.subs([(alpha, alpha_num), (w, w_num), (m, m_num)])
+#solve for c
+#sp.solve(sol.subs([(alpha, alpha_num), (w, w_num), (m, m_num)]), l)
+#solve diffc diffl difflam
+sols = sp.solve([eq1, eq2, eq3], [c, l, lam])
+#saving the c solution as variable
+c_sol = sols[0][0]
+#saving first solution as variable
+l_sol = sols[0][1]
+c_sol, l_sol
+c_sol2 = ((m+(k*w*l_0)) - ((1-k)*w*l)).subs([(w, w_num), (m, m_num), (l_0, 40), (w, w_num), (m, m_num), (l_0, 40), (k, 1)])
+c_sol3 = 260
+c_sol33 = (((m+((1+k)*w*l_0)) - ((k)*w*l)).subs([(w, w_num), (m, m_num), (l_0, 40), (k, 0.75), (l, 20)]))
+l_sol3 = 52.5
+
+scenario1 = (c_sol)**(5/7) * (l_sol)**(2/7)
+#scenario2 = (((m+(k*w*l_0)) - ((1-k)*w*l)).subs([(w, w_num), (m, m_num), (l_0, 40), (k, 1)]))**(0.4) * (l_0_num)**(0.6)
+scenario2 = (c_sol2)**(1-0.6) * (l_0_num-0)**(0.6)
+scenario3 = (c_sol3)**(1-0.6) * (l_sol3)**(0.6)
+#scenario3 = ((m+((1+k)*w*l_0)) - ((1-k)*w*l)).subs([(w, w_num), (m, m_num), (l_0, 40), (k, 0.75), (l, l_0_num)])**(0.4) * (l_0_num)**(0.6)
+
+l_x = np.linspace(0.01, 70, 10000)
+l_x2 = np.linspace(20, 60, 10000)
+l_x3 = np.linspace(0, 60, 10000)
+
+nytte1 = sp.Eq(u, c**(1-alpha) * l**alpha)
+
+nytte2 = sp.Eq(u, c**(1-beta) * l**beta)
+
+nytte3 = sp.Eq(u, c**(1-beta) * l**beta)
+
+
+
+konsum_func1 = sp.solve(nytte1, c)[0]
+
+konsum_func2 = sp.solve(nytte2, c)[0]
+
+konsum_func3 = sp.solve(nytte3, c)[0]
+
+
+
+
+konsum_func1 = sp.lambdify((u, alpha, l), konsum_func1)
+konsum_func2 = sp.lambdify((u, beta, l), konsum_func2)
+konsum_func3 = sp.lambdify((u, beta, l), konsum_func3)
+
+indiff_tilfelle1 = konsum_func1(scenario1, alpha_num, l_x)
+indiff_tilfelle2 = konsum_func2(scenario2, beta_num, l_x)
+indiff_tilfelle3 = konsum_func3(scenario3, beta_num, l_x)
+
+
+
+konsum_tilfelle11 = 700- 10* l_x
+konsum_tilfelle22 = c_sol - 0*l_x2
+konsum_tilfelle33 = c_sol33 -(k_num*w_num* l_x)
+
+
+
+
+
+
+
+
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+
+ax.plot(l_x, indiff_tilfelle1, color="#0F045B", label="Tilfelle 1 uten stønad")
+
+#ax.plot(l_x, indiff_tilfelle2, color="#146508")
+
+
+
+ax.plot(l_x, konsum_tilfelle11, color = "#1B01C0")
+
+
+ax.set_xlim(0, 70)
+ax.set_ylim(0, 1100)
+ax.text(20, 520, '$A$', fontsize=18)
+ax.legend()
+#pltsavefig
+plt.savefig('nytte_sykdom.png', dpi=300, bbox_inches='tight')
+
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+
+
+ax.plot(l_x, indiff_tilfelle2, color="red", label="Tilfelle 2 med 100% dekning")
+ax.plot(l_x3, indiff_tilfelle3, color="green", label="Tilfelle med 25% stønad")
+#ax.plot(l_x, indiff_tilfelle2, color="#146508")
+
+
+
+ax.plot(l_x, konsum_tilfelle22, color = "#1B01C0")
+ax.plot(l_x3, konsum_tilfelle33, color = "#21C309")
+
+ax.set_xlim(0, 100)
+ax.set_ylim(0, 1000)
+
+
+
+#hlines at 100
+ax.hlines(m_num+25, 0, l_0_num, linestyles='dashed', color="grey")
+
+
+
+ax.text(17, 500, '$B$', fontsize=18)
+ax.text(42.5, 270, '$C$', fontsize=18)
+ax.text(60, 500, '$D$', fontsize=18)
+
+
+ax.legend()
+#pltsavefig
+plt.savefig('nytte_sykdom_komp.png', dpi=300, bbox_inches='tight')
+
+
+
+```
+
+# Utfordring 3.1
+
+## 3.1.1
+
+Tone har nytte av sammensatt konsum og fritid. Tone sin nytte er gitt ved bruk av Cobb-Douglas funksjonen.
+
+$$
+U(c,l)=c^{\theta}\cdot l^(1−\theta) \tag{1}
+$$
+
+En av antagelsene vi gjør er at arbeidsmarkedet er perfekt. Scenario 1 er når det ikke er noe stønad, og scenario 2 er når det er tilført en stønad. Inntekt og konsum er gitt i 10 tall.
+
+Ligning 1 viser gitt nytte for verdier av $c$ og $l$.
+
+$$
+U=c^{\theta}\cdot l^{(1−\theta)} \tag{1}
+$$ Da $c$ er konsum så er dette gitt ved $c=m+w\cdot l$. Altså arbeidsfri inntekt pluss time lønn multiplisert med antall timer arbeidet.
+
+Ligning 2 viser nytten dersom hun ikke jobber og da blir $l=0$ slik at vi bare for $m$ alene.
+
+$$
+U_0 = m^{\theta} \cdot l_0^{1-\theta} \tag{2}
+$$
+
+Dersom hun jobber ($l > 0$, $w > 0$) så er konsumet høyere som vist i ligning 3 så for å finne hva reservasjonslønnen $w^r$ er så må vi sette ligning 2 og 3 lik hverandre. $$
+U_1 = (m+lw)^{\theta} \cdot (l_0-l)^{1-\theta} \tag{3}
+$$ Ved å sette disse lik hverandre vist i ligning 4 og løse for $w$ så kan vi finne reservasjonslønnen.
+
+$$
+m^{\theta} \cdot l_0^{1-\theta} = (m+lw)^\theta (l_0 - l)^{1 - \theta} \tag{4}
+$$ Siden jeg vil ha $w$ alene så flytter jeg over $(l_0 - l)^{1 - \theta}$
+
+$$
+\frac{m^{\theta} \cdot l_0^{1-\theta}}{(l_0 - l)^{1 - \theta}} = (m+lw)^\theta
+$$ Videre vil jeg ha bort eksponenten så jeg har rota.
+
+$$
+\biggl(\frac{m^{\theta} \cdot l_0^{1-\theta}}{(l_0 - l)^{1 - \theta}}\biggl)^\frac{1}{\theta} = m+lw
+$$
+
+Og for å få w alene så flytter jeg over $m$ og $l$
+
+$$
+w = \frac{\biggl(\frac{m^{\theta} \cdot l_0^{1-\theta}}{(l_0 - l)^{1 - \theta}}\biggl)^\frac{1}{\theta} -m}{l}
+$$
+
+Dette uttrykket forenkler jeg til ligning 5
+
+$$
+w^r = \frac{-m\bigl(l_0^{1-\theta}\cdot m^\theta(l_0 -l)^{\theta -1})^{\frac{1}{\theta}}}{l} \tag{5}
+$$
+
+```{=tex}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.9\linewidth]{nytte_1.png}
+  \captionof{figure}{Nytte og budsjettbetingelse scenario 1}
+  \label{fig:fig1}
+\end{figure}
+```
+\autoref{fig:fig1} viser indifferanse kurven og budsjettet i scenario 1 uten stønad dersom vi legger inn tallene $\theta=0.5$, $m = 100$, $l_0=60$ og $l=l^{FT}=40$. $w^r$ viser reservasjonslønnen dersom hun må jobbe 40 timer i uken og det ikke finnes stønad. Sitat:"Reservasjonslønnen er lønnen som gjør at Tone er indifferent til å jobbe eller ikke."[See @kjelsrud_2013_forelesning, pp.15][^1]
+
+[^1]: @kjelsrud_2013_forelesning
+
+$m$ viser arbeidsfri inntekt. $l^{FT}$ viser fulltidsarbeid altså 40timer arbeid eller 20 timer fritid.. $l_0$ viser 60 timer fritid.
+
+Reservasjonslønnen er da den minste lønnen som Tone vil ha for at hun skal jobbe fulltid. Dersom lønnen som tilbys for fulltidsarbeid er $>5$ så er hun ikke lengere indifferent og vil da få høyere nytte ved å jobbe.
+
+Hun ville valgt å jobbe mellom $A$ og $U_0$ dersom det var mulig til samme lønnen og da mottatt høyere nytte.
+
+\clearpage
+
+Vi gjør det samme for nytten ved stønad uten jobbing gitt ved $U_{0s}$ i ligning 6. Stønaden gis ved $s$ og $s > 0$.
+
+$$
+U_{0s} = (m+s)^\theta \cdot l_0^{1-\theta} \tag{6}
+$$ Dersom Tone nå jobber så faller stønaden bort så nytten er blir $U_{1s}$ i ligning 7
+
+$$
+U_{1s} = (lw+m)^\theta(l_0-l)^{1-\theta} \tag{7}
+$$
+
+Vi legger de lik hverandre for å finne reservasjonslønnen.
+
+$$
+(m+s)^\theta \cdot l_0^{1-\theta} = (lw+m)^\theta(l_0-l)^{1-\theta} \tag{8}
+$$
+
+Flytter over $(l_0-l)^{1-\theta}$ og omskriver.
+
+$$(lw+m)^\theta = \frac{(m+s)^\theta \cdot l_0^{1-\theta}}{(l_0-l)^{1-\theta}}$$
+
+Tar igjen theta roten for å få bort eksponenten og flytter over $m$
+
+$$lw = \biggl(\frac{(m+s)^\theta \cdot l_0^{1-\theta}}{(l_0-l)^{1-\theta}}\biggl)^{\frac{1}{\theta}} - m$$
+
+Da får vi ligning 9 som vi forenkler til ligning 10. $$w = \frac{\biggl(\frac{(m+s)^\theta \cdot l_0^{1-\theta}}{(l_0-l)^{1-\theta}}\biggl)^{\frac{1}{\theta}} - m}{l} \tag{9}$$
+
+$$w_s^r = \frac{-m + \bigl(l_0^{1-\theta}(l_0-l)^{\theta -1}(m+s)^\theta\bigl)^\frac{1}{\theta}}{l} \tag{10}$$
+
+I ligning 10 så kan vi se at dersom $s>0$ så vil $w_s^r$ være et større tall enn det som kommer fra ligning 5.
+
+$$\frac{-m\bigl(l_0^{1-\theta}\cdot m^\theta(l_0 -l)^{\theta -1})^{\frac{1}{\theta}}}{l} < \frac{-m + \bigl(l_0^{1-\theta}(l_0-l)^{\theta -1}(m+s)^\theta\bigl)^\frac{1}{\theta}}{l}$$
+
+\clearpage
+
+Jeg setter inn tall verdier for $\theta=0.5$, $m = 100$, $l_0=60$, $l=l^{FT}=40$ og $s=100$ og får da at ligning 5 gir en reservasjonslønn på 5 og ligning 10 gir en reservasjonslønn på 12.5.
+
+\autoref{fig:fig2} har de samme tall verdiene på x og y aksene som \autoref{fig:fig1} men jeg har fjernet dette fra grafen for å gjøre den mer oversiktlig
+
+```{=tex}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\linewidth]{nytte_2.png}
+  \captionof{figure}{Nytte og budsjettbetingelse scenario 1 og 2}
+  \label{fig:fig2}
+\end{figure}
+```
+I grønn linje har vi nå $w^r_s$ som er reservasjonslønnen med stønad dersom hun må jobbe 40timer i uken. Dette er budsjettet dersom det er innført en stønad dersom man ikke jobber. Dette er gitt ved m+s. Dersom Tone da har den arbeidsfrie inntekten m, og ved å ikke jobbe får hun m+s og da får hun nyttenivået gitt ved $U_1$. Punktet A er på et lavere nytte nivå enn det hun nå får ved å ikke jobbe så reservasjonslønnen har økt som vist ved Punkt B. På dette punktet så kan hun velge å ikke jobbe og få høyere konsum enn vist i punkt A og hun vil da velge og ikke jobbe til den forrige reservasjonslønnen. Da hun ikke kan få stønad dersom hun jobber så må den nye reservasjonslønnen må nå kompensere for tapet på stønaden så reservasjonslønnen er nå høyere som vist ved $w^r_s$. Dette vil si at dersom lønnen er 12.5 så er hun indifferent til å jobbe eller ikke, og dersom lønnen er $>12.5$ så vil hun få en høyere nytte av å jobbe.
+
+\clearpage
+
+## 3.1.2
+
+Arbeidsmarkedet er sjelden perfekt. Forklar hvilke effekter trygd har på arbeidsmarkedet da arbeidsmarkedet er ufullkomment.
+
+Jeg går ut ifra de 3 effektene: Jobbsøker effekter, Lønnseffekter og Rettighetseffekter.
+
+Dersom arbeidsmarkedet er perfekt er reservasjonslønnen statisk da det ikke finnes arbeidsledighet. Dette er forskjellig fra når det er ufullkomment da det finnes arbeidsledighet. Da er personene arbeidssøkere da blir reservasjonslønnen "dynamisk" som da er lønnen som gjør at personen er indifferent å akseptere et lønnstilbud og fortsette å søke.
+
+Så i tilfellet når arbeidsmarkedet ikke er perfekt så kan en av effektene av en stønad være at jobbsøker effekten blir større. Det vil si at når en stønad innføres så vil alternativ kostnaden til å ikke ha jobb minke. Som vil si at de vil kreve en høyere lønn.
+
+Når arbeidsmarkedet ikke er perfekt så kan det være markedsmakt hos partene. Dette kan bety at arbeidsgivere vet at arbeidstakere ikke lett kan få ny jobb og vil da bety at de kan sette en lavere lønn, eller at arbeidstakere kan vite at arbeidsgivere vil få det vanskeligere å få arbeidere og dermed kreve en høyere lønn.
+
+Dersom arbeidsgivere har markedsmakt og det innføres stønad så kan makt overføres fra arbeidsgiverne til arbeidstakerne da alternativkostnaden fra å ikke få jobb går ned slik at arbeidsgiverne ikke kan kreve like høy lønn for å få like mange arbeidere. Innføringen av en stønad kan også gi for mye makt til arbeidstakerne slik at de krever en for høy reservasjons lønn, dette vil da lede til at arbeidsgiverne ikke kan ansette like mange som gjør at arbeidsledigheten går opp mens arbeiderne får stønad og likevel ikke jobber.
+
+Rettighetseffekter kan være at du må søke jobb aktivt for å få stønad, eller stønaden kan være avhengig av at du har hatt jobb før. Dersom du må ha hatt jobb for å få stønad så kan de som ikke har hatt jobb før være villig til å jobbe for en lavere lønn siden alternativ kostnaden til å ikke jobbe er høyere da de ikke får inntekt fra stønad. Da vil deres reservasjonslønn kunne være lavere som kan lede til arbeidsledigheten synker da arbeidsgivere kan ansette flere. Dette kan også bety at du vil ha flere personer i arbeidsstyrken slik at sysselsettingsraten går opp. De som da allerede har fått retten til å få en stønad vil da ikke ha samme nødvendighet til å søke like mye samtidig som dem vil kreve en høyere lønn for å kompensere for tapet av stønad så deres reservasjonslønn vil være høyere.
+
+\clearpage
+
+# Utfordring 3.2
+
+## a) Studer teksten i sangen Tredagern av Gatas parlament. Lag en figur og diskuter dine funn.
+
+```{=tex}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\linewidth]{egenmeldinger.png}
+  \captionof{figure}{Utviklingen i egenmeldinger}
+  \label{fig:fig3}
+\end{figure}
+```
+Sangen handler om at at det de ikke ønsker å jobbe men ønsker fri. De sier at de skal ringe til jobben og si at de er syk siden de bare kan ta egenmelding og få 3 dager fri. Det er for artisten nokk at de er føler seg bittelitt dårlig og det er nokk til å ta 3 dager fri.
+
+I \autoref{fig:fig3} så ser man kanskje en generell trend som øker. Vi kan da se at siden sangen kom ut så har det fremdeles vært en økning i egenmeldinger. Dette kan tyde på at disinsentiveffektene er for store i forhold til "kostnaden" for å ta egenmelding.
+
+\clearpage
+
+## b) Beskriv disinsentivproblemet knyttet til sangen ved hjelp av økonomisk teori.
+
+I sangen vil han bare ta fri og dette kan være siden sykepenger tilbyr en så høy kompensasjon uten kontrollering om du er syk eller ikke. Dette kan lede til at kan noen individer velger å ikke arbeide selv om de er i stand til det. Dette skjer siden deres nytte fra fritid overskrider nytten de får fra konsumet de får fra inntekten fra å jobbe siden de får så mye kompensasjon for inntektstapet. 
+
+
+Modellen jeg bruker for å vise disinsentivproblemet bruker noen sentrale antakelser som
+
+-   Individer er rasjonelle og prøver å maksimere sin egen nytte.
+
+-   I figurer så vises det slik at nytte kan komme fra fritid og konsum.
+
+-   Det settes inn en sykdomsindeks som viser individets opplevde sykdom og dette påvirker deres preferanser.
+
+-   Sykelønnsordninger gir full eller delvis lønnskompensasjon ved sykdom.
+
+```{=tex}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\linewidth]{nytte_sykdom.png}
+  \captionof{figure}{Nytte og budsjettbetingelse ved sykdom}
+  \label{fig:fig4}
+\end{figure}
+```
+I \autoref{fig:fig4}, uten sykelønnskompensasjon, er det en trade-off mellom arbeid og fritid. I punkt A jobber individet 40 timer i uken og tar 20 timer fri, fordi dette maksimerer deres nytte gitt inntekt og fritids preferanser.
+
+Men \autoref{fig:fig5} viser en ny tilpasning der hun får 100% kompensasjon der hun velger å være i punkt D på 60timer fritid og ingen timer jobbing. Dette kommer siden lønnen hun får i punkt B dersom hun jobber 100% blir kompensert fult ut da hun bare er litt syk og da kan hun være hjemme. I punkt C så er det innført kompensasjon på 25% av lønnen så dette leder til at hun velger å jobbe rundt 18 timer istedet for 0.
+
+
+
+\clearpage
+
+## c) Hvilket virkemiddel ville du som samfunnsøkonom foreslått for å redusere disinsentiveffekten i sangen? Bruk økonomisk teori du har lært på dette kurset til å svare på dette spørsmålet. Bruk diagram i din besvarelse. Husk å forklare økonomisk intuisjon.
+
+
+
+
+
+```{=tex}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\linewidth]{nytte_sykdom_komp.png}
+  \captionof{figure}{Nytte og budsjettbetingelse ved sykdom ved 100dekning og 25dekket kompensasjon}
+  \label{fig:fig5}
+\end{figure}
+```
+
+
+
+
+Jeg ville foreslått en sykelønnsordning der kompensasjonen starter på et litt lavere nivå enn lønnen med arbeid, og avtar med tid.  Dette ville gitt en insentiv til å komme tilbake til arbeidet så tidlig som mulig for å oppnå sin maksimale nytte raskere igjen. Dette er fordi når det er 100% kompensasjon så er det "bedre" for deg og da få full fritid til samme konsum, og dermed velger du å være hjemme så lenge som mulig i modellen. 
+Personen i sangen vil da ikke få like god råd dersom de blir hjemme da de ikke ville fått like mye penger. 
+
+Jeg ville også forsøkt og ordne noe former for insentiver for å returnere til arbeid, slik som en form for tilleggsstøtte for tilpasning på arbeid.
+
+
+
+
+Figurene her har da i stor grad tatt tall fra Mikko sitt seminar da jeg ikke fikk til å regne det ut ordentlig i python. 
+
+
+
+\clearpage
+
+# Referanser
+
+::: {#refs}
+:::
+
+\clearpage
+
+\section {Appendix Generell KI bruk}
+
+I løpet av koden så kan det ses mange \# kommentarer der det er skrevet for eks "#fillbetween q1 and q2". Når jeg skriver kode i Visual Studio Code så har jeg en plugin som heter Github Copilot. Når jeg skriver slike kommentarer så kan den foresøke å fullføre kodelinjene mens jeg skriver de. Noen ganger klarer den det, men andre ikke. Det er vanskelig å dokumentere hvert bruk der den er brukt siden det "går veldig fort" men siden jeg ikke har fått på plass en slik dokumentasjon så kan all python kode der det er brukt kommentarer antas som at det er brukt Github Copilot. Nærmere info om dette KI verktøyet kan ses på <https://github.com/features/copilot>
+
+
+Jeg skulle gjerne ha lagt til chatgpt linker men jeg har brukt bilder i de chattene og dermed er det ikke mulig å dele de. 
+
+\section {Appendix 3.1 KI bruk}
+
+3.1.2 har hatt noe input til tekst der jeg har postet mitt svar i chatgpt og bedt om innspill. 
+\
+
+\section {Appendix 3.2 KI bruk}
+
+Jeg har brukt ChatGPT der jeg sendte in spørsmålet fra oppgaven og har da brukt en god del av de innspillene til hvordan jeg skulle svare oppgavene a b og c men det var mye rare svar så jeg har i hovedsak skrevet inn helt selv. 
+
+Denne delen rundt 3.2 er også den oppgaven som jeg er mest misfornøyd med ut av mine innleveringer. 
+
+
+\section {Appendix Github link}
+
+<https://github.com/Danieljoha/Sok-2008>

@@ -1,0 +1,1165 @@
+---
+title: "Utfordring 2"
+subtitle: "Fakultet for biovitenskap, fiskeri og økonomi."
+author: "Kandidatnummer 7, SOK-2008 Høst 2023"
+date: last-modified 
+date-format: "DD-MM-YYYY"
+editor: visual
+toc-title: "Innholdsfortegnelse."
+format: 
+  pdf:
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+echo: false
+warning: false
+message: false
+bibliography: references.bib
+csl: norsk-apa-manual.csl
+crossref: 
+  lof-title: "Figurliste"
+  fig-title: "Figur"
+  lot-title: "Tabelliste"
+  tbl-title: "Tabell"
+header-includes:
+  - \usepackage{wrapfig}
+  - \usepackage{subcaption}
+  - \usepackage[utf8]{inputenc}
+  - \usepackage{amsmath}
+nocite: |
+  @*
+encoding: UTF-8
+---
+
+```{=tex}
+\newpage
+\renewcommand*{\figureautorefname}{Figur}
+\renewcommand*{\tableautorefname}{Tabell}
+\renewcommand*\contentsname{Innholdsfortegnelse}
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+```
+```{r, warning=FALSE, message=FALSE}
+rm(list=ls()) 
+library(tidyverse)
+library(OECD)
+library(ggrepel)
+library(stargazer)
+```
+
+```{r, message=FALSE, warning=FALSE}
+
+earn_mw_avgr2 <- read_csv("https://ec.europa.eu/eurostat/api/dissemination/sdmx/3.0/data/dataflow/ESTAT/EARN_MW_AVGR2/1.0?compress=false&format=csvdata&formatVersion=2.0&lang=en&labels=both", show_col_types = FALSE) 
+lfsi_emp_a <- read_csv("https://ec.europa.eu/eurostat/api/dissemination/sdmx/3.0/data/dataflow/ESTAT/LFSI_EMP_A/1.0?compress=false&format=csvdata&formatVersion=2.0&lang=en&labels=both", show_col_types = FALSE) 
+
+
+inntekt <- earn_mw_avgr2 %>% 
+  filter(`TIME_PERIOD: Time` == "2021", `indic_se: Structure of earnings indicator` == "MMW_MEAN_ME_PP: Monthly minimum wage as a proportion of the mean gross monthly earnings") %>% 
+  select(-c(STRUCTURE, `freq: Time frequency`, STRUCTURE_ID, `TIME_PERIOD: Time`, `indic_se: Structure of earnings indicator`, `unit: Unit of measure`, `OBS_FLAG: Observation status (Flag)`))
+  
+
+
+
+sysselsetting <- lfsi_emp_a %>% 
+  filter(`age: Age class` == "Y20-64: From 20 to 64 years", `sex: Sex` == "T: Total", `TIME_PERIOD: Time` == "2021", `unit: Unit of measure` == "PC_POP: Percentage of total population", !str_detect(`geo: Geopolitical entity (reporting)`, "^(EU|EA)")) %>% 
+  select(-c(`age: Age class`, `sex: Sex`, STRUCTURE, `TIME_PERIOD: Time`, `unit: Unit of measure`, `STRUCTURE_ID`, `freq: Time frequency`, `OBS_FLAG: Observation status (Flag)`))
+
+
+
+countrylist <- unique(inntekt$`geo: Geopolitical entity (reporting)`)
+
+
+
+
+
+sysselsetting <- sysselsetting %>% 
+  filter(`indic_em: Employment indicator` == "ACT: Persons in the labour force (former name: active persons)", `geo: Geopolitical entity (reporting)` %in% countrylist) %>% 
+  select(-`indic_em: Employment indicator`)
+
+
+
+
+
+countrylist <- unique(sysselsetting$`geo: Geopolitical entity (reporting)`)
+
+
+
+inntekt1 <- inntekt %>% 
+  filter(`nace_r2: Statistical classification of economic activities in the European Community (NACE Rev. 2)` == "B-N: Business economy", `geo: Geopolitical entity (reporting)` %in% countrylist) %>% 
+  select(-`nace_r2: Statistical classification of economic activities in the European Community (NACE Rev. 2)`)
+
+inntekt2 <- inntekt %>% 
+  filter(`nace_r2: Statistical classification of economic activities in the European Community (NACE Rev. 2)` == "B-S: Industry, construction and services (except activities of households as employers and extra-territorial organisations and bodies)", `geo: Geopolitical entity (reporting)` %in% countrylist) %>% 
+  select(-`nace_r2: Statistical classification of economic activities in the European Community (NACE Rev. 2)`)
+
+
+#bruk uansett. velg en. av B-S og B-N
+
+#bruk ACT
+
+
+
+bs <- merge(inntekt2, sysselsetting, by = "geo: Geopolitical entity (reporting)")
+bs <- bs %>% 
+  rename(country = 1,"BS" = 2, "ACT"=3)
+
+
+
+tablebs <- lm(bs$ACT ~ bs$BS)#reg tabell skal brukes
+
+
+
+plot <- bs %>% 
+  mutate(country = str_sub(country, 4, -1)) %>% 
+  ggplot(aes(x=ACT,y=BS, label = country)) +
+  geom_point(color="#5FA5FF")+
+  geom_smooth(method=lm, se=FALSE)+
+  geom_text(aes(x = max(ACT),y = max(BS),  
+                label = paste("R", "==", round(cor(ACT, BS), 2))),
+            parse=TRUE,hjust = 1, vjust = 1, size = 4, color = "#FC3145")+
+  geom_text(aes(x = max(ACT), y = max(BS)-.7, label = paste0("R^2", "==", round(cor(ACT, BS)^2, 2)))
+            , parse = TRUE, hjust = 1, vjust = 1, size = 4, color = "#FC3145")+
+  labs(subtitle="Næringshovedgruppe \"B-S\" i 2021", y="Prosent av inntekt", x="Sysselsettingsrate 20-64", caption="Source: Eurostat, lfsi_emp_a og earn_mw_avgr2")+
+  scale_x_continuous(labels=scales::percent_format(scale=1), n.breaks = 10)+
+  scale_y_continuous(labels=scales::percent_format(scale=1), n.breaks = 10)+
+  geom_text_repel()+
+  theme_bw() +
+  theme(panel.grid.major = element_line(colour = "grey"))
+
+ggsave("minstelonn.png", width=7, height=5)
+```
+
+```{r}
+tud <- get_dataset("TUD", start_time = "2018", end_time = "2018")
+mig <- get_dataset("MIG_NUP_RATES_GENDER", start_time = "2018", end_time = "2018")
+#tud = trade union density
+#mig = arbeidsledilighet mellom grupper
+
+tud <- tud %>% 
+  select(-c(FREQUENCY, MEAS, Time, TIME_FORMAT)) %>% 
+  rename(COUNTRY = LOCATION, Organisasjonsgrad_prosent=ObsValue)
+
+
+mig <- mig %>% 
+  filter(GENDER == "TOT") %>% 
+  select(-c(GENDER, Time, TIME_FORMAT)) 
+
+mig$RATE[grep("N_RATE", mig$RATE)] <- "Employment rate"
+mig$RATE[grep("U_RATE", mig$RATE)] <- "Unemployment rate"
+mig$RATE[grep("P_RATE", mig$RATE)] <- "Participation rate"
+
+mig$BIRTH[grep("NB", mig$BIRTH)] <- "Native-born"
+mig$BIRTH[grep("FB", mig$BIRTH)] <- "Foreign-born"
+
+
+
+
+df <- merge(mig, tud, by="COUNTRY")
+
+df <- df %>% 
+  select(-OBS_STATUS) %>% 
+  filter(RATE == "Unemployment rate") %>% 
+  mutate(ObsValue = as.numeric(ObsValue), Organisasjonsgrad_prosent = as.numeric(Organisasjonsgrad_prosent)) %>% 
+  rename(arbeidsledighet_prosent=ObsValue)
+
+#fjerner noen land siden det er mangel i de forskjellige datasettene
+
+
+nb <- df %>% 
+  filter(BIRTH == "Native-born") 
+
+fb <- df %>% 
+  filter(BIRTH == "Foreign-born")
+
+
+nb_countries <- unique(nb$COUNTRY)
+fb_countries <- unique(fb$COUNTRY)
+
+nb <- nb %>% 
+  filter(COUNTRY %in% fb_countries)
+
+fb <- fb %>% 
+  filter(COUNTRY %in% nb_countries)
+
+df <- df %>% 
+  filter(COUNTRY %in% fb_countries, COUNTRY %in% nb_countries)
+
+
+df <- df %>%
+  pivot_wider(names_from = "BIRTH", values_from = "arbeidsledighet_prosent")
+df <- df %>% 
+  rename("Utenlandsfødte arbeidsledighet prosent" = `Foreign-born`, "Innenlandsfødte arbeidsledighets prosent" = `Native-born`, "Organisert andel av befolkning" = Organisasjonsgrad_prosent) %>% 
+  na.omit()
+
+
+tablenb <- lm(nb$Organisasjonsgrad_prosent ~ nb$arbeidsledighet_prosent)
+
+tablefb <- lm(fb$Organisasjonsgrad_prosent ~ fb$arbeidsledighet_prosent)
+
+table_multippel <- lm(df$`Organisert andel av befolkning` ~ df$`Utenlandsfødte arbeidsledighet prosent` + df$`Innenlandsfødte arbeidsledighets prosent`)
+
+
+```
+
+```{r}
+plot <- nb %>% 
+  ggplot(aes(x=Organisasjonsgrad_prosent, y=arbeidsledighet_prosent, label=COUNTRY))+
+  geom_point()+
+  geom_smooth(method=lm, se=FALSE) +
+  geom_text_repel()+
+  geom_text(aes(x = max(Organisasjonsgrad_prosent), y = max(arbeidsledighet_prosent),  
+                label = paste("R", "==", round(cor(Organisasjonsgrad_prosent, arbeidsledighet_prosent), 2))),
+            parse=TRUE,hjust = 1, vjust = 1, size = 4, color = "red")+
+  geom_text(aes(x = max(Organisasjonsgrad_prosent), y = max(arbeidsledighet_prosent)-.7, label = paste0("R^2", "==", round(cor(Organisasjonsgrad_prosent, arbeidsledighet_prosent)^2, 2)))
+            , parse = TRUE, hjust = 1, vjust = 1, size = 4, color = "red")+
+  labs(subtitle="Innenlandsfødte arbeidsledighet mot organisasjonsgrad", y="Arbeidsledighet", x="Organisasjonsgrad", caption="OECD: TUD, MIG_NUP_RATES_GENDER")+
+  scale_x_continuous(labels=scales::percent_format(scale=1), n.breaks = 10)+
+  scale_y_continuous(labels=scales::percent_format(scale=1), n.breaks = 10)+
+  theme_bw() +
+  theme(panel.grid.major = element_line(colour = "grey"))
+
+ggsave("innenland.png", width=6, height=4)
+
+
+```
+
+```{r}
+plot <- fb %>% 
+  ggplot(aes(x=Organisasjonsgrad_prosent, y=arbeidsledighet_prosent, label=COUNTRY))+
+  geom_point()+
+  geom_smooth(method=lm, se=FALSE) +
+  geom_text_repel()+
+  geom_text(aes(x = max(Organisasjonsgrad_prosent), y = max(arbeidsledighet_prosent),  
+                label = paste("R", "==", round(cor(Organisasjonsgrad_prosent, arbeidsledighet_prosent), 2))),
+            parse=TRUE,hjust = 1, vjust = 1, size = 4, color = "red")+
+  geom_text(aes(x = max(Organisasjonsgrad_prosent), y = max(arbeidsledighet_prosent)-.7, label = paste0("R^2", "==", round(cor(Organisasjonsgrad_prosent, arbeidsledighet_prosent)^2, 2)))
+            , parse = TRUE, hjust = 1, vjust = 1, size = 4, color = "red")+
+  labs(subtitle="Utenlandsfødte arbeidsledighet mot organisasjonsgrad", y="Arbeidsledighet", x="Organisasjonsgrad", caption="OECD: TUD, MIG_NUP_RATES_GENDER")+
+  scale_x_continuous(labels=scales::percent_format(scale=1), n.breaks = 10)+
+  scale_y_continuous(labels=scales::percent_format(scale=1), n.breaks = 10)+
+  theme_bw() +
+  theme(panel.grid.major = element_line(colour = "grey"))
+
+ggsave("utenland.png", width=6, height=4)
+
+```
+
+\clearpage
+
+```{python include=FALSE}
+from IPython.display import display, Math, Latex
+import numpy as np
+from matplotlib import pyplot as plt
+import sympy as sp
+
+
+E, alpha, beta, w, T, ld, ls, w_fk, L, rho = sp.symbols("\Epsilon \u03B1, \u03B2, w, T, L^D, L^S w^*, L rho", real=True, positive=True)
+
+
+#skriver inn ligningene fra seminaret
+L_d = sp.Eq(ld, (E/alpha) - (1/alpha)*w)
+L_s = sp.Eq(ls, -(T/beta)+(1/beta)*w)
+#setter de lik hverandre
+equation = sp.Eq((E/alpha) - (1/alpha)*w, -(T/beta)+(1/beta)*w)
+
+equation_w = sp.solve(equation, w)[0]
+
+
+#subs for E = 250, alpha = 0.5, T = 10, beta = 0.5
+wfk = equation_w.subs([(E, 250), (alpha, 0.5), (T, 10), (beta, 0.5)])
+
+
+
+
+#subs for ls
+L_s_solved_num_fk = L_s.subs([(T, 10), (beta, 0.5), (w, wfk)])
+#solving
+L_s_solved_num_fk = sp.solve(L_s_solved_num_fk, ls)[0]
+
+L_d_solved_num_fk = L_d.subs([(E, 250), (alpha, 0.5), (w, wfk)])
+L_d_solved_num_fk = sp.solve(L_d_solved_num_fk, ld)[0]
+
+
+#løser for L_d
+L_d_solved = sp.solve(L_d, ld)[0]
+
+
+
+wmin = 150
+L_d_min_fk = L_d_solved.subs([(E, 250), (alpha, 0.5), (w, wmin)])
+
+
+
+#løser for w i labour supply og demand slik at jeg kan plotte dem ved å sette inn for T, Beta og L.(skrevet som x i kode)
+supply_kurve = sp.solve(L_s, w)[0]
+
+demand_kurve = sp.solve(L_d, w)[0]
+
+#lager funksjon for supply_kurve
+def tilbud(L,b,T):
+    return L*b+T
+#lager funksjon for demand_kurve
+def ettersporsel(L,a,E):
+    return -L*a+E
+
+
+L_d_for_int = sp.Eq(L, (250/0.5) - (1/0.5)*w)
+L_s_for_int = sp.Eq(L, -(10/0.5)+(1/0.5)*w)
+
+
+
+equation_for_int = sp.Eq((250/0.5) - (1/0.5)*w, -(10/0.5)+(1/0.5)*w)
+equation_for_int
+#solve for w
+wage_int_fk = sp.solve(equation_for_int, w)[0]
+
+
+L_eq_fk = sp.solve(L_d_for_int, L)[0]
+L_int_fk = L_eq_fk.subs(w, wage_int_fk)
+
+
+
+L_int_min = L_eq_fk.subs(w, wmin)
+
+wage_int_min = L_eq_fk.subs(w, L_int_min)
+
+L_d_derivert = sp.simplify(sp.diff(L_d, w))
+
+L_s_derivert = sp.simplify(sp.diff(L_s, w))
+
+Equation_derivert = sp.Eq(L_d_derivert, L_s_derivert)
+ 
+ 
+L_d_likevekt = L_d.subs(w, equation_w)
+
+L_s_likevekt = L_s.subs(w, equation_w)
+
+L_likevekt = sp.Eq(L_d_likevekt, L_s_likevekt)
+
+L_d_likevekt_solved = sp.solve(L_d_likevekt, ld)[0]
+L_s_likevekt_solved = sp.solve(L_s_likevekt, ls)[0]
+
+
+#diff for T and E
+derivert_for_E = sp.diff(L_s_likevekt_solved, E)
+derivert_for_T = sp.diff(L_s_likevekt_solved, T) 
+
+```
+
+```{python include=FALSE}
+#Function is 250-0.5w
+x = np.arange(0, 550, 1)
+x2 = np.arange(0, L_int_min+1, 1).astype(float)
+x3 = np.arange(L_int_min, L_int_fk+1, 1).astype(float)
+x4 = np.arange(0, L_int_fk+1, 1).astype(float)
+
+fig, ax = plt.subplots()
+
+
+ax.plot(x, ettersporsel(x, 0.5, 250), color="#FF6666")
+ax.plot(x, tilbud(x, 0.5, 10), color="#00994C")
+
+
+
+#hline at L_d_solved to wfk
+ax.hlines(wfk, 0, L_d_solved_num_fk, linestyles="dashed", color="grey")
+
+ax.vlines(L_d_solved_num_fk, 0, wfk, linestyle="dashed", color="grey")
+
+#xlim ylim
+ax.set_xlim(0, 550)
+ax.set_ylim(0, 300)
+
+#adding L^D and L^S as text 
+ax.text(500, 270, "$L^S$", fontsize=20)
+ax.text(500, 10, "$L^D$", fontsize=20)
+
+ax.spines["right"].set_visible(False)
+ax.spines["top"].set_visible(False)
+
+ax.text(-75, wfk-5, "$w^{FK}$", fontsize=20)
+ax.text(L_d_solved_num_fk-5, -30, "$L^{FK}$", fontsize=20)
+ax.fill_between(x4, 130, ettersporsel(x4, 0.5, 250), color="red", alpha=0.5, label="Arbedsgiveroverskudd")
+ax.fill_between(x4, 130, tilbud(x4, 0.5, 10), color="blue", alpha=0.5, label="Arbeidstakeroverskudd")
+#no ticks
+ax.set_xticks([])
+ax.set_yticks([])
+
+ax.legend()
+
+
+plt.savefig("fk.png", dpi=300)
+```
+
+```{python include=FALSE}
+#Function is 250-0.5w
+x = np.arange(0, 550, 1)
+
+fig, ax = plt.subplots()
+
+ax.plot(x, ettersporsel(x, 0.5, 250), color="#FF6666")
+ax.plot(x, tilbud(x, 0.5, 10), color="#00994C")
+
+
+#hline at L_d_solved to wfk
+ax.hlines(wfk, 0, L_d_solved_num_fk, linestyles="dashed", color="grey")
+
+ax.vlines(L_d_solved_num_fk, 0, wfk, linestyle="dashed", color="grey")
+
+#xlim ylim
+ax.set_xlim(0, 550)
+ax.set_ylim(0, 300)
+
+#adding L^D and L^S as text 
+ax.text(500, 270, "$L^S$", fontsize=20)
+ax.text(500, 10, "$L^D$", fontsize=20)
+
+ax.spines["right"].set_visible(False)
+ax.spines["top"].set_visible(False)
+
+ax.text(-75, wfk-5, "$w^{FK}$", fontsize=20)
+ax.text(L_d_solved_num_fk, -30, "$L^{FK}$", fontsize=20)
+
+#text w with ^ above
+ax.text(-75, wmin, "$w^{min}$", fontsize=20)
+
+#plotter wmin
+ax.hlines(wmin, 0, 550, color="black", linestyles="dashed")
+
+#vline
+ax.vlines(L_d_min_fk, 0, wmin, linestyle="dashed", color="black")
+
+ax.text(L_d_min_fk-22, -30, "$L^{min}$", fontsize=20)
+
+#no ticks
+ax.set_xticks([])
+ax.set_yticks([])
+
+#arrow from L_d_min_fk to L_d_solved_num_fk. bigger
+ax.annotate("", xy=(L_d_min_fk, 20), xytext=(L_d_solved_num_fk, 20), arrowprops=dict(arrowstyle="->", lw=3))
+
+
+#show scatter at x=80
+ax.plot(220, ettersporsel(220, 0.5, 250), marker="o", color="red")
+ax.plot(220, tilbud(220, 0.5, 10), marker="o", color="blue")
+
+#set a point b
+ax.text(215, 100, "c", fontsize=20, color="blue")
+ax.text(215, 150, "b", fontsize=20, color="red")
+#pltsavefig
+
+#hline using x2
+ax.hlines(wmin, 0, L_int_min, color="black", linestyles="solid")
+ax.hlines(wfk, 0, L_int_fk, color="black", linestyles="dashed")
+
+
+
+ax.fill_between(x2, 150, ettersporsel(x2, 0.5, 250), color="red", alpha=0.5, label="Arbedsgiveroverskudd")
+ax.fill_between(x2, 150, tilbud(x2, 0.5, 10), color="blue", alpha=0.5, label="Arbeidstakeroverskudd")
+
+
+
+
+ax.fill_between(x3, ettersporsel(x3, 0.5, 250), tilbud(x3, 0.5, 10), color="black", alpha=0.7, label="Dødvektstap")
+
+
+
+
+
+ax.legend()
+
+
+plt.savefig("fk_min.png", dpi=300)
+
+
+```
+
+```{python include=FALSE}
+FK_TC = w*L
+FK_TC_diff = sp.diff(FK_TC, L)
+
+#monop_TC= w(L)*L
+monop_tc=(T+beta*L) *L
+monop_tc_diff = sp.diff(monop_tc, L)
+monop_tc_diff #grensekostnad
+
+#grenseinntekt = grensekostnad
+mlc = monop_tc_diff
+
+# E-alpha*L = MRP
+MRP = (E-alpha*L)
+
+
+betingelse = sp.Eq(monop_tc_diff, MRP)
+
+
+L_tilbud = sp.solve(betingelse, L)[0]
+
+
+L_tilbud_num = L_tilbud.subs([(E, 250), (alpha, 0.5), (T, 10), (beta, 0.5)])
+
+
+
+w_tilbud = T+beta*L_tilbud_num
+
+
+
+w_tilbud_num = w_tilbud.subs([(T, 10), (beta, 0.5)])
+
+def mlcfunc(T, beta, L):
+    return 2*L*beta+T
+
+
+
+```
+
+```{python include=FALSE}
+fig, ax = plt.subplots()
+
+
+ax.plot(x, ettersporsel(x, 0.5, 250), color="#FF6666")
+ax.plot(x, tilbud(x, 0.5, 10), color="#00994C")
+
+
+
+#xlim ylim
+ax.set_xlim(0, 550)
+ax.set_ylim(0, 300)
+
+#adding L^D and L^S as text 
+ax.text(500, 270, "$L^S$", fontsize=20)
+ax.text(500, 10, "$L^D$", fontsize=20)
+ax.text(300, 280, "$MLC$", fontsize=20)
+
+
+
+
+
+#mlcfunc(L, T, beta)
+
+ax.plot(x, mlcfunc(10, 0.5, x), color="black")
+
+
+ax.vlines(L_tilbud_num, 0, w_tilbud_num, color="grey")
+ax.hlines(w_tilbud_num, 0, L_tilbud_num, color="grey")
+
+
+
+ax.spines["right"].set_visible(False)
+ax.spines["top"].set_visible(False)
+
+
+
+ax.vlines(L_tilbud_num, w_tilbud_num, mlcfunc(10, 0.5, L_tilbud_num), color="black")
+
+ax.text(L_tilbud_num-5, -30, "$L^{m}$", fontsize=20)
+ax.text(-75, w_tilbud_num-5, "$w^{m}$", fontsize=20)
+
+#xlim ylim
+ax.set_xlim(0, 550)
+ax.set_ylim(0, 300)
+
+ax.set_xticks([])
+ax.set_yticks([])
+
+
+
+
+x3 = np.arange(L_int_min, L_int_fk+1, 1).astype(float)
+
+x5 = np.arange(L_tilbud_num, L_d_solved_num_fk+1, 1).astype(float)
+ax.fill_between(x5, ettersporsel(x5, 0.5, 250), tilbud(x5, 0.5, 10), color="black", alpha=0.7, label="Dødvektstap")
+
+
+x7 = np.arange(0, L_tilbud_num+1, 1).astype(float)
+ax.fill_between(x7, 90, ettersporsel(x7, 0.5, 250), color="red", alpha=0.5, label="Arbedsgiveroverskudd")
+ax.fill_between(x7, 90, tilbud(x7, 0.5, 10), color="blue", alpha=0.5, label="Arbeidstakeroverskudd")
+
+
+#ax.text A
+ax.text(160, 180, "A", fontsize=20, color="black")
+
+
+ax.legend(loc="upper left")
+plt.savefig("monopsoni.png", dpi=300)
+
+```
+
+```{python include=FALSE}
+fig, ax = plt.subplots()
+
+
+ax.plot(x, ettersporsel(x, 0.5, 250), color="#FF6666")
+ax.plot(x, tilbud(x, 0.5, 10), color="#00994C")
+
+
+#xlim ylim
+ax.set_xlim(0, 550)
+ax.set_ylim(0, 300)
+
+#adding L^D and L^S as text 
+ax.text(500, 270, "$L^S$", fontsize=20)
+ax.text(500, 10, "$L^D$", fontsize=20)
+ax.text(300, 280, "$MLC$", fontsize=20)
+
+
+
+
+
+#mlcfunc(L, T, beta)
+
+ax.plot(x, mlcfunc(10, 0.5, x), color="black")
+
+
+
+
+ax.vlines(L_tilbud_num, 0, w_tilbud_num, color="grey")
+ax.hlines(w_tilbud_num, 0, L_tilbud_num, color="grey")
+
+
+
+ax.spines["right"].set_visible(False)
+ax.spines["top"].set_visible(False)
+
+ax.text(L_tilbud_num-10, -30, "$L^{m}$", fontsize=20)
+ax.text(-75, w_tilbud_num-5, "$w^{m}$", fontsize=20)
+
+
+
+
+#xlim ylim
+ax.set_xlim(0, 550)
+ax.set_ylim(0, 300)
+
+ax.set_xticks([])
+ax.set_yticks([])
+
+
+
+
+
+#text w with ^ above
+ax.text(-75, wmin, "$w^{min}$", fontsize=20)
+ax.vlines(L_tilbud_num, 0, wmin, color="black")
+ax.hlines(wmin, 0, 500, color="black")
+
+
+x6 = np.arange(L_tilbud_num, L_int_min+1, 1).astype(float)
+
+
+ax.fill_between(x6, ettersporsel(x6, 0.5, 250), tilbud(x6, 0.5, 10), color="green", alpha=0.5, label="Reddet overskudd", hatch="\\")
+
+
+ax.fill_between(x3, ettersporsel(x3, 0.5, 250), tilbud(x3, 0.5, 10), color="black", alpha=0.7, label="Nytt dødvektstap")
+
+
+ax.vlines(L_d_min_fk, 0, wmin, linestyle="dashed", color="black")
+ax.annotate("", xy=(L_int_min, 20), xytext=(L_tilbud_num, 20), arrowprops=dict(arrowstyle="->", lw=3))
+ax.text(L_int_min-3, -30, "$L^{min}$", fontsize=20)
+
+
+ax.fill_between(x7, 150, ettersporsel(x7, 0.5, 250), color="red", alpha=0.3, label="Arbedsgiveroverskudd", hatch="\\")
+ax.fill_between(x7, 150, tilbud(x7, 0.5, 10), color="blue", alpha=0.3, label="Arbeidstakeroverskudd", hatch="\\")
+
+#add text B
+ax.text(200, 160, "B", fontsize=20, color="black")
+
+ax.legend(loc="upper left")
+
+plt.savefig("monopsoni_min.png", dpi=300)
+
+
+```
+
+```{python include=FALSE}
+L_s_min = rho * L_s_likevekt_solved
+#l_s_min er mindre enn L_s_likevekt_solved ved økt minstelønn. rho < 1
+mindre_enn = sp.Lt(L_s_min, L_s_likevekt_solved)
+mindre_enn = sp.simplify(mindre_enn)
+
+L_s_int_likevekt = sp.integrate(equation_w-tilbud(L, beta, T), (L, 0, L_s_likevekt_solved))
+L_d_int_likevekt = sp.integrate(ettersporsel(L, alpha, E)-equation_w, (L, 0, L_s_likevekt_solved))
+
+
+L_s_int_likevekt_min = sp.integrate(equation_w-tilbud(L,beta, T), (L, 0, L_s_min))
+L_d_int_likevekt_min = sp.integrate(ettersporsel(L, alpha, E)-equation_w, (L, 0, L_s_min))
+
+
+tilbud_likevekt_min = sp.Lt(L_s_int_likevekt_min, L_s_int_likevekt)
+ettersporsel_likevekt_min = sp.Lt(L_d_int_likevekt_min, L_d_int_likevekt)
+
+
+tilbud_likevekt_min = sp.simplify(tilbud_likevekt_min)
+ettersporsel_likevekt_min = sp.simplify(ettersporsel_likevekt_min)
+tilbud_likevekt_min #Som vil si at dersom L er mindre, så gir dette et dødvektstap da integralet til likevekt er mindre enn integratet til likevekt med minstelønn
+```
+
+```{python include=FALSE}
+
+#w = 800 - 0.08L
+#w er reallønn og L er antall sysselsatte 
+
+#Fagforeningens nyttefunksjon er gitt ved U^F = (w-w^r)*L
+#der w^r = 100
+
+L = sp.symbols('L', real=True, positive=True)
+w = 800 - 0.08*L
+
+# nytte funksjon
+Uf = ((800 - 0.08 * L) - 100) * L
+
+
+derivert_L = sp.diff(Uf, L)
+
+L_max = sp.solve(derivert_L, L)[0]
+
+
+w_max = w.subs(L, L_max)
+
+nytte = (w_max - 100) * L_max
+nytte #1.5mill wtf
+
+
+wr_L_max = float(sp.solve(sp.Eq(800-0.08*L, 100), L)[0])
+
+x8 = np.linspace(0.01, 10000, 100)
+x9 = np.linspace(float(L_max), wr_L_max, 100)
+def wages(x8):
+    return 800 - 0.08 * x8
+
+
+nyttekurve = sp.solve(Uf - nytte, w)
+
+nyttekurve_func = sp.lambdify(L, nyttekurve[0])
+
+
+
+
+
+
+fig, ax = plt.subplots(figsize=(5, 5))
+
+ax.plot(x8, wages(x8), color='blue')
+ax.plot(x8, nyttekurve_func(x8), color='red')
+ax.text(10000, 300, '$U_0$', fontsize=20)
+ax.text(10000, -50, '$L^D$', fontsize=20)
+ax.set_xlim(0, 12000)
+ax.set_ylim(0, 1200)
+
+
+ax.fill_between(x9,100, wages(x9), color='grey', alpha=0.5, label='Dødvektstap')
+
+ax.hlines(w_max, 0, L_max, color='black', linestyle='dashed')
+ax.vlines(L_max, 0, w_max, color='black', linestyle='dashed')
+
+#line at 100
+ax.hlines(100, 0, 10000, color='black', linestyle='dashed')
+ax.text(10000, 100, '$w^r$', fontsize=20)
+
+#wm
+ax.text(0, w_max, '$w^m$', fontsize=20)
+#lmax
+ax.text(L_max-350, -80, '$L^m$', fontsize=20)
+
+ax.set_xticks([])
+ax.set_yticks([])
+
+ax.legend(loc='upper right')
+
+
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+
+
+plt.savefig('fagforening_deadweight.png', dpi=300)
+
+
+```
+
+
+```{python include=FALSE}
+xakse = 1,2,3, 4, 5, 6, 7, 8
+yakse1 = 3, 4, 5, 6, 8, 9, 10, 11
+yakse_nochange = 3, 4, 5, 6, 7, 8, 9, 10
+yakse2 = 1, 2, 3, 4, 5, 6, 7, 8
+
+
+fig, ax = plt.subplots()
+
+ax.plot(xakse, yakse1, color="#FF6666", label="Gruppe med endring")
+ax.plot(xakse, yakse_nochange, color="#FF6666", linestyle="dashed")
+ax.plot(xakse, yakse2, color="#00994C", label="Kontroll gruppe")
+
+
+ax.annotate("", xy=(7, 7), xytext=(7, 10), arrowprops=dict(arrowstyle="<->", lw=1))
+ax.text(7.1, 8.5, "A", fontsize=20)
+
+ax.annotate("", xy=(5, 5), xytext=(5, 7), arrowprops=dict(arrowstyle="<->", lw=1))
+ax.text(5.1, 6, "B", fontsize=12)
+ax.annotate("", xy=(6, 9), xytext=(6, 8), arrowprops=dict(arrowstyle="<->", lw=1))
+ax.text(6.1, 8.5, "C", fontsize=12)
+
+
+
+ax.set_ylim(0, 12)
+
+ax.set_xticks([])
+ax.set_yticks([])
+
+
+ax.legend(loc="upper left")
+plt.savefig("difference.png", dpi=300)
+
+
+```
+
+
+# Utfordring 2.1 - Minstelønn
+
+## 2.1.1
+
+### «Minstelønninger fører til **økt** fattigdom»
+
+Dersom det er et perfekt marked med fullkommen konkurranse så kan en minstelønn gi økt fattigdom i form av mindre sysselsetting dersom minstelønnen settes høyere enn lønnen i likevekt mellom etterspørsel og tilbud. Dette er fordi i et perfekt marked så er det nådd en markedslikevekt til lønn der det er maksimal effektivitet i markedet. Det vil si at velferden til alle er maksimert. Dersom minstelønnen settes høyere så oppstår det et dødvektstap. Dødvektstapet har oppstått fordi vi nå ikke utnytter samfunnets goder maksimalt siden vi fastsetter lønnen høyere enn det som er optimalt. Dette skjer fordi minstelønnen nå forhindrer folk som ønsket å jobbe fra å få jobb, og hindrer arbeidsgivere og ansette folk siden de ikke er villig til å betale den minstelønnen til like mange folk som lønnen i likevekten i et perfekt marked. Dette kan også skje i et ufullkomment marked som ved monopsoni som for eks der arbeidsgiver har stor markedsmakt dersom minstelønnen er satt over $MLC$. 
+
+#### Matematisk utledning og grafisk analyse
+
+For å kunne finne lønningen i en fullkommen konkurranse så setter vi opp to ligninger der $L^D$ er etterspørsel etter arbeidskraft(Labour Demand) og $L^S$ er tilbud av arbeidskraft(Labour supply).
+
+Da har vi ligningene
+
+$$L^D = \frac{\mathrm{E}}{\alpha} - \frac{1}{\alpha}w \tag{1}$$
+
+$$L^S = -\frac{T}{\beta}+\frac{1}{\beta}w \tag{2}$$
+
+Vi setter disse lik hverandre for å kunne løse for w for å finne lønningen
+
+$$L^D=\frac{\mathrm{E}}{\alpha} - \frac{1}{\alpha}w = -\frac{T}{\beta}+\frac{1}{\beta}w = L^S \tag{3}$$
+
+Og løser for w og da får vi lønnen i likevekt ved fullkommen konkurranse
+
+$$w^{FK} = \frac{T\alpha + \mathrm{E}\beta}{\alpha+\beta} \tag{4}$$ Ved å ta ligning 4 og sette inn for $w$ i ligning 3 så får vi $L$ i likevekt.
+
+$$L^{D} = \frac{\mathrm{E}}{\alpha} - \frac{T \alpha + \mathrm{E} \beta}{\alpha (\alpha + \beta)} =  - \frac{T}{\beta} + \frac{T \alpha + \mathrm{E} \beta}{\beta (\alpha + \beta)} = L^{S}$$
+
+Og løst for $L$ gir dette oss likevekten i ligning 5.
+
+$$L^{FK} =\frac{-T +\mathrm{E}}{\alpha - \beta} \tag{5}$$
+
+Denne likevekten vises i \autoref{fig:fig1} og all overskudd for arbeidere og arbeidsgivere er farget.
+
+```{=tex}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\linewidth]{fk.png}
+  \captionof{figure}{Likevekt under fullkommen konkurranse}
+  \label{fig:fig1}
+\end{figure}
+```
+Ved å derivere ligning 3 for $w$ så kan vi se endringen av en økt lønn. $$\frac{\partial L^D}{\partial w} = \frac{\mathrm{E}-w}{\alpha} =  \frac{-T+w}{\beta}=\frac{\partial L^S}{\partial w} \tag{6}$$ Her kan vi se er at dersom $w$ blir større så blir $\mathrm{E}$(Etterspørsel) mindre samtidig som at vi kan se at $-T$(tilbud) blir større.
+
+For å vise effekten av dette så deriverer jeg ligningen 5 for $L^{FK}$ for T og får $T=-\frac{1}{\alpha + \beta}$ og for $\mathrm{E}$ får jeg $E=\frac{1}{\alpha + \beta}$.
+
+\clearpage
+
+Så dersom T blir større så blir likevekten lavere, og dersom E blir mindre så blir likevekten også lavere. Dette resulterer i en likevekt der $\mathrm{E}$ og $T$ møtes på et lavere $L$(sysselsetting) nivå. Dette er vist med pil i \autoref{fig:fig2}. Dette er da et dødvektstap.
+
+Om $w$ skulle få en minimum lavere enn i likevekt så ville dette ikke gitt en effekt i et perfekt marked.
+
+Det vi da ser er at dersom minstelønnen er satt høyere enn lønnen i en fullkommen konkurranse så vil vi få en reduksjon i arbeidere som gir økt arbeidsledighet. Dette er en måte som kan gi økt fattigdom siden det nå finnes arbeidere som ville jobbet til en lavere lønn men ikke kan. Dette kan ses i \autoref{fig:fig2} hvor $L^{min}$ er på et lavere nivå enn $L^{FK}$ vist med pilen.
+
+For å kunne vise dette visuelt i en graf så tar jeg $L^D$ og $L^S$ og løser de for w for å finne lønnen i likevekt i fullkommen konkurranse. Da får vi ligningene $$w =L^S\beta + T \tag{7}$$ $$w =-L^D\alpha+\mathrm{E}\tag{8}$$
+
+Så ved å sette inn en minstelønn som er $w^{min} > w^{FK}$ så skriver jeg en ny likevekt for den ligningen hvor $\rho >1$ og ganger denne med likevekten i et perfekt marked. $$w^{min} = \rho * \frac{-T+E}{\alpha+\beta} \tag{9}$$
+
+```{=tex}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\linewidth]{fk_min.png}
+  \captionof{figure}{Likevekt under innført minstelønn}
+  \label{fig:fig2}
+\end{figure}
+```
+Det er også andre måter dødvektstapet kunne vært større eller mindre som for eksempel dersom markedet selger varer med høy prissensitivitet så kan den $L^D$ kurven vært brattere og et større dødvektstap ville oppstått eller motsatt dersom det et lite prissensitive varer.
+
+\clearpage
+
+#### Matematisk utledning av integralene
+
+For å bevise dette så tar jeg integralet til funksjonene opp til likevekten i et perfekt marked uten minstelønn og disse er gitt som ligning 10 og 11
+
+$$\text{Overskuddet til arbeidsgiverne} = \int_{0}^{\frac{-T +\mathrm{E}}{\alpha - \beta}} (L\alpha+\mathrm{E} - \frac{T\alpha + \mathrm{E}\beta}{\alpha+\beta}) \, dL \tag{10}$$
+
+$$\text{Overskuddet til arbeidstakerne} = \int_{0}^{\frac{-T +\mathrm{E}}{\alpha - \beta}} (\frac{T\alpha + \mathrm{E}\beta}{\alpha+\beta} - (L\beta+T)) \, dL \tag{11}$$
+
+Siden jeg nå har sett at minstelønnen har ført til redusert $L$ så tar jeg integralet til det nye overskuddet under minstelønn gitt ved ligning 12 og 13.
+
+$$\text{Nytt overskudd til arbeidsgiverne} = \int_{0}^{\frac{\rho (- T + \mathrm{E})}{\alpha + \beta}} (L\alpha+\mathrm{E} - \frac{T\alpha + \mathrm{E}\beta}{\alpha+\beta}) \, dL \tag{12}$$
+
+$$\text{Nytt overskudd til arbeidstakerne} = \int_{0}^{\frac{\rho (- T + \mathrm{E})}{\alpha + \beta}} (\frac{T\alpha + \mathrm{E}\beta}{\alpha+\beta} - (L\beta+T)) \, \tag{13}dL $$
+
+Løsningene på tibuds integralene er gitt som
+
+```{=tex}
+\begin{align}
+&\text{Arbeidstakeres overskudd}& \nonumber \\
+w^{FK} &= \frac{\beta (T - \mathrm{E})^{2}}{2 (\alpha + \beta)^{2}} > \frac{\rho \beta (2 - \rho) (T - \mathrm{E})^{2}}{2 (\alpha + \beta)^{2}} = w^{min} \tag{14}
+\end{align}
+
+\begin{align}
+&\text{Arbeidsgiveres overskudd}& \nonumber \\
+w^{FK} &= \frac{\alpha (T - \mathrm{E})^{2}}{2 (\alpha + \beta)^{2}} > \frac{\rho \alpha(2 - \rho) (T - \mathrm{E})^{2}}{2 (\alpha + \beta)^{2}}= w^{min} \tag{15}
+\end{align}
+```
+Dette dødvektstapet oppstår siden vi får en forflyttning av likevektspunktet fra $W^{FK}, L^{FK}$ til $W^{min}, L^{min}$. Dette vises visuelt i \autoref{fig:fig2} ved punkt B og C der etterspørselen i markedet er villig til å betale mer enn $w^{FK}$ men mindre enn $w^{min}$, mens tilbyderene er villig til å gi sin arbeidskraft for $w^{FK}$ der de ville fått et overskudd ved lønnen i $w^{FK}$ siden arbeideren ville fått mer enn det de var villig til å jobbe for så de da får et overskudd. Og arbeidsgiveren ville fått mer arbeidskraft siden de var villig til å betale helt opp til lønnen $w^{FK}$ i markedslikedsvekten. Disse to punktene er nå ikke mulig å nå og dermed kan ikke arbeideren jobbe eller bedriften ansette da lønnen er fastsatt på $w^{min} >w^{FK}$.
+
+I figuren der verdier er gitt så får vi at integralet når det er fullkommen konkurranse er 28800 og bare 28000 ved innført minstelønn på 150, med et dødvektstap på 800.
+
+\clearpage
+
+### «Minstelønninger fører til mindre fattigdom».
+
+Dersom det ikke er et perfekt marked så kan lønnen være satt til et nivå som er forskjelig fra markedslikevekten. Da er det et dødvektstap siden markedet ikke er helt effektivt. Ved et monopsoni hos arbeidsgiver ansettes færre enn markedslikevekten. Når det ansettes færre så er det flere som er arbeidssøkende som gjør at lønnen er lavere.
+
+Jeg blir å illustrere effekten på minstelønn når det er et monopsoni for arbeidsgiver, altså de har stor markedsmakt og da kan en minstelønn føre til økt til samme sysselsetting.
+
+Da har vi noen nye begreper som brukes i ligningene fremover. $TR = \text{Total revenue}$, $TC = \text{Total cost}$, $MLC = \text{Marginal cost of labour}$, $MLR = \text{Marginal labour revenue}$, og $MRP = \text{Marginal revenue of product}$. Jeg bruker profittfunksjonen $\Pi = TR-TC$ der TR er $p\cdot F(L)$ og TC er $w\cdot L$ i et fullkommen konkurranse.
+
+Vi deriverer dette for L $\frac{\partial \Pi}{\partial L} = 0$ som betyr $\frac{\partial TR}{\partial L}=\frac{\partial TC}{\partial L}=> MR=MC$. Dette vil si at grenseinntekt = grensekostnad.
+
+Ved et monopsoni så er $TC = w(L)\cdot L$ så når vi legger inn for dette så for vi $TC=T\cdot L+\alpha L^2$ Så for å finne $MC$ som er grensekostnad så deriverer vi denne for L og får $MC = \frac{\partial T L + \alpha L^2}{\partial L} => MC = T+2 \alpha L$
+
+$MR = \mathrm{E}-\beta L$ og siden MC=MR $\mathrm{E}-\beta L = T+2 \alpha L$
+
+Jeg løser dette nå for L og i ligning 16 ser vi at L under monopsoni som er gitt ved $L^m$. $$L^m = \frac{E-T}{\beta + 2 \alpha} \tag{16}$$
+
+Lønnen de utbetaler er gitt i ny likevekt vist i \autoref{fig:fig3} i punkt A.\
+Lønnen blir gitt ved $w=T+\alpha L$. Siden $L$ nå er på et lavere punkt så kan vi i formelen se at lønn blir å være lavere. Den er lavere siden det er mange arbeidere som ønsker jobb men veldig få jobber å få så de er villig til å bli betalt mindre enn det bedriften hadde vært villig å betale.
+
+Ved å nå innføre en minstelønn som er over denne lønnen men under krysningspunktet til $MLC$ og $L^D$ så vil det ikke være en reduksjon i arbeidere da bedriften er villig til å betale det vist i \autoref{fig:fig4} i punkt B. 
+
+```{=tex}
+\begin{figure}[h!]
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.95\linewidth]{monopsoni.png}
+  \captionof{figure}{Likevekt under\\\hspace{\textwidth}arbeidsgivers monopsoni}
+  \label{fig:fig3}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.95\linewidth]{monopsoni_min.png}
+  \captionof{figure}{Monopsoni likevekt\\\hspace{\textwidth}under innført minstelønn}
+  \label{fig:fig4}
+\end{minipage}
+\end{figure}
+```
+\clearpage
+
+### 
+
+## 2.1.2 
+
+```{=tex}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{minstelonn.png}
+    \caption{Minstelønninger i prosent av gjennomsnittlig bruttoinntekt}
+    \label{fig:fig5}
+\end{figure}
+```
+
+
+
+B-N betyr den inneholder fra B til N. mens B til S inneholder alle fra B til S så det er mer i B til S mens B til N eksluderer industri osv.
+
+Jeg velger B-S: Industri, byggenæring, og tjenesteyting (med unntak av husholdningers aktiviteter som arbeidsgivere og aktiviteter fra ekstraterritorielle organisasjoner) siden denne inkluderer alt i B-N men tar også med næringsgruppene O P Q og R.\
+Klassifikasjonene fra SSB er[^1]
+
+[^1]: @standard
+
+O=Offentlig administrasjon og forsvar, og trygdeordninger underlagt offentlig forvaltning.
+
+P = Undervisning
+
+Q = Helse og sosialtjenester
+
+R = Kulturell virksomhet, underholdning og fritidsaktiviteter.
+
+### 2.1.2 Del 1
+
+Hvilken av påstandene i Utfordring 2.1.1 ser den observerte sammenhengen ut å gi støtte til?
+
+Påstanden «Minstelønninger fører til **økt** fattigdom» passer bedre til den sammenhengen vi ser. Det vi kan se er at når minstelønnen er høyere så er sysselsettingsraten lavere.
+
+Korrelasjonskoeffisienten er gitt som -0.35 i figuren dette kommer ikke fra regresjonslinjen som kommer fra lineær regresjon men fra å ta korrelasjonen mellom verdiene i minstelønn mot sysselsettingsraten. Denne verdien forteller oss at det er en negativ sammenheng hvor når minstelønningen øker med 1% så synker sysselsettingsraten med 0.35%. Ved å opphøye denne i 2 så får vi en $R^2$ som forteller oss at den korrelasjonen forklarer 12% av variasjonen i sysselsettingsrate.
+
+
+```{r, results='asis', warning=FALSE}
+stargazer(tablebs, title = "Lineær regresjons resultat for B-S", label = "tab:1", type = "latex", header=FALSE)
+```
+
+
+Det vi kan se i tabell 2 er at for hver prosent arbeidsledigheten til utenlandsfødte går opp, så øker organisasjonsgraden med 4.6%. Men når arbeidsledigheten til innenlandsfødte øker så synker organisasjonsgraden med 6.676%. 
+Ved multippel regresjon så får jeg en $R^2$ på 0.414 som betyr at variasjonen i arbeidsledighet hos gruppene forklarer 41% av variasjonen i organisasjonsgraden.
+
+
+\clearpage
+
+### 2.1.2 Del 2
+
+Sammenhengen mellom nivået på minstelønn og arbeidsledighetsraten er en korrelasjon. Diskuter årsaker til at vi ikke kan trekke konklusjonen at denne sammenhengen mellom nivået på minstelønn og arbeidsledighetsraten er en korrelasjon.
+
+En av årsakene er at det kan være årlige variasjoner. Vi ser også bare på korrelasjonen mellom nivået på minstelønn og sysselsettingsraten. Vi ser ikke på noen endringer som blir gjort men bare hvordan nivået er i hvert av de landene. Ved å bare måle endringen i hvert land fra år til år så kan vi ikke trekke konklusjoner fra minstelønns nivået. Ved å se på endringene i hvert land for endringer i deres minstelønn så kan vi begynne og se noe endring ved å måle forskjellen i endringer fra år fra år. 
+
+
+For å lage en studie på dette så burde vi studert to veldig like grupper der vi gjør et tiltak for å foresake en endring hos den ene gruppen men ikke den andre. Med denne fremgangsmåten så kan vi forsøke å måle endringen hos begge, og om det er ulik endring over tid hos begge så kan vi da måle den ulike endringen for å se effekten av vårt tiltak. I \autoref{fig:fig5} så er dette en illustrasjon av denne formen. 
+Her er det 2 like grupper som skal måles, og vi gjør en endring ved en av de gruppene. Vi måler da den totale endringen som vist ved punkt A. Ut ifra dette så prøver vi å paralell forskyve linjen til kontroll gruppen og måler hvor mye denne måtte skyves og trekker dette ifra den totale endringen vist i punkt A. Denne endringen i endringer er vist ved punkt C der vi da kunne måle effekten av vårt tiltak.
+
+
+
+```{=tex}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{difference.png}
+    \caption{Illustrasjon av "Difference in differences"}
+    \label{fig:fig5}
+\end{figure}
+```
+
+
+
+\clearpage
+
+# Utfordring 2.2 - Fagforeninger
+
+## 2.2.1
+
+
+
+Bruk økonomisk teori og grafisk analyse til å gi intuisjon til påstanden «Sterke fagforeninger reduserer velferden».
+
+Fagforeninger har som mål å maksimere nytten til medlemmene sine. Dersom de har markedsmakt så kan de kreve høyere lønn enn det lønnen er i et perfekt marked. Arbeidsgiverne gitt ved $L^D$ må da betale den høyere lønnen dersom de skal ansette folk men dette er da en lønn som er høyere enn det lønnen ville vært i likevekten og da kan ikke bedriftene ansette like mange da lønnen er for høy. Dermed gir dette et effektivitetstap.
+
+I figuren er reservasjonslønnen vist med $w^r$ og dette stedet hvor denne krysser $L^D$ ville vært likevekten. Men det vi kan se er at fagforeningen har satt lønnen $w^m$. Dette gir oss en $L^M$ som er lavere enn den det ville vært om alle hadde vært ansatt under krysningspunktet til $L^D$ og $w^r$. Dette effektivitetstapet er merket i grått i \autoref{fig:fig6}.
+
+
+
+
+```{=tex}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{fagforening_deadweight.png}
+    \caption{Dødvektstap ved for sterke fagforeninger}
+    \label{fig:fig6}
+\end{figure}
+```
+
+
+\clearpage
+
+## 2.2.2
+
+Diskuter dine empiriske observasjoner ut fra økonomisk teori om forhandling mellom arbeidsmarkedets parter og medlemsbasens sammensetning.
+
+Det er tegnet inn lineær regresjonslinjer men disse er ikke signifikant. Dette er vist i output på siste side. Jeg tar en lineær multippel regresjon mellom begge variablene og får et signifikant resultat men jeg har ikke dette med i figur, men har med tabell. 
+```{=tex}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{innenland.png}
+    \caption{Innenlandsfødte arbeidsledighet mot organisasjonsgrad}
+    \label{fig:fig9}
+\end{figure}
+```
+
+Det vi kan se mellom innenlandsfødte og utenlandsfødte er at det er en negativ korrelasjon mellom innenlandsfødte sin arbeidsledighet organisasjonsgraden i landet men motsatt for utenlandsfødte sin arbeidsledighet. Dette kan tyde på at fagforeningene ikke har for stor makt da en økt organisasjonsgrad reduserer arbeidsledighet hos innenlandsfødte. Det kan også da virke som den økte organisasjonsgraden øker effektiviteten i økonomien. Dette kan bety at i landene med høy organisasjonsgrad så spiller fagforeningene en rolle i å sikre jobbsikkerhet. Da det er mye usikkerhet ved lineær regresjonen så kan det også være at økonomiene i landene med høy organisasjonsgrad er sterke nok til å støtte både høy organisasjonsgrad og lav arbeidsledighet.
+
+\clearpage
+```{=tex}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{utenland.png}
+    \caption{Utenlandsfødte arbeidsledighet mot organisasjonsgrad}
+    \label{fig:fig10}
+\end{figure}
+```
+Men i \autoref{fig:fig10} så kan det se ut som en økt organisasjonsgrad fører til at utenlandsfødte får en høyere arbeidsledighet.  Dette kan være fordi utenlandsfødte arbeidstakere ofte er i mer usikre jobber uten fagforeninger eller det kan være andre hindringer på arbeidsmarkedet som lover for jobb sikkerhet for de som allerede har jobb slik at bedrifter ikke vil ansette flere. Dette kan være resultatet av at fagforeninger generelt støtter sterkere jobb beskyttelse for sine medlemmer som kan lede til at å det blir vanskeligere å gå inn og ut av arbeidsmarkedet, og utenlandsfødte skal prøve å gå inn i arbeidsmarkedet. 
+
+Dette kan vise at medlemsbasens sammensetning kan ha stor effekt da fagforeningene ønsker høyest nytte for sine medlemmer og kan da presse lønnen opp, og ved at lønnen øker så vil andelen arbeidere gå ned, og da kan dette bli vanskeligere for utenlandsfødte å få jobb. Fagforeningen vil også at den økte lønnen skal dekke flere enn bare de i fagforeningen slik at ikke bare arbeidsgiveren vil ansette de utenom fagforeninger. Da kommer "Excess coverage" som kan virke ødeleggende for de utenlandsfødte arbeidstakerne som kanskje ville fått jobb dersom de fikk lov til å jobbe for den lavere lønnen. 
+
+
+Dette viser at når organisasjonsgraden blir høyere så blir det bedre for de innenlandsfødte da det sannsynligvis er flere av de i fagforeningen, og fagforeningen vil da støtte opp de bedre uten og ta hensyn for utenlandsfødte. 
+
+
+\clearpage
+
+
+```{r, results='asis', warning=FALSE}
+
+stargazer(table_multippel, title = "Multippel lineær regresjons resultat  for innenlands og utenlandsfødte", label = "tab:table2", type = "latex", header=FALSE)
+```
+
+
+Dette viser oss at når arbeidsledigheten for utenlandsfødte øker med 1%poeng, så øker organisasjonsgraden med 4.63%poeng. og en 1%poeng økning i innenlandsfødte sin arbeidsledighet så synker organisasjonsgraden med 6.7%poeng
+og da forklarer de 2 variablene 41% av variansen i organisasjonsgraden.
+
+Den forteller oss også at dersom det var 0 arbeidsledighet så ville vi hatt en organisasjonsgrad på 24.615%.
+
+
+Denne tabellen må da tas med en stor klype salt da vi bare har 26 observasjoner med en "Residual standard error" på 18 med "degrees of freedom" på 23 som forteller oss hvor mye organisasjonsgraden avviker fra linjen anslått i regresjonsmodellen. 
+
+F statistic forteller oss et signifikant resultat som sier at modellen angivelig har forklaringskraft for organisasjonsgraden. 
+
+\clearpage
+
+# Referanser
+
+::: {#refs}
+:::
+
+\clearpage
+
+\section {Appendix Generell KI bruk}
+
+I løpet av koden så kan det ses mange \# kommentarer der det er skrevet for eks "#fillbetween q1 and q2". Når jeg skriver kode i Visual Studio Code så har jeg en plugin som heter Github Copilot. Når jeg skriver slike kommentarer så kan den foresøke å fullføre kodelinjene mens jeg skriver de. Noen ganger klarer den det, men andre ikke. Det er vanskelig å dokumentere hvert bruk der den er brukt siden det "går veldig fort" men siden jeg ikke har fått på plass en slik dokumentasjon så kan all python kode der det er brukt kommentarer antas som at det er brukt Github Copilot. Nærmere info om dette KI verktøyet kan ses på <https://github.com/features/copilot>
+
+\section {Appendix 2.1 KI bruk}
+
+Forsøkte bruk av chatgpt til å hjelpe meg til å skrive integralene i latex men endte med å forkaste alt.
+
+Brukte chatgpt til å finne ut hvordan jeg skrev større en/mindre en og hvilken greske bokstaver jeg skulle bruke. <https://chat.openai.com/share/3d8555b4-fb99-4946-9766-699aef77df9b>
+
+Spurte chatgpt om hjelp med integralene <https://chat.openai.com/share/010a93a1-1467-4de8-a45a-94d1e42c2e60>
+
+\
+
+\section {Appendix 2.2 KI bruk}
+
+I del 2 av oppgaven så er det brukt ChatGPT til å hjelpe meg skrive svar på spørsmålene om fagforeninger. Jeg har da skrevet inn teksten jeg har hatt, og etterspurt forbedringer. Jeg har da fått inputs i teksten men jeg tror at svaret jeg gir er rett. 
+
+
+\section {Appendix Github link og lineær regresjonsresultater}
+
+<https://github.com/Danieljoha/Sok-2008>
+
+
+Lineær regresjons resultat
+
+
+```{r, results='asis'}
+stargazer(tablenb, title = "Lineær regresjons resultat for innenlandsfødte", label = "tab:table3", type = "latex", header=FALSE)
+
+```
+
+```{r, results='asis'}
+
+stargazer(tablefb,title = "Lineær regresjons resultat  for utenlandslandsfødte", label = "tab:table4", type = "latex", header=FALSE)
+```
+

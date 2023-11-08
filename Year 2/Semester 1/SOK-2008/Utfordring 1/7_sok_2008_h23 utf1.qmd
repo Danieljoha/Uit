@@ -1,0 +1,901 @@
+---
+title: "Utfordring 1"
+subtitle: "Fakultet for biovitenskap, fiskeri og økonomi."
+author: "Kandidatnummer 7, SOK-2008 Høst 2023"
+date: last-modified 
+date-format: "DD-MM-YYYY"
+editor: visual
+toc-title: "Innholdsfortegnelse."
+format: 
+  pdf:
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+echo: false
+warning: false
+message: false
+bibliography: references.bib
+csl: norsk-apa-manual.csl
+crossref: 
+  lof-title: "Figur liste"
+  fig-title: "Figur"
+header-includes:
+  - \usepackage{wrapfig}
+  - \usepackage{subcaption}
+  - \usepackage[utf8]{inputenc}
+nocite: |
+  @*
+encoding: UTF-8
+---
+
+```{=tex}
+\newpage
+\renewcommand*{\figureautorefname}{Figur}
+\tableofcontents
+\listoffigures
+\newpage
+```
+```{r, warning=FALSE, message=FALSE}
+rm(list=ls()) 
+library(tidyverse)
+library(lubridate)
+library(rjstat)
+library(janitor)
+library(gdata)
+library(httr)
+library(jsonlite)
+library(ggrepel)
+library(stringr)
+library(stargazer)
+```
+
+```{r}
+url04544 <- "https://data.ssb.no/api/v0/no/table/04544/"
+
+query <- '{
+  "query": [
+    {
+      "code": "Kjonn",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "0",
+          "1",
+          "2"
+        ]
+      }
+    },
+    {
+      "code": "Yrkesstatus",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "00",
+          "01",
+          "02",
+          "03"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+df_04544 <- url04544 %>%
+  POST(body = query, encode = "json") %>% 
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble()
+
+plot <- df_04544 %>% 
+  filter(statistikkvariabel == "Faktisk arbeidstid (timer per uke)") %>% 
+  filter(kjønn != "Begge kjønn") %>%
+  filter(yrkesstatus == "I alt") %>% 
+  mutate(år = as.numeric(år)) %>% 
+  ggplot()+
+  geom_line(aes(x=år, y=value, color=kjønn))+
+  theme_bw() +
+  theme(legend.position = "bottom")+
+  labs(x="", y="Arbeidstimer per uke", caption="SSB tabell 04544", color="") +
+  scale_x_continuous(expand = c(0, 0), n.breaks = 14, guide = guide_axis(angle=45))
+
+ggsave("df_04544.png", width=8, height=4)
+
+rm(query, url04544, df_04544, plot)
+```
+
+```{r}
+df112 <- read_delim("https://raw.githubusercontent.com/uit-sok-2008-h23/uit-sok-2008-h23.github.io/main/assets/women.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE, show_col_types = FALSE)
+
+
+
+plot <- df112 %>% 
+  ggplot(aes(x=tot_full_rate, y=fem_emp_rate_0_2))+
+  geom_point() +
+  geom_text_repel(aes(label=country))+
+  theme_bw()+
+  theme(legend.position = "none")+
+  labs(x="Antall uker permisjon", y="Kvinner i arbeid med barn i alderen 0-2", caption="Data fra OECD, tilgang gitt fra Andrea Mannberg")+
+  scale_x_continuous()+
+  scale_y_continuous(limits=c(0, 100), labels=scales::percent_format(scale=1), expand= c(0,0)) +
+  geom_smooth(method=lm, se=FALSE, alpha=0.5)
+
+
+ggsave("pointfig0_2.png", width=8, height=4)
+rm(plot)
+```
+
+```{r}
+
+plot <- df112 %>% 
+  ggplot(aes(x=tot_full_rate, y=fem_emp_rate_6_14))+
+  geom_point()+
+  geom_text_repel(aes(label=country))+
+  theme_bw()+
+  theme(legend.position = "none")+
+  labs(x="Antall uker permisjon", y="Kvinner i arbeid med barn i alderen 6-14", caption="Data fra OECD, tilgang gitt fra Andrea Mannberg")+
+  scale_x_continuous()+
+  scale_y_continuous(limits = c(0, 100), labels=scales::percent_format(scale=1), expand= c(0,0)) +
+  geom_smooth(method=lm, se=FALSE, alpha=0.5) 
+  
+
+ggsave("pointfig6_14.png", width=8, height=4)
+rm(plot, df112)
+```
+
+```{r}
+url <- "https://data.ssb.no/api/v0/no/table/07459/"
+
+
+query <- '{
+  "query": [
+    {
+      "code": "Region",
+      "selection": {
+        "filter": "vs:Landet",
+        "values": [
+          "0"
+        ]
+      }
+    },
+    {
+      "code": "Kjonn",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "1",
+          "2"
+        ]
+      }
+    },
+    {
+      "code": "Alder",
+      "selection": {
+        "filter": "agg:FemAarigGruppering",
+        "values": [
+          "F00-04",
+          "F05-09",
+          "F10-14",
+          "F15-19",
+          "F20-24",
+          "F25-29",
+          "F30-34",
+          "F35-39",
+          "F40-44",
+          "F45-49",
+          "F50-54",
+          "F55-59",
+          "F60-64",
+          "F65-69",
+          "F70-74",
+          "F75-79",
+          "F80-84",
+          "F85-89",
+          "F90-94",
+          "F95-99",
+          "F100G5+"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2003",
+          "2004",
+          "2005",
+          "2006",
+          "2007",
+          "2008",
+          "2009",
+          "2010",
+          "2011",
+          "2012",
+          "2013",
+          "2014",
+          "2015",
+          "2016",
+          "2017",
+          "2018",
+          "2019",
+          "2020",
+          "2021",
+          "2022",
+          "2023"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+df_07459 <- url %>%
+  POST(body = query, encode = "json") %>% 
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble() 
+
+df_07459 <- df_07459 %>% 
+  filter(år %in% c("2003", "2023"))
+
+
+plot <- df_07459 %>%
+  mutate(start_alder = as.integer(str_extract(alder, "^\\d+"))) %>% #regex og sett de første funne tall til int
+  arrange(år) %>%  
+  mutate(value = ifelse(kjønn=="Menn", value*(-1), value*1)) %>%
+  ggplot(aes(x = reorder(alder, start_alder),y = value, fill=kjønn, alpha = as.factor(år))) +
+  scale_alpha_manual(values = c("2003" = 1, "2023" = 0.5))+
+  geom_col(position = "identity") +
+  geom_text(aes(label = "Menn", y = -200000, x = "95-99 år"), hjust = 0, vjust = 0, size = 4, color="#0E3F59") +
+  geom_text(aes(label = "Kvinne", y = 150000, x = "95-99 år"), hjust = 0, vjust = 0, size = 4, color="#BC2222") +
+  scale_fill_manual(values = c(Menn = "#0E3F59", Kvinner = "#BC2222")) +
+  labs(x="", y="", fill="", alpha="", title="2003, helfargede søyler. 2023, gjennomsiktige", caption="SSB tabell 07459")+
+  scale_y_continuous(labels = abs(seq(-300000,300000,by = 75000)),
+                     breaks = seq(-300000,300000,by = 75000))+
+  coord_flip()+
+  theme_bw()+
+  theme(legend.position = "none")
+
+
+ggsave("pyramide.png", width=8, height=8)
+rm(df_07459, plot, url, query)
+```
+
+```{r}
+eurostat <- read_csv("https://ec.europa.eu/eurostat/api/dissemination/sdmx/3.0/data/dataflow/ESTAT/HLTH_SHA11_HF/1.0?compress=false&format=csvdata&formatVersion=2.0&lang=en&labels=both", show_col_types = FALSE) 
+
+
+eurostat <- eurostat %>%
+  select(-c(1:3)) %>%
+  rename(unit = 1, scheme = 2, geo = 3, time = 4, value = 5, flag = 6) %>% 
+  filter(time == "2019") %>% 
+  filter(unit %in% c("PC_CHE: Percentual share of total current health expenditure (CHE)", "PPS_HAB: Purchasing power standard (PPS) per inhabitant"), scheme %in% c("HF3: Household out-of-pocket payment", "TOT_HF: All financing schemes")) %>% 
+  select(-time, -flag) %>% 
+  filter(!str_detect(geo, "^(EU|EA)")) %>% 
+  filter(!(unit == "PC_CHE: Percentual share of total current health expenditure (CHE)" & scheme == "TOT_HF: All financing schemes"), !(unit == "PPS_HAB: Purchasing power standard (PPS) per inhabitant" & scheme == "HF3: Household out-of-pocket payment")) %>% 
+  mutate(unit = paste(unit, scheme, sep = " - ")) %>% 
+  select(-scheme) %>% 
+  pivot_wider(names_from = "unit", values_from="value") %>% 
+  rename(householdexp_percent = 2, govexp = 3)
+
+
+plot <- eurostat %>% 
+  mutate(geo = substr(geo, 1, 2)) %>% 
+  ggplot(aes(x=householdexp_percent, y=govexp)) +
+  geom_point()+
+  labs(x="Egenandel andel av totale helsekostnader", y="Kjøpekrafts justerte totale kostnader per innbygger", caption = "Eurostat hlth_sha11_hf")+
+  geom_smooth(method=lm, se=FALSE) +
+  theme_bw()+
+  geom_text_repel(aes(label=geo))+
+  scale_x_continuous(labels=scales::percent_format(scale=1))
+
+
+table <- lm(eurostat$govexp ~ eurostat$householdexp_percent)
+
+
+
+ggsave("eurostat.png", width=8, height=4)
+
+rm(eurostat, plot)
+```
+
+```{python include=FALSE}
+from IPython.display import display, Math, Latex
+import numpy as np
+from matplotlib import pyplot as plt
+import sympy as sp
+
+
+
+
+c, l, a, b, U_0 =sp.symbols("c l a b U_0", real=True, positive=True)
+U=c**a*l**b
+# Løser for x_2
+x_2_ind_sol=sp.solve(U-U_0,l)[0]
+
+indiff_x_2=sp.lambdify( (U_0,a,b,c), x_2_ind_sol)
+
+
+
+def budsjett(M, p1, p2, x1):
+    return M/p2 - p1*x1/p2
+
+
+p_1, p_2, m =sp.symbols("p_1 p_2 m", real=True, positive=True)
+
+# budsjett
+bud=p_1*c+p_2*l
+
+# Beregne MSB
+
+msb = sp.diff(U, c)/sp.diff(U,l)
+x_2_rel=sp.solve(msb-p_1/p_2,l)[0]
+budsj=bud.subs(l,x_2_rel)
+x_1_eq= sp.solve(budsj-m,c)[0]
+
+x_2_eq= x_2_rel.subs(c,x_1_eq)
+
+U_max=U.subs([(c,x_1_eq),(l,x_2_eq)])
+
+nytte_kvinne = U_max.subs([(a,.4),(b,.4),(m,2000),(p_1,20),(p_2,20)])
+x_1_num_kvinne = x_1_eq.subs([(a,.4),(b,.4),(m,2000),(p_1,20),(p_2,20)])
+x_2_num_kvinne = x_2_eq.subs([(a,.4),(b,.4),(m,2000),(p_1,20),(p_2,20)])
+
+
+nytte_menn = U_max.subs([(a,.3),(b,.5),(m,2000),(p_1,20),(p_2,20)])
+x_1_num_menn = x_1_eq.subs([(a,.3),(b,.5),(m,2000),(p_1,20),(p_2,20)])
+x_2_num_menn = x_2_eq.subs([(a,.3),(b,.5),(m,2000),(p_1,20),(p_2,20)])
+
+
+
+x=np.linspace(0.001,100, 100)
+
+fig, ax = plt.subplots()
+
+
+
+ax.set_ylabel('Konsum $c$', loc='top')
+ax.set_xlabel('Fritid $l$', loc='right')
+ax.set_xlim(20, 100)
+ax.set_ylim(0, 100)
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')   
+
+         
+#no numbers on axis
+ax.xaxis.set_major_formatter(plt.NullFormatter())
+ax.yaxis.set_major_formatter(plt.NullFormatter())
+#no ticks on x or y axis
+ax.xaxis.set_ticks_position('none')
+ax.yaxis.set_ticks_position('none')
+
+
+
+
+ax.plot(x, indiff_x_2(nytte_kvinne,.4,.4,x), color= "red", label="Preferansen til Kvinner")
+
+ax.plot(x, indiff_x_2(nytte_menn,.3,.5,x), color= "blue", label="Preferansen til Menn")
+
+
+ax.vlines(x_1_num_kvinne,0,x_2_num_kvinne, color='grey',ls='dashed')
+ax.hlines(x_2_num_kvinne,0,x_1_num_kvinne, color='grey',ls='dashed')
+ax.scatter(x_1_num_kvinne, x_2_num_kvinne, color="red", label="Optimalt valg for kvinner")
+
+
+
+ax.vlines(x_1_num_menn,0,x_2_num_menn, color='grey',ls='dashed')
+ax.hlines(x_2_num_menn,0,x_1_num_menn, color='grey',ls='dashed')
+ax.scatter(x_1_num_menn, x_2_num_menn, color="blue", label="Optimalt valg for menn")
+
+
+
+x_res=np.linspace(0.001,80, 100)
+ax.plot(x_res, budsjett(2000, 20, 20, x_res), label='Budsjett', color="black")
+#hline to the right of the budget line
+ax.hlines(20,20,80, color='grey',ls='dashed')
+#text m "Reservasjonslønn"
+ax.text(12, 19, '$c$=$m$', fontsize=12)
+#text for both other h lines
+ax.text(12, 50, '$c_{kvinner}$', fontsize=12)
+ax.text(12, 60, '$c_{menn}$', fontsize=12)
+
+#text vlines
+ax.text(35, -5, '$l_{menn}$', fontsize=12)
+ax.text(48, -5, '$l_{kvinner}$', fontsize=12)
+
+
+ax.vlines(80,0,20, color='grey',ls='dashed')
+ax.text(77, -5, '$l=T$', fontsize=12)
+
+
+#vis navnene:
+ax.legend()
+
+#savefig
+plt.savefig('preferanser.png')
+```
+
+```{python include=FALSE}
+
+from IPython.display import display, Math, Latex
+import numpy as np
+from matplotlib import pyplot as plt
+import sympy as sp
+
+
+
+c, l, a, b, U_0 =sp.symbols("c l a b U_0", real=True, positive=True)
+U=c**a*l**b
+# Løser for x_2
+x_2_ind_sol=sp.solve(U-U_0,l)[0]
+
+indiff_x_2=sp.lambdify( (U_0,a,b,c), x_2_ind_sol)
+
+
+
+def budsjett(M, p1, p2, x1):
+    return M/p2 - p1*x1/p2
+
+
+p_1, p_2, m =sp.symbols("p_1 p_2 m", real=True, positive=True)
+
+# budsjett
+bud=p_1*c+p_2*l
+
+# Beregne MSB
+
+msb = sp.diff(U, c)/sp.diff(U,l)
+x_2_rel=sp.solve(msb-p_1/p_2,l)[0]
+budsj=bud.subs(l,x_2_rel)
+x_1_eq= sp.solve(budsj-m,c)[0]
+
+x_2_eq= x_2_rel.subs(c,x_1_eq)
+
+U_max=U.subs([(c,x_1_eq),(l,x_2_eq)])
+
+nytte_kvinne = U_max.subs([(a,.4),(b,.4),(m,2000),(p_1,20),(p_2,20)])
+x_1_num_kvinne = x_1_eq.subs([(a,.4),(b,.4),(m,2000),(p_1,20),(p_2,20)])
+x_2_num_kvinne = x_2_eq.subs([(a,.4),(b,.4),(m,2000),(p_1,20),(p_2,20)])
+
+
+nytte_menn = U_max.subs([(a,.3),(b,.5),(m,2000),(p_1,20),(p_2,20)])
+x_1_num_menn = x_1_eq.subs([(a,.3),(b,.5),(m,2000),(p_1,20),(p_2,20)])
+x_2_num_menn = x_2_eq.subs([(a,.3),(b,.5),(m,2000),(p_1,20),(p_2,20)])
+
+
+
+x=np.linspace(0.001,100, 100)
+
+fig, ax = plt.subplots()
+
+
+
+ax.set_ylabel('$w$', loc='top', rotation=0)
+ax.set_xlabel('$t$', loc='right')
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')   
+
+         
+#no numbers on axis
+ax.xaxis.set_major_formatter(plt.NullFormatter())
+ax.yaxis.set_major_formatter(plt.NullFormatter())
+#no ticks on x or y axis
+ax.xaxis.set_ticks_position('none')
+ax.yaxis.set_ticks_position('none')
+
+
+
+x = np.linspace(15, 35, 100)
+
+
+
+ax.set_xlim(0, 40)
+ax.set_ylim(0, 210)
+#savefig
+
+
+#hline from the left of the graph to the right
+ax.hlines(indiff_x_2(nytte_kvinne,.4,.4,x)[0],0,15, color='grey',ls='dashed')
+ax.hlines(indiff_x_2(nytte_kvinne,.4,.4,x)[10],0,15, color='grey',ls='dashed')
+
+ax.hlines(indiff_x_2(nytte_kvinne,.4,.4,x)[99],0,15, color='grey',ls='dashed')
+
+
+#vlines 
+ax.vlines(15,0,indiff_x_2(nytte_kvinne,.4,.4,x)[0], color='grey',ls='dashed')
+
+
+#text
+ax.text(15, -10, '$t_0$', fontsize=12)
+
+ax.text(-2, indiff_x_2(nytte_kvinne,.4,.4,x)[0], '$w_1^r$', fontsize=12)
+ax.text(-2, indiff_x_2(nytte_kvinne,.4,.4,x)[10], '$w_0$', fontsize=12)
+
+ax.text(-2, indiff_x_2(nytte_kvinne,.4,.4,x)[99], '$w_0^r$', fontsize=12)
+
+
+
+
+#plt savefig
+plt.savefig('0barn.png')
+ax.plot(x, indiff_x_2(nytte_kvinne,.4,.4,x), color="black")
+
+
+#hline from the left of the graph to the right
+ax.hlines(indiff_x_2(nytte_kvinne,.4,.4,x)[0],0,15, color='grey',ls='dashed')
+ax.hlines(indiff_x_2(nytte_kvinne,.4,.4,x)[10],0,17, color='grey',ls='dashed')
+ax.hlines(indiff_x_2(nytte_kvinne,.4,.4,x)[20],0,19, color='grey',ls='dashed')
+
+ax.hlines(indiff_x_2(nytte_kvinne,.4,.4,x)[99],0,35, color='grey',ls='dashed')
+
+
+#vlines 
+ax.vlines(15,0,indiff_x_2(nytte_kvinne,.4,.4,x)[0], color='grey',ls='dashed')
+ax.vlines(17,0,indiff_x_2(nytte_kvinne,.4,.4,x)[10], color='grey',ls='dashed')
+ax.vlines(19,0,indiff_x_2(nytte_kvinne,.4,.4,x)[20], color='grey',ls='dashed')
+
+#text
+ax.text(15, -10, '$t_0$', fontsize=12)
+ax.text(17, -10, '$t_A$', fontsize=12)
+ax.text(19, -10, '$t_B$', fontsize=12)
+
+
+ax.text(-2, indiff_x_2(nytte_kvinne,.4,.4,x)[20], '$\^w$', fontsize=12)
+
+#scatter at w_0 and w^
+ax.scatter(17, indiff_x_2(nytte_kvinne,.4,.4,x)[10], color="black")
+ax.text(17, indiff_x_2(nytte_kvinne,.4,.4,x)[10]+2, 'A $w_0 = w_1$', fontsize=12)
+ax.scatter(19, indiff_x_2(nytte_kvinne,.4,.4,x)[20], color="black")
+ax.text(19, indiff_x_2(nytte_kvinne,.4,.4,x)[20]+2, 'B $w_1 = \^w$', fontsize=12)
+ax.text(35, indiff_x_2(nytte_kvinne,.4,.4,x)[99], '$w^r$', fontsize=12)
+
+
+#plt savefig
+plt.savefig('foreldrepermisjon.png')
+
+
+```
+
+```{python include=FALSE}
+x=np.linspace(0.001,100, 100)
+
+
+
+#intersections for the indifference curves and budget line
+int_eq = indiff_x_2(nytte_menn-3.5,.3,.5,c) - budsjett(2000, 20, 20, c)
+int_eq_2 = indiff_x_2(nytte_menn-7,.3,.5,c) - budsjett(2000, 20, 20, c)
+
+int_1 = sp.solve(int_eq, c)
+int_2 = sp.solve(int_eq_2, c)
+
+fig, ax = plt.subplots()
+
+
+
+ax.set_ylabel('Konsum $c$', loc='top')
+ax.set_xlabel('Fritid $l$', loc='right')
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')   
+
+         
+#no numbers on axis
+ax.xaxis.set_major_formatter(plt.NullFormatter())
+ax.yaxis.set_major_formatter(plt.NullFormatter())
+#no ticks on x or y axis
+ax.xaxis.set_ticks_position('none')
+ax.yaxis.set_ticks_position('none')
+
+x_res=np.linspace(0.001,float(int_1[1]), 100)
+ax.plot(x_res, budsjett(2000, 20, 20, x_res), label='Budsjett', color="black")
+
+
+
+
+ax.plot(x_res, indiff_x_2(nytte_menn-3.5,.3,.5,x_res), color= "black", label="$U_{np}$", ls='dashed')
+
+
+ax.plot(x_res, indiff_x_2(nytte_menn-7,.3,.5,x_res), color= "black", label="$U_{ft}$", ls='dotted')
+
+
+ax.text(70, 30, 'A', fontsize=12)
+
+
+ax.text(int_1[0], budsjett(2000, 20, 20, x_res)[15], 'B', fontsize=12)
+ax.text(int_1[0], budsjett(2000, 20, 20, x_res)[60], 'C', fontsize=12)
+#vlines
+ax.vlines(int_1[0],0,budsjett(2000, 20, 20, x_res)[15], color='grey',ls='dashed')
+ax.vlines(int_1[1],0,budsjett(2000, 20, 20, x_res)[99], color='black',ls='solid')
+#text
+ax.text(int_1[0]-2, -5, '$h_{ft}$', fontsize=12)
+ax.text(int_1[1]-1, -5, '$l=T$', fontsize=12)
+
+
+#vis navnene:
+ax.legend()
+ax.set_xlim(0, 80)
+ax.set_ylim(0, 120)
+#savefig
+plt.savefig('tvunget.png')
+
+
+ax.plot(x_res, indiff_x_2(nytte_menn,.3,.5,x_res), color= "blue", label="$U_{pt}$")
+#scatter at budget
+ax.text(x_1_num_menn, x_2_num_menn, '$D$', fontsize=12)
+#vlines hlines
+ax.vlines(x_1_num_menn,0,x_2_num_menn, color='grey',ls='dashed')
+ax.text(x_1_num_menn-2, -5, '$h_{pt}$', fontsize=12)
+
+
+
+ax.legend()
+
+plt.savefig('deltid.png')
+
+```
+
+```{python include=FALSE}
+
+def demand(p):
+    return 200-p
+
+
+#supply linear line at 100
+def supply(p, t):
+    return 100 + t*p
+
+def supply5(p, t):
+    return 50 + t*p
+
+p, t = sp.symbols('p t', real = True, positive = True)
+
+eq_1 = sp.Eq(demand(p), supply(p, t))
+
+
+#plot them
+p = np.linspace(0, 200, 1000)
+
+
+fig, ax = plt.subplots()
+
+ax.set_ylabel('Pris på helsetjenester $p$', loc='top', size=8)
+ax.set_xlabel('Forbruk av helsetjenster $q$', loc='right')
+ax.set(xlim=(0,250))
+ax.set(ylim=(0,250))
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+#noticks
+#ax.xaxis.set_ticks_position('none')
+#ax.yaxis.set_ticks_position('none')
+#no ticklabels
+ax.xaxis.set_major_formatter(plt.NullFormatter())
+ax.yaxis.set_major_formatter(plt.NullFormatter())
+
+
+#vline to intersection 1 and 2
+ax.vlines(100,0,100, color='grey',ls='dashed')
+ax.text(100, 5, '$q_1$', fontsize=12)
+ax.vlines(150,0,100, color='grey',ls='dashed')
+ax.text(150, 5, '$q_2$', fontsize=12)
+ax.text(200, 5, '$q_3$', fontsize=12)
+
+
+ax.plot(p, demand(p), label='Etterspørsel')
+ax.text(-26, 43, '$P=0.5$', fontsize=10)
+ax.plot(p, supply(p, 0), label='1 egenandel')
+ax.text(-20, 93, '$P=1$', fontsize=10)
+ax.text(-20, -3, '$P=0$', fontsize=10)
+
+ax.plot(p, supply5(p, 0), label='0.5 egenandel')
+
+#fillbetween above egenandel 0.5 and 1 egenandel from 100 to 150 but only above the ettersporsel line
+ax.fill_between(p, demand(p), supply(p, 0), where= (p>100) & (p<150), color='grey', alpha=0.7, label = "Dødvektstap $p=0.5$")
+ax.fill_between(p, demand(p), supply(p, 0), where= (p>150) & (p<200), color='black', alpha=0.7, label = "Dødvektstap $p=0$")
+#fillbetween y0 to y100, and x0 to x100
+ax.fill_between(p, 0, 100, where= (p>0) & (p<100), color='lightblue', alpha=0.9, label = "Opprinnelig forbruk")
+#fillbetween y0 to the etterspørsels line
+ax.fill_between(p, 0, demand(p), where= (p>100) & (p<200), color='red', alpha=0.1)
+
+
+ax.legend()
+
+plt.savefig('helsetjenester.png')
+```
+
+\clearpage
+
+## Utfordring 1.1
+
+### 1.1.1 Menn og kvinners arbeidstimer
+
+```{=tex}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{df_04544.png}
+    \caption{Kvinner og menns arbeidstimer}
+    \label{fig:fig1}
+\end{figure}
+```
+Grafen i \autoref{fig:fig1} viser en tydelig nedgang i menns ukentlige arbeidstimer fra 1996 til 2022, mens kvinners arbeidstimer viser en svak stigning over samme periode. Forskjellen mellom menns og kvinners arbeidstimer ser ut til å minske over tid.
+
+Forklaringen til hvorfor menn har hatt en nedgang i arbeidstimer kan være fordi det ble innført fedrekvote i foreldrepermisjonen. Siden starten av figuren så kan vi se at arbeidstiden til menn har gått ned, samtidig har fedrekvoten har blitt utvidet over tid.[^1] Vi kan se at det var en økning i arbeidstimer i 2014 og jeg gjør en antagelse at det er relatert til at fedrekvoten ble redusert i 2014 før den ble forlenget igjen i 2018. Dette kan da samtidig vise noe grunnlag til økningen i arbeidstimer til kvinner.
+
+[^1]: @hamre_2017_fedrekvoten
+
+Fertilitetsraten har også gått ned som delvis kan være grunnen til økningen i arbeidstimer for kvinner.
+
+For å gi en forklaring på hvorfor kvinner jobber flere arbeidstimer enn menn så må jeg gjøre noen antagelser. Jeg går ut ifra at kvinner og menn har ulike preferanser for fritid og inntekt. Antagelsen jeg gjør er at menn har en høyere preferanse for inntekt enn kvinner, mens kvinner har en høyere preferanse for fritid enn menn. Det kan også være relatert til at det har vært en nedgang i antall timer overtid. [^2]
+
+[^2]: @lien_2019_frre
+
+Fra en artikkel om lønnsgapet i Norge på SSB "Det er langt flere kvinner som jobber deltid enn menn. Blant kvinner er det 46 prosent som jobber deltid, mens det blant menn er 25 prosent."@fltre_2022_slik
+
+En del av grunnen kan være at kvinner må jobbe mindre når de nylig har fått barn. Effekten barnepass ordninger og permisjon har kommer jeg til i 1.1.2
+
+For å vise preferansene så bruker jeg ligningen $$U(c,l)=c^{a}l^{b}$$
+
+Hvor $0<\alpha, \beta <1$ og $\alpha+\beta\leq 1$ $c$ er konsum og $l$ er fritid og $\alpha$ og $\beta$ er elastisiteten mellom arbeid og fritid. Dette illustreres i \autoref{fig:fig2}
+
+Ved bruk av denne ligningen så kan vi legge inn forskjellige elasisiteter for konsum og fritid som viser personenes preferanser.
+
+Ved å legge inn hvilken inntekt de ønsker dersom de er tvunget til fulltid eller deltid vil vi kunne se hvor mye de ønsker å jobbe. Vi vet at kvinner i større grad en menn jobber deltid. Ved antagelsen om forskjell i preferanser til fritid og konsum så illustrerer jeg da dette ved å sette $\alpha$ for menn til 0.4 og $\beta$ til 0.4, og for kvinner setter jeg $\alpha$ til 0.3 og $\beta$ til 0.5. Dette vil da vise at kvinner har en høyere preferanse for fritid enn menn, og lavere preferanse for konsum.
+
+```{=tex}
+\begin{wrapfigure}{r}{0.6\textwidth}
+    \centering
+    \includegraphics[width=0.6\textwidth]{preferanser.png}
+    \caption{Ulike preferanser}
+    \label{fig:fig2}
+\end{wrapfigure}
+```
+I \autoref{fig:fig2} så har vi konsum på y aksen hvor vi kan se tangerinspunktene til indifferansekurvene til menn og kvinner til budsjettlinjen til konsum. Disse er merket med $c_{menn}$ og $c_{kvinner}$. Langs x aksen så har vi fritid hvor vi igjen ser tangeringspunktene til menn og kvinner merket med $l_{menn}$ og $l_{kvinner}$.
+
+$m$ er arbeidsfri inntekt og dette er inntekten de har uansett om de jobber eller ikke. Langs y aksen ser man $c=m$ og dette er nivået på konsum de har uansett om de jobber eller ikke. Budsjettlinjen viser inntekten som kommer fra arbeid som betales per time og det er bare et bestemt antall timer i døgnet og dette resulterer i at budsjettlinjen stopper hvor fritid = T (antall timer i døgnet).
+
+I figuren ser man blå og rød linje. Disse representerer indifferansekurvene til menn og kvinner. I figuren så er nyttenivået vist ved distanse fra origo i retning nordøst. Langs disse kurvene er det samme nyttenivå for menn og kvinner. Punktene som er tegnet inn er da punktet hvor den marginale substisjonsbrøken er lik helningen på budsjettlinjen. Dette betyr at de kan ikke velge mer av fritid eller konsum i det budsjettet uten å redusere nytte.
+
+\clearpage
+
+### 1.1.2 Foreldrepermisjon
+
+\autoref{fig:fig3} og \autoref{fig:fig4} kommer fra datasettet som viser generøsiteten av foreldrepermisjonsordninger og mødres yrkesdeltakelse i 24 OECD land i 2021. «Gunstige permisjonsordninger ved fødsel sikrer høy yrkesdeltakelse blant kvinner på lang sikt».
+
+```{=tex}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{pointfig0_2.png}
+    \caption{Yrkesdeltakelsen for kvinner med barn mellom 0 og 2 år gamle}
+    \label{fig:fig3}
+    \includegraphics[width=\textwidth]{pointfig6_14.png}
+    \caption{Yrkesdeltakelsen for kvinner med barn mellom 4 og 16 år gamle}
+    \label{fig:fig4}
+\end{figure}
+```
+I figurene så ser det ut som det er en sammenheng mellom hvor lang permisjonstiden er og yrkesdeltakelsen til kvinner er me unntak som Tsjekkia og Slovakia med kvinner med barn 0-2år gamle. Litt av grunnen til dette kan forklares ved "Differences are also substantial in the coverage of formal childcare arrangements for young children under the age of3. In countries such as the Czech Republic, Mexico, and the Slovak Republic, fewer than 10 per-cent of young children are enrolled in early childcare programs.."[se @titoboeri_2021_the, pp. 284-285]
+
+\clearpage
+
+I \autoref{fig:fig5} så har jeg w for wages eller lønn på y aksen. $w_0$ er lønnen kvinnen har før hun velger og få barn. $w^r_0$ er reservasjonslønnen. Når kvinnen får barn så øker reservasjonslønnen til $w_1^r$. Dette vises på tidspunktet $t_0$ på x aksen. Grunnen til at reservasjonslønnen øker er at de da nettopp har født unge og ikke kan jobbe uten at lønnen er svært høy.
+
+```{=tex}
+\begin{wrapfigure}{r}{0.6\textwidth}
+    \includegraphics[width=0.6\textwidth]{0barn.png}
+    \caption{Lønn før barn}
+    \label{fig:fig5}
+    \centering
+    \includegraphics[width=0.6\textwidth]{foreldrepermisjon.png}
+    \caption{Effekten av foreldre permisjon}
+    \label{fig:fig6}
+\end{wrapfigure}
+```
+Vi går ut ifra et perfekt marked hvor det er fri konkurranse og lønnen er lik marginalproduktet av arbeid. Dette betyr at lønnen er lik den marginale produktiviteten av arbeidet. Det vil si at når kvinnen får barn og ikke jobber over tid så vil lønnen hun kan få synke siden vi går ut ifra at hennes produktivitet synker når hun ikke er i arbeid.
+
+I \autoref{fig:fig6} kan vi i punkt A se hvor raskt kvinnen kommer seg tilbake i arbeid etter fødsel siden den synkende reservasjonslønnen møter hennes originale lønn $w_0$. Men det vi ser i punkt B er den lavere lønnen $\^w$ møter hennes synkende reservasjonslønn.
+
+Så i denne modellen så kan vi se at dersom man har foreldre permisjon så kommer kvinner raskere i arbeid siden punkt A er ved $t_A$ på den høyere lønnen hun får istedet for å vente reservasjonslønnen synker til $w_1^r$ ved $t_B$.
+
+\clearpage
+
+### 1.1.3 Den norske velferdsmodellens bærekraft
+
+Forklar hvorfor høy yrkesdeltakelse blant norske kvinner og høye barnetall er viktig for at den norske velferdsmodellen skal være økonomisk bærekraftig. Den norske velferdsmodellen er finansiert igjennom inntekter fra skatt. For at den norske velferdsmodellen skal være bærekraftig, så må vi ha høy yrkesdeltakelse, slik at et tilstrekkelig antall mennesker betaler skatt slik at vi kan finansiere de offentlige velferdstilbudene.
+
+Sentralt i velferdsmodellen er "generasjonskontrakten". Dette betyr at dagens arbeidende befolkning finansierer velferdsytelsene for dagens pensjonister, med forventningen om at fremtidige generasjoner vil gjøre det samme for dem. Men dette forutsetter at vi har en stabil eller voksende befolkning. Høy fertilitet sikrer at Norge har en fornyelse av befolkningen, noe som er avgjørende for at generasjonskontrakten skal fungere. Det vi kan se i \autoref{fig:fig7} er at det er potentielt et kommende problem med at vi får en aldrende befolkning der færre er i arbeid og flere må få ytelser.
+
+```{=tex}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pyramide.png}
+    \caption{Populasjons pyramide 2003 og 2023}
+    \label{fig:fig7}
+\end{figure}
+```
+\clearpage
+
+## Utfordring 1.2
+
+### 1.2.1 Sammenhengen mellom egenandeler og helsetjenesteforbruk
+
+```{=tex}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{eurostat.png}
+    \caption{Egenandeler som andel av myndighetenes totale utgifter til helsetjenester og helsetjenesteforbruk pr. innbygger i europeiske land justert for kjøpekraft}
+    \label{fig:fig8}
+\end{figure}
+```
+Det vi ser er at når egenandelen øker, så synker utgiftene til helsetjenester. Dette kan tyde på at økte egenbetalingen reduserer bruk av helsetjenester. Vi har noen land som Sveits i toppen og Romania i bunnen som skiller seg ut. Sveits har en høy egenandel og høyt helsetjenesteforbruk, mens Romania har en lav egenandel og lavt helsetjenesteforbruk men ellers så kan det virke som det er en sammenheng her.
+
+\clearpage
+
+```{r}
+stargazer(table,type = "text", title = "Lineær regresjons resultat")
+```
+
+Her kan vi se en tabell for resultatet for en lineær regresjon. Vi kan se at det er en negativ sammenheng mellom "householdexppercent" og "govexp". Dette betyr at når egenandelen øker med en enhet så synker govexp med 66enheter.
+
+$R^2$ = 0.264: I dette tilfellet forklarer modellen 26,4% av variabiliteten i "govexp" er foklart av householdexp_percent.
+
+Jeg mangler kunnskapen til å si noe her men det kan virke som det er en sammenheng siden householdexp forklarer 26.4% av variasjonen i govexp. men om dette er høyt eller lavt kan jeg ikke si noe om.
+
+\clearpage
+
+### 1.2.2 Egenandel og effektivitet i helsetjenesten
+
+For å kunne forklare hvordan økt egenbetaling påvirker helsetjenesteforbruk så må jeg forklare adferdsrisiko. Dersom personer ikke har noen helseforsikring så vil de i figuren bruke helsetjenester inntil marginalnytten er større enn de marginalekostnadene. Dette kan vi se i $q_1$. Her ser vi da det opprinnelige forbruket av helsetjenester fylt med blått. Men dersom de betaler 50% av prisen så kan deres forbruk øke til $q_2$ siden de nå har en lavere pris på helsetjenestene. Dersom de betaler 0% av prisen så får de maksimal nytte ved å bruke så mye helsetjenester som mulig. Dette kan vi se i $q_3$.
+
+```{=tex}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{helsetjenester.png}
+    \caption{Bruk av helsetjenester før og etter innføring av helseforsikring}
+    \label{fig:fig9}
+\end{figure}
+```
+I \autoref{fig:fig9} så er da dødvektstap ved 50% egenbetaling gitt ved det gråe arealet, men ved 0% egenbetaling så er det totalt dødvektstap gitt med det svarte arealet som må adderes med det gråe.
+
+Det vi da kan se er at det kommer en redusert likevekt mellom forbruk når egenandeler er 100% i forhold til 0%. Dette kan være redusert forbuk for ikke kritiske behandlinger eller kosmetiske behandlinger. Helningen på den etterspørselslinjen avhenger av elasisiteten. Det som styrer den elasisiteten er hvor viktig det forbruket av helsetjenester er, som hjerteoperasjoner ville hatt en bratt linje, og kosmetiske behandlinger ville hatt en slak linje.
+
+Ved helseforsikring så er det et annet begrep som heter "Uheldig utvalg" som kommer av at hvis egenbetalingen er lav, vil de med høyest risiko være mest sannsynlig til å kjøpe forsikring noe som vil øke prisene på forsikringen, mens de med lav risiko ikke vil betale like mye for forsikringen som igjen gir en ond sirkel hvor det er bare blir høyere og høyere risikos kunder med høyere og høyere priser.
+
+"Moralsk hasard" er situasjoner der en part er mer tilbøyelig til å ta risiko fordi de da ikke vil måtte betale den fulle kostnaden av den risikoen.
+
+Økt egenbetaling reduserer potensialet for både ex-ante og ex-post moralsk hasard. Ex-ante er før behoved for helsetjenester oppstår og dersom de ikke da må betale full pris så vil de være mindre incentivert til å drive forebyggende tiltak som et bra kosthold med mye mosjon, og/eller unngåelse av risikofylt adferd som fallskjermhopping. Ex-post er handlingene som skjer etter at behovet for helsetjenester har oppstått. Dette kan være å ikke følge legens råd om å ta være sengeliggende noen dager etter en operasjon siden de da ikke vil måtte betale for en ny operasjon dersom noe går galt.
+
+### 1.2.3
+
+Økte egenandeler vil føre til at de med lav inntekt vil kunne få dårligere tilgang til helsetjenester i forhold til de md høy inntekt. Dette kan lede til at de med høy inntekt har et overforbruk mens de med lav inntekt har et underforbruk. Økte egenandeler kan også føre til at invidiver utsetter eller unngår nødvendig helsehjelp som kan forverre helseutfallene. Dette kan føre til at de med lav inntekt får dårligere helseutfall enn de med høy inntekt.
+
+\clearpage
+
+# Referanser
+
+::: {#refs}
+:::
+
+\clearpage
+
+\section {Appendix Generell KI bruk}
+
+Jeg hadde problemer med å rendre dokumentet pga norske bokstaver. Ved bruk av OpenAI sin ChatGPT tjeneste så fikk jeg svaret om at det var encoding problem, og ved å selv søke på problemet i quarto så har jeg innsatt "encoding: UTF-8" i YAML koden. og noen ganger små omskrivinger siden jeg fort starter setninger på og.
+
+I løpet av koden så kan det ses mange \# kommentarer der det er skrevet for eks "#fillbetween q1 and q2". Når jeg skriver kode i Visual Studio Code så har jeg en plugin som heter Github Copilot. Når jeg skriver slike kommentarer så kan den foresøke å fullføre kodelinjene mens jeg skriver de. Noen ganger klarer den det, men andre ikke. Det er vanskelig å dokumentere hvert bruk der den er brukt siden det "går veldig fort" men siden jeg ikke har fått på plass en slik dokumentasjon så kan all python kode der det er brukt kommentarer antas som at det er brukt Github Copilot. Nærmere info om dette KI verktøyet kan ses på <https://github.com/features/copilot>
+
+\section {Appendix 1.1 KI bruk}
+
+Bruk av OpenAI ChatGPT til å lage regex på linje 258
+
+\
+
+\section {Appendix 1.2 KI bruk}
+
+Bruk av OpenAI ChatGPT til å lage regex på linje 280
