@@ -47,11 +47,45 @@ terninger %>%
 
 ```
 
-### 2.1 Er det uniform sannsynlighet for utfallene? 
+### 2.1 Er det uniform sannsynlighet for utfallene?
 
 Ja det er uniform sannsynlighet men for betingelsen om at $T^1_2>T^2_2$ så er ikke alle utfall i utfallsrommet mulig men den relative sannsynligheten for de mulige utfallene vil være uniform
 
 \clearpage
+
+```{r}
+mulige_utfall <- data.frame(sum  = (rep(1:6, times=6) + rep(1:6, each=6)))
+
+mulige_utfall <- mulige_utfall %>% 
+  group_by(sum) %>% 
+  summarise(f = n()) %>% 
+  mutate(storeF = cumsum(f)/sum(f)) #hehe
+
+mulige_utfall %>% 
+  ggplot(aes(x=sum)) +
+  geom_bar(aes(y=f), stat="identity")+
+  geom_bar(aes(y=storeF*max(f)), stat="identity", alpha=0.6, fill="lightblue")+
+  scale_y_continuous(sec.axis = sec_axis(~ . / max(mulige_utfall$f), name="Kumulativ Frekvens (F)"), n.breaks = 10)+
+  labs(y="Frekvens (f)", x="Terningkast summer")+
+  scale_x_continuous(n.breaks = 12)+
+  theme_bw()
+```
+
+```{r}
+p <- 6/36
+max_trials <- 10
+trials <- 1:max_trials
+probabilities <- dgeom(trials -1, p)
+
+dataframen <- data.frame(trials, probabilities)
+
+dataframen %>% 
+  ggplot(aes(x=trials, y=probabilities))+
+  geom_bar(stat="identity") +
+  scale_y_continuous(n.breaks = 10)+
+  labs(y="Sannsynlighet", x="Antall forsøk", title="Sannsynlighet for 7 per forsøk")+
+  scale_x_continuous(expand=c(0,0), n.breaks = 10)
+```
 
 ## 3. Bruk R og regn ut forventningsverdien til de to terningene.
 
@@ -70,7 +104,8 @@ str(terninger)
 ### 3.2. Fjern alle vektorer der terning sett en er større en terningsett to dvs. der \[(1, 1) \< (1, 2)\].
 
 ```{r}
-sett_1 <- terninger[terninger$t1_1 + terninger$t1_2 > terninger$t2_1 + terninger$t2_2, ]
+sett_1 <- terninger[terninger$t1_1 + terninger$t1_2 > 
+terninger$t2_1 + terninger$t2_2, ]
 str(sett_1)
 ```
 
@@ -84,7 +119,32 @@ nrow(sett_1) # Utfall der T^1_2 > T^2_2
 
 ```{r}
 forventningsverdi_t1_1 <- mean(sett_1$t1_1)
+
+
+sett_2 <- terninger[terninger$t1_1 + terninger$t1_2 > 
+terninger$t2_1 + terninger$t2_2, ]
+
+forventningsverdi_t2_1 <- mean(sett_2$t2_1)
+
+mean(c(1,2,3,4,5,6))
 forventningsverdi_t1_1
+forventningsverdi_t2_1
+```
+
+```{r}
+var(sett_2$t2_1)
+var(sett_1$t1_1)
+```
+
+```{r}
+sd(sett_2$t2_1)
+sd(sett_1$t1_1)
+```
+
+```{r}
+sqrt((((1-3.5)^2)+(2-3.5)^2 + (3-3.5)^2 +
+(4-3.5)^2 + (5-3.5)^2 + (6-3.5)^2)/6)
+sd(c(1,2,3,4,5,6))
 ```
 
 # Appendix KI bruk
