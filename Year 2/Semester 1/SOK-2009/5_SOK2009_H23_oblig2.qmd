@@ -1,0 +1,403 @@
+---
+title: "Mappeinnlevering 2"
+subtitle: "Fakultet for biovitenskap, fiskeri og økonomi."
+author: "Kandidatnummer 5, SOK-2009 Høst 2023"
+date: last-modified 
+date-format: "DD-MM-YYYY"
+editor: visual
+toc-title: "Innholdsfortegnelse."
+format: 
+  pdf:
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+echo: false
+warning: false
+message: false
+crossref: 
+  lof-title: "Figurliste"
+  fig-title: "Figur"
+  lot-title: "Tabelliste"
+  tbl-title: "Tabell"
+toc: true
+header-includes:
+  - \usepackage{wrapfig}
+  - \usepackage{subcaption}
+  - \usepackage[utf8]{inputenc}
+  - \usepackage{amsmath}
+encoding: UTF-8
+---
+
+```{r}
+
+rm(list=ls()) 
+library(tidyverse)
+library(car)
+library(stargazer)
+
+
+load(url("http://www.principlesofeconometrics.com/poe5/data/rdata/mroz.rdata"))
+
+
+
+```
+
+# Oppgave 1:
+
+## a) Kjør en enkel lineær regresjonsanalyse. Velg avhengig og uavhengig variabel selv, og forklar hva du ønsker/har mulighet til å finne ut av ved bruk av disse variablene.
+
+Jeg vil se om det er en sammenheng mellom par sine utdanninger, og ser da på "Husband" sin utdanning mot "Wife" sin utdanning. Jeg kjører så en lineær regresjon mellom og vi ser at det er en trend som kan tyde på at de med høy utdanning også har en partner med høy utdanning.
+
+### Antagelser ved lineær regresjon.
+
+I et dataset med et $n$ verdier av x og y så regner vi regresjonslinjen ved $y_i = \alpha + \beta x + \epsilon_i$ der $\alpha$ blir skjeringspunktet i y aksen når $x=0$, $\beta$ er helningen på regresjonslinjen der en hver enhetsøkning i x, så øker y med $\beta$. $\epsilon_i$ er residualen for hver observasjon som da er forskjellen mellom en hver gitt $\alpha + \beta x$ og den observerte verdien i datasettet. Enhver gitt $\hat y$ viser oss da ethvert estimert punkt der summen av de kvadrerte residualene er minimert.
+
+Antagelsene om $\epsilon_i$ er linearitet, normalitet, homoskedastisitet og uavhengighet.
+
+Jeg forkarer de andre begrepene senere men jeg ikke helt hvordan jeg skal teste for uavhengighet men denne antagelsen er at feilene vi får ikke er korrelert med hverandre
+
+\clearpage
+
+## b) Vis og forklar resultatene dine. Bruk grafer, tabeller, og output til å forklare din modell, og ta med alle detaljer/statistikker som er relevante for din analyse.
+
+```{r, results='asis', warning=FALSE}
+stargazer(lm(mroz$heduc ~ mroz$educ), title = "Lineært regresjonsresultat for ektefellers år med utdanning", label = "tab:table1", type = "latex", header=FALSE, covariate.labels = c("Kvinnens utdanning"), dep.var.caption = "Avhengig variabel", dep.var.labels = "Mannens utdanning")
+```
+
+Koeffisienten til kvinners utdanning forteller oss at at for hvert ekstra år med utdanning som kvinnen har så er det en økning på 0.811 år i mannens utdanning.
+
+"Constant" viser at dersom konen har 0 år med utdanning så er det forventet at mannen har 2.530år med utdanning.
+
+Verdiene i parentes er standardfeilen til estimatene.
+
+Det er 753 observasjoner i datasettet.
+
+$R^2$ verdien på 0.374 forteller oss at 37.4% av variasjonen i mannen sin utdanning kan forklares av kvinnens utdanning i modellen. Vi kan også se $\text{Adjusted}R^2$ som er mer interessant i multippel regresjon da verdien tar hensyn til antallet variabler da denne "straffer" deg når det legges til flere variabler. I dette tilfellet er det bare de 2 variablene så denne blir lik $R^2$.
+
+Residual STD. Error er standardavviket av feilene i modellen. 2.391 viser at det gjennomsnittlig er 2.391år forskjell mellom den preikerte verdien som modellen viser, og de faktiske datapunktene. df=751 angir at det er 751 "Degrees of freedom" som er antallet uavhengige variabler som er fri til å variere ved tilfeldig trekning.
+
+F Statistic tester hvor godt kvinnens utdanning forklarer mannens utdanning. F verdien er den forklarte variansen per degrees of freedom delt på den uforklarte variansen per degrees of freedom. Det at denne er høy forteller oss at den forklarte variansen er høyere enn den uforklarte variansen og denne har 3 stjerner som betyr at den er signifikant med p verdi på under 0.01.
+
+På bunnen kan vi se "Note" som viser hva de forskjellige stjernene betyr. Dette forteller oss P-verdien for forskjellige konfidensnivåer. P verdi forteller hva sannsynligheten er for at nullhypotesen er sann. Altså sjangsen for at resultatet vi har kan forekomme tilfeldig. Så for en gitt $\hat \beta$(estimert $\beta$) så er da sjangsen for at den "faktiske" $\beta$ verdien er 0.
+
+Da vi ser at det er 3 stjerner så betyr dette at det er over en 99% sannsynlighet at det observerte resultatet skyldes en effekt og ikke har kommet fra tilfeldig trekning. Altså at nullhypotesen kan forkastes.
+
+```{r}
+
+lmmodell <- lm(mroz$heduc ~ mroz$educ)
+
+lm_summary <- summary(lmmodell)
+slope <- lm_summary$coefficients[2, 1]
+
+r_squared <- lm_summary$r.squared
+
+
+mroz %>% 
+  ggplot(aes(x=educ, y=heduc))+
+  geom_point()+
+  geom_smooth(method=lm, color="blue", se=FALSE)+
+  labs(y="Mannen sin utdanning", x="Konen sin utdanning", caption="Source: Dataset provided by Professor Tom Mroz", title="Ektefellers år med utdanning")+
+  theme_minimal()+
+  geom_text(aes(x = max(educ),y = 5,  
+                label = paste("Koeffesient", "==", round(slope,2))),
+            parse=TRUE,hjust = 1, vjust = 1, size = 4, color = "#525252")+
+  geom_text(aes(x = max(educ),y = 4,  
+                label = paste("R^2", "==", round(r_squared,2))),
+            parse=TRUE,hjust = 1, vjust = 1, size = 4, color = "#525252")
+  
+
+```
+
+Jeg ser da at jeg har en høy koffesient så helningen er høy, og jeg har en $R^2$ som også er veldig høy. Dette forteller meg at modellen tyder på at det er en sammenheng mellom utdannelsen til parterene i ekteskap.
+
+Dette viser da hvor godt utdanningen til kvinner påvirker mannens utdanning. Så om kvinnen tar et ekstra år med utdanning så får mannen 0.8år utdanning.
+
+\clearpage
+
+## c) Undersøk hvorvidt modellen din bryter med antakelsene til lineær regresjon. Hvis ja, hva er konsekvensen av de eventuelle bruddene? Vis og forklar hvordan du testet/undersøkte.
+
+### Linearitet
+
+Linearitets antagelsen tilsir at de forventede utfallene er lineært relatert til de uavhengige variablene.
+
+For å teste linearitet så tar jeg først en visuell undersøkelse av dataen og tegner opp en loess linje. Jeg tegner dette i tillegg til lineær regresjonslinjen da loess linjen er en lokalvektet glattet linje som lager en jevn linje igjennom de lokale datapunktene.
+
+```{r}
+mroz %>% 
+  ggplot(aes(x=educ, y=heduc))+
+  geom_point()+
+  geom_smooth(method=loess, color="red")+
+  geom_smooth(method=lm, color="blue")+
+  labs(y="Mannen sin utdanning", x="Konen sin utdanning", caption="Source: Dataset provided by Professor Tom Mroz")+
+  theme_minimal()
+```
+
+Loess linjen merket i rødt ser ut til å matche den lineære regresjonslinjen. Vi kan da se at det er ikke perfekt men den lineære modellen passer godt og loess linjen er ikke konsistent over eller under den linære linjen.
+
+Jeg setter nå opp punktene til regresjonslinjen på y aksen og residualene på x aksen for å se etter brudd på lineæritet. Jeg legger igjen med en loess linje, og en rød horisontal linje.
+
+```{r}
+lmmodell %>% 
+  ggplot(aes(fitted(lmmodell), residuals(lmmodell)))+
+  geom_point()+
+  geom_smooth()+
+  geom_hline(yintercept=0,color="red")+
+  theme_minimal()
+```
+
+Vi kan se at den lokalvektede linjen passer ganske godt med den horisontale linjen.
+
+### Normalitet
+
+Normalitets antagelsen betyr at residualene er normalfordelt. Dette er nødvendig for å kunne estimere nøtaktige standardfeil. Vist i Tabell 1 som "Residual STD. Error"
+
+Vi gjør da en Shapiro Wilk test
+
+```{r}
+shapiro.test(residuals(lmmodell))
+```
+
+Testen gir oss en svært lav P verdi som tyder på at residualene våre ikke er normalfordelt. P verdien her er sannynligheten for å observere en tilfeldig verdi som er 0.0000000008134 dersom nullhypotesen er sann som i testen er at residualene er normalfordelt. I økonomi kan det være normalt og ha en konfidensintervall på 0.95 så da testen gir en p verdi på under 0.05 så må jeg gjøre en visuall undersøkelse der jeg lager et kvantil-kvantil plot.
+
+```{r}
+ggplot() +
+  geom_qq(aes(sample = rstandard(lmmodell))) + 
+  geom_abline(color="red", linewidth=4, alpha=0.1)+
+  geom_abline(color="red", linewidth=1)
+```
+
+Dette var pussig. Vi fikk en figur der residualene markert med de svarte punktene følger den røde linjen som de ville gjort dersom residualene var normalfordelt.
+
+### Homoskedastisitet. Problem oppstår her.
+
+Homoskedastisitet betyr at residualene har lik varians for alle våre predikerte verdier i den lineære regresjonslinjen.
+
+Jeg tester dette siden nøyaktige standardfeil er viktig for å kunne stole på resultatene som p verdiene vi får.
+
+Jeg starter med en Breush-Pagan test. Denne testen gjør en egen regresjon med de predikerte verdiene som uavhengig variabel og tester om disse kan forklare variansen til residualene.
+
+```{r}
+ncvTest(lmmodell)
+```
+
+Her fikk vi en P verdi som er på under 0.05 som ikke er bra. Dette forteller oss at sjangsen for at variansen på residualene ikke er konstant er veldig sannsynlig. Som bryter med homoskedastisitets antagelsen og at det da er heteroskedasisitet(?). Dette betyr at variansen på residualene ikke er lik for alle de predikerte verdiene.
+
+```{r}
+mroz %>% 
+  ggplot(aes(fitted(lmmodell), sqrt(abs(rstandard(lmmodell)))))+
+  geom_point()
+```
+
+Det vi her kan se er at det ikke ser ut til å være noe mønster. Så visuelt så kan det virke som at antagelsen om homoskedasisitet kan beholdes.
+
+Jeg gjør da en siste visuell undersøkelse der jeg tar kvadratroten av de standariserte residualene mot de predikerte verdiene. Jeg håper da på en rett linje.
+
+```{r}
+
+mroz %>% 
+  ggplot(aes(fitted(lmmodell), sqrt(abs(rstandard(lmmodell)))))+
+  geom_point()+
+  geom_smooth()
+```
+
+Det er en synkende varians som kan tyde på at antagelsen om homoskedasisitet er brutt. Den loess linjen vi får er fremdeles ganske flat men vi kan se at den synker, øker og synker igjen der vi ender på et punkt en del lavere enn startspunktet. Jeg vet ikke om dette tilsier at den er alvorlig brutt men dette kan bety at signifikansnivåene vi får ikke er nøyaktig og at det da er problemer som forskyver resultatet vi har.
+
+\clearpage
+
+# Oppgave 2:
+
+## a) Kjør en multippel lineær regresjonsanalyse med minst to uavhengige variabler. Velg selv om du tilføyer en eller flere variabler til din tidligere analyse, eller om du lager en helt ny. Forklar hvorfor du har valgt denne kombinasjonen av variabler.
+
+Da det så ut som det kunne være noe sammenheng mellom kvinnens og mannens utdanningsnivå så tar jeg nå med mannens foreldres utdanningsnivå for å se om dette kan forklare utdanningen til mannen.
+
+```{r}
+
+mreg_men_lm <- lm(mroz$heduc ~ mroz$educ + mroz$hfathereduc + mroz$hmothereduc)
+
+mreg_men_lm2 <- lm(mroz$heduc ~ mroz$educ + mroz$hfathereduc + mroz$hmothereduc + mroz$fathereduc + mroz$mothereduc)
+
+
+mreg_kvinner_lm <- lm(mroz$educ ~ mroz$heduc + mroz$fathereduc + mroz$mothereduc)
+
+mreg_kvinner_lm2 <- lm(mroz$educ ~ mroz$heduc + mroz$fathereduc + mroz$mothereduc + mroz$hfathereduc + mroz$hmothereduc)
+
+
+tabell4vars <- mroz %>% 
+  select(educ, heduc, fathereduc, mothereduc)
+
+```
+
+## b) Vis og forklar resultatene dine. Bruk grafer, tabeller, og output til å forklare din modell og hva modellen kan fortelle oss.
+
+```{r, results='asis', warning=FALSE}
+stargazer(mreg_men_lm, title = "Multippel lineær regresjons menn", label = "tab:table2", type = "latex", header=FALSE, dep.var.caption = "Avhengig variabel", covariate.labels = c("Kvinnens utdanning", "Mannens fars utdanning", "Mannens mors utdanning"), dep.var.labels = c("Mannens utdanning"))
+```
+
+Tabell 2 viste at det ikke ser ut til å være noe signifikant resultat på mannen sine foreldres utdanning. Så jeg tester mot kvinnes foreldres utdanning. Jeg gjøre det motsatte for kvinner for å se om jeg ser en klar effekt. Tabell 3 på neste side viser dette.
+
+Jeg går ut ifra at jeg vil få problemer med uavhengighet da foreldres utdanning kanskje også har samme sammenheng.
+
+\clearpage
+
+```{r, results='asis', warning=FALSE}
+stargazer(mreg_men_lm2, mreg_kvinner_lm2, 
+          type = "latex", 
+          title = "Lineære regresjonsresultater for ektefellers utdanningsvalg", 
+          label = "tab:table3",
+          header = FALSE,
+          covariate.labels = c("Kvinnens utdanning", "Mannens utdanning","Mannens fars utdanning", "Mannens mors utdanning", "Kvinnens fars utdanning", "Kvinnens mors utdanning"),
+          dep.var.caption = "Avhengig variabel", 
+          dep.var.labels = c("Mannens utdanning", "Kvinnens utdanning"))
+```
+
+Vi kan se at for menn så får vi ingen signifikant resultat på hannes foreldes utdanning men den potentielle effekten ser uansett liten ut. Pussig at kvinnens fars utdanning haret signifikant resultat på hannes utdanning. Vi endrer ikke $R^2$ spesielt ved å legge til flere variabler og $Adjusted \> R^2$ viser fremdeles en marginal økning i forklaringskraft fra 0.374.
+
+Men vi ser at for kvinner så ser det ut til å ha effekt hva hennes foreldres utdanning er og hva mannens utdanning er, så jeg fokuserer på denne effekten videre da vi fremdeles har en høy forklaringsgrad med signifikante resultater. Jeg sjekker hvordan effekt jeg får på $R^2$ og $Adjusted \> R^2$ ved å nå ta bort hennes manns foreldres utdanning da disse ikke ga et signifikant resultat og isolerer da hennes utdanning mot mannens utdanning og hennes foreldres utdanning i tabell 4.
+
+\clearpage
+
+```{r, results='asis', warning=FALSE}
+stargazer(mreg_kvinner_lm, title = "Multippel lineær regresjons kvinner", label = "tab:table4", type = "latex", header=FALSE, dep.var.caption = "Avhengig variabel", covariate.labels = c("Mannens utdanning", "Kvinnens fars utdanning", "Kvinnens mors utdanning"), dep.var.labels = c("Kvinnens utdanning"))
+
+```
+
+$R^2$ og $Adjusted \> R^2$ har ikke hatt stor endring så denne modellen bruker jeg fremover.
+
+Det vi her kan se er det er et signifikant resultat på kvinnens foreldres utdanning og mannens utdanning. Det vi kan se er at får hvert ekstra år med utdanning kvinnens far har så har hun 0.098 år ekstra utdanning, og hennes mors effekt er 0.126 år. Og får hvert ekstra år mannen har med utdanning så øker hennes med 0.374år.
+
+\clearpage
+
+De fine figurene vi får er så dette.
+
+```{r}
+
+avPlots(mreg_kvinner_lm, layout=c(1,3))
+
+```
+
+```{r}
+tabell4vars %>% 
+  mutate(foreldres_utdanning = (fathereduc + mothereduc) / 2) %>% 
+  filter(foreldres_utdanning %in% c(0, 3, 8, 10, 15)) %>% 
+  ggplot(aes(x=educ, y=heduc, color=factor(foreldres_utdanning)))+
+  geom_point(alpha=0.5)+
+  geom_smooth(method = lm, se=FALSE, linewidth=1, linetype=1)+
+  scale_color_discrete(name="Foreldrenes utvalgte år med utdanning")+
+  labs(title="Regresjonslinjer for kvinnens år med utdanning", x="Kvinnens år med utdanning",y="Mannens år med utdanning")
+```
+
+\clearpage
+
+## c) Test hvorvidt modellen din bryter med antakelsene til multippel lineær regresjon. Vis og forklar hvordan du testet/undersøkte
+
+Jeg tester nå modellen i Tabell 4.
+
+### Kollinearitet
+
+Jeg tester kollinearitet for å se om det er korrelasjon mellom de uavhengige variablene siden dette kan kunstig øke svingingene i modellen og svekker nøyaktigheten til modellen slik at vi ikke kan stole på p verdiene.
+
+Jeg tester kollinearitet først ved å lage en korrelasjonsmatrise.
+
+```{r}
+cor(tabell4vars)
+```
+
+Vi ser at korrelasjonene er under 0.7 men de er fortsatt noe høye.
+
+Jeg gjør nå en Variance Inflation Factor test for å få en målestokk for graden av kollinearitet.
+
+```{r}
+vif(mreg_kvinner_lm)
+```
+
+Jeg ser her at verdier jeg får er på rundt 1 til 1.6 og det forteller at det ikke er stor grad av kollinearitet.
+
+### Linearitet
+
+Jeg setter opp en figur med residualene på y aksen og de predikerte verdiene på x aksen.
+
+```{r}
+mreg_kvinner_lm %>% 
+  ggplot(aes(fitted(mreg_kvinner_lm), residuals(mreg_kvinner_lm)))+
+  geom_point()+
+  geom_smooth()+
+  geom_hline(yintercept=0,color="red")
+```
+
+Holder seg noe bra men avviker på start og slutt.
+
+### Normalitet
+
+Jeg sjekker normaliteten i et kvantil-kvantil plot.
+
+```{r}
+mreg_kvinner_lm %>% 
+  ggplot()+
+  geom_qq(aes(sample=rstandard(mreg_kvinner_lm)))+
+  geom_abline(color="red")
+```
+
+Igjen ser vi at den holder seg veldig bra men avviker på start og slutt.
+
+### Homoskedasisitet
+
+Jeg lager en figur der jeg tar kvadratroten av absoluttverdiene til de standardiserte residualene på y aksen og de predikerte verdiene på x aksen.
+
+```{r}
+mreg_kvinner_lm %>% 
+  ggplot(aes(fitted(mreg_kvinner_lm), sqrt(abs(rstandard(mreg_kvinner_lm)))))+
+  geom_point()+
+  geom_smooth()
+```
+
+Her ser vi at det er et problem. Jeg vet ikke om dette betyr at det er et alvorlig brudd men om jeg hadde en linjal som så slik ut så ville jeg ikke prøvd å måle noe med den.
+
+Jeg prøver å fjerne farens utdanning for å se effekten.
+
+```{r}
+mreg_kvinner_lm3 <- lm(mroz$educ ~ mroz$heduc+ mroz$mothereduc)
+mreg_kvinner_lm3 %>% 
+  ggplot(aes(fitted(mreg_kvinner_lm3), sqrt(abs(rstandard(mreg_kvinner_lm3)))))+
+  geom_point()+
+  geom_smooth()
+```
+
+Den ble noe rettere men fremdeles tydelig buet.
+
+Prøver modellen men denne gangen uten morens utdanning.
+
+```{r}
+mreg_kvinner_lm4 <- lm(mroz$educ ~ mroz$heduc + mroz$fathereduc)
+mreg_kvinner_lm4 %>% 
+  ggplot(aes(fitted(mreg_kvinner_lm4), sqrt(abs(rstandard(mreg_kvinner_lm4)))))+
+  geom_point()+
+  geom_smooth()
+```
+
+De virker til å ikke ha stor effekt så jeg prøver å fjerne mannens utdanning.
+
+```{r}
+mreg_kvinner_lm5 <- lm(mroz$educ ~ mroz$mothereduc + mroz$fathereduc)
+mreg_kvinner_lm5 %>% 
+  ggplot(aes(fitted(mreg_kvinner_lm5), sqrt(abs(rstandard(mreg_kvinner_lm5)))))+
+  geom_point()+
+  geom_smooth()
+```
+
+Det var pussig. Det ser ut som modellen ikke kan stoles på da det ikke kan påvises homoskedasisitet.
+
+Gjør nå en NCV test igjen
+
+```{r}
+ncvTest(mreg_kvinner_lm2)
+```
+
+Her fikk vi en P verdi som er på over 0.05 som er bra. Dette forteller oss at sjangsen for at variansen på residualene ikke er konstant er lite sannsynlig. Dette stemmer med homoskedastisitets antagelsen. Dette betyr at variansen på residualene kan være lik for alle de predikerte verdiene.
+
+# Konklusjon
+
+Jeg kan da konkludere med at den lineære modellen mellom Menns utdanning og Kvinners utdanning virket som den kunne stoles på men i den multipple regresjonsmodellen så kan jeg ikke konkludere med mye da jeg ikke føler jeg kan stole på modellen da antagelsen om homoskedasisitet er alvorlig brutt.
