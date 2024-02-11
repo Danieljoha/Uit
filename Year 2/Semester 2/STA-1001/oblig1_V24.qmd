@@ -1,7 +1,58 @@
 ---
-title: "STA-1001"
-format: pdf
+title: "OBLIGATORISK INNLEVERING 1, STA-1001 2024"
+date: last-modified 
+date-format: "DD-MM-YYYY"
 editor: visual
+abstract: | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+format: 
+  pdf:
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+    toc-title: "Innholdsfortegnelse"
+    toc: true
+    toccolor: black
+echo: false
+bibliography: references.bib
+csl: norsk-apa-manual.csl
+nocite: |
+  @*
 ---
 
 ## Oppgave 1:
@@ -38,16 +89,15 @@ karakterer %>%
   labs(title="Oppgave 1, boxplot", x="Karakterer", y="")
 ```
 
-
-
-
 ## Oppgave 2:
 
+I boken "Sannsynlighetsregning og statistikk for høyere utdanning" på side 29 så har jeg benyttet meg av bevis 1.10 for hjelp av utregning.[^1]
+
+[^1]: @kristensen_2019_sannsynlighetsregning
 
 $$
 \sum_{i=1}^{n} (x_i - \bar{x})^2 = \sum_{i=1}^{n} x_i^2 - n\bar{x}^2 \tag{1}
 $$
-
 
 $$s^2 = \frac{\sum_{i=1}^{n} x_i^2 - n \cdot \bar x^2}{n-1}$$
 
@@ -63,15 +113,11 @@ Gitt at et aritmetisk gjennomsnitt er regnet med
 
 $$\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i \tag{2}$$
 
-
 så kan jeg forenkle det andre leddet ved å bruke ligning 2.
 
-
-$$- 2\bar x \sum_{i=1}^{n} x_i = -2 \cdot \frac{1}{n}\sum_{i=1}^{n} x_i \cdot \sum_{i=1}^{n} x_i$$
-som da endelig gir meg
+$$- 2\bar x \sum_{i=1}^{n} x_i = -2 \cdot \frac{1}{n}\sum_{i=1}^{n} x_i \cdot \sum_{i=1}^{n} x_i$$ som da endelig gir meg
 
 $$-2 \cdot \left(\frac{\sum_{i=1}^{n} x_i}{n}\right)^2 = -2 \cdot n \cdot \bar x^2$$
-
 
 Setter den så inn igjen i ligning 1
 
@@ -81,57 +127,102 @@ Så starter jeg på det tredje leddet og gitt at $\bar x$ er konstant så skrive
 
 $$\sum_{i=1}^{n} \bar x^2 = n \cdot \bar x^2$$
 
-
-
-Til slutt får jeg som endelig forenkles ut i ligning 3.
-$$\sum_{i=1}^{n} x_i^2 -2 \cdot n \cdot \bar x^2 + n \cdot \bar x^2$$
+Til slutt får jeg som endelig forenkles ut i ligning 3. $$\sum_{i=1}^{n} x_i^2 -2 \cdot n \cdot \bar x^2 + n \cdot \bar x^2$$
 
 $$= \sum_{i=1}^{n} x_i^2 - n\bar x^2 \tag{3}$$
 
 ## Oppgave 3:
 
-En artist skal gi ut et album. Problemet er at artisten har ti låter, og må velge bort to av dem. Han vet heller ikke hvilken rekkefølge han vil bruke. La oss kalle låtene: 
-A B C D E F G H I J
+En artist skal gi ut et album. Problemet er at artisten har ti låter, og må velge bort to av dem. Han vet heller ikke hvilken rekkefølge han vil bruke. La oss kalle låtene: A B C D E F G H I J
 
 ### a) Om han skal velge 8 av de 10 låtene:
-- Hvor mange mulige kombinasjoner av 8 låter finnes det?
-- Hvor mange mulige kombinasjoner finnes det om A, B og C skal være med?
+
+-   Hvor mange mulige kombinasjoner av 8 låter finnes det?
+-   Hvor mange mulige kombinasjoner finnes det om A, B og C skal være med?
 
 ### b) Om han skal velge 8 av de 10 låtene:
-- Hvor mange mulige rekkefølger av 8 låter finns det?
-- Hvor mange av rekkefølgene er i alfabetisk ordning?
+
+-   Hvor mange mulige rekkefølger av 8 låter finns det?
+-   Hvor mange av rekkefølgene er i alfabetisk ordning?
 
 Merk at i oppgave c) skal det bare velges ut 6 låter
 
-
 ### c) Om han skal velge 6 av de 10 låtene, men må ha med B om han har med A (om motsatt), og kan
-ikke ha med J om han har med I (og motsatt):
-- Hvor mange mulige kombinasjoner av 6 låter finns det?
+
+ikke ha med J om han har med I (og motsatt): - Hvor mange mulige kombinasjoner av 6 låter finns det?
 
 ### d) Om han skal velge 8 av de 10 låtene og velger tilfeldig:
-- Hva er sannsynligheten for at A kommer med?
-- Hva er sannsynligheten for at minst ́en av A og B kommer med?
 
+-   Hva er sannsynligheten for at A kommer med?
+-   Hva er sannsynligheten for at minst ́en av A og B kommer med?
 
 ## Oppgave 4
 
-Det er kjent at 10% av laksepopulasjonen i et vassdrag har en bestemt parasitt, her kalt parasitt A. Det
-er også kjent at 20% av populasjonen har en parasitt kalt parasitt B. Vi veit `og at av de laksene som har
-parasitt A (gitt parasitt A) vil 50% ha parasitt B (betinga sannsynlighet 0.5).
+Det er kjent at 10% av laksepopulasjonen i et vassdrag har en bestemt parasitt, her kalt parasitt A. Det er også kjent at 20% av populasjonen har en parasitt kalt parasitt B. Vi veit og at av de laksene som har parasitt A (gitt parasitt A) vil 50% ha parasitt B (betinga sannsynlighet 0.5).
 
+### a) Er hendelsene A = "laks har parasitt A" og B = "laks har parasitt B" uavhengige?
 
-### a) Er hendelsene A = ”laks har parasitt A” og B = ”laks har parasitt B” uavhengige?
 Er de disjunkte?
 
 ### b) Regn ut sannsynligheten for at en laks har begge parasittene, P (A ∩ B).
+
 Regn ut sannsynligheten for at en laks har minst en parasitt.
 
-
 ### c) Gitt at en laks har minst en parasitt, hva er sannsynligheten for at den har parasitt A?
-Gitt at en laks ikke har parasitt A, hva er sannsynligheten for at den har parasitt B?
-Vi tenker oss at n = 10 laks blir sjekka for parasitt A.
+
+Gitt at en laks ikke har parasitt A, hva er sannsynligheten for at den har parasitt B? Vi tenker oss at n = 10 laks blir sjekka for parasitt A.
+
+### d) Hva er sannsynligheten for at minst ́en laks har parasitt A?
+
+Hva er sannsynligheten for at akkurat ́en laks har parasitt A?
+
+## 5
+
+For en type backup-batterier er det kjent at levetida (tida, i år, det tar før de svikter) er gitt ved sannsynlighetstettheten
+
+$$
+f(x) = \frac{2}{5} x e^{-\frac{1}{2}x^2}, \quad x > 0
+$$
+
+a) Skisser tettheten i R.  
+Vis at dette er ei ekte fordeling.  
+Finn den kumulative fordelingsfunksjonen, \( F(x) \), og skissér også denne.
+
+b) Når er det siste tidspunktet du fremdeles kan være 90% sikker på at et batteri virker?
+
+c) Finn sannsynligheten for at et tilfeldig valgt batteri skal virke etter ett år.  
+Om du inspiserer et batteri etter ett år og finner at det virker, hva er sannsynligheten for at det ikke vil virke om du inspiserer det ett år seinere?
+
+## 6
+
+Vi antar følgende simultane sannsynlighetstetthet for de stokastiske variablene X og Y:
+
+$$
+f(x,y) = 
+\begin{cases} 
+2e^{-(2+x+y)}, & x > 0, y > 0 \\
+0, & \text{ellers}
+\end{cases}
+$$
+
+a) Finn de marginale fordelingene (sannsynlighetstetthetene) for X og Y?  
+Hva blir den betinga fordelinga (sannsynlighetstettheten) for X?  
+Er X og Y uavhengige?
+
+Nå er vi interessert i hva som blir summen av X og Y.
+
+b) Finn ved integrasjon av den simultane sannsynlighetstettheten \( f(x,y) \) hva som blir sannsynligheten for at summen av X og Y er under 2. Det vil si finn \( P(X + Y < 2) \).
 
 
-### d) Hva er sannsynligheten for at minst  ́en laks har parasitt A?
-Hva er sannsynligheten for at akkurat  ́en laks har parasitt A?
+
+
+
+
+
+
+
+## Referanser
+
+::: {#refs}
+:::
 
