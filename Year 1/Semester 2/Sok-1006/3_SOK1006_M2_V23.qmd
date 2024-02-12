@@ -9,31 +9,19 @@ toc: true
 toc-title: "Innholdsfortegnelse."
 abstract: | 
     | 
+    | Denne oppgaven analyserer hvilken effekt innføring av bompenger har hatt på bilisters kjøremønster. 
+    | 
+    | Resultatene indikerer en betydelig nedgang i bilkjøring, en økning i inntektene til myndighetene, en økning i busspåstigninger, og flere syklister. 
+    | 
+    | Kapittel 1 forteller om formålet til innføringen av bompenger og det vi kan se er at reduksjonen i bilkjøring var mest merkbar i rushtiden, noe som tyder på at bilister tilpasser kjøreatferden sin til bompengesatsene. 
     | 
     | 
+    | Kapittel 2 viser også en vekst i antallet elbiler, noe som kan påvirke inntektene fra bompenger fremover, da nullutslipp biler har 50% rabatt. 
     | 
     | 
+    | I kapittel 3 så kan vi se at bompenger reduserer hvor mye billister kjører og dermed kan vi i kapittel 4 stille spørsmål om det på lengre sikt kan bidra til en samfunnsøkonomisk gevinst ved å redusere forurensning og forbedre folkehelsen. 
     | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
-    | 
+    | Det er derimot viktig og understreke at det er mange faktorer som kan påvirke disse resultatene, inkludert høy inflasjon og renteøkninger, og at resultatene er basert på data samlet inn i løpet av bare et halvt år etter innføringen av bompenger.
     | 
     | 
     | 
@@ -62,7 +50,11 @@ nocite: |
 ---
 
 ```{python}
-#Koden i dette dokumentet vil ikke kunne kjøres på forventet måte uten å fjerne ting som %%capture som er lagt i mange kodeblokker. Denne kommandoen er lagt til for å fortelle Jupyter engine som kjører python koden at den ikke skal putte plotsene der kodeblokkene er. Denne koden kjøres ved å trykke "Render". Det 
+#Koden i dette dokumentet vil ikke kunne kjøres på forventet måte uten å fjerne ting som %%capture som er lagt i mange kodeblokker. Denne kommandoen er lagt til for å fortelle Jupyter engine som kjører python koden at den ikke skal putte plotsene der kodeblokkene er. Denne koden kjøres ved å trykke "Render".
+
+#VIKTIG
+#Koden vil ta ca 15min å kjøre da data hentes fra Statens Vegvesen og dette tar tid. Dette vil bare være tilfellet første gang koden kjøres da jeg lagrer en csv fil i samme mappe som denne oppgaven lastes ned i. Koden vil da lese de filene og la være å hente dataen fra statens vegvesen.
+#Viktig
 
 import json
 import pandas as pd
@@ -84,42 +76,1308 @@ from IPython.display import display, Math, Latex
 ```
 
 ```{python}
+#ble veldig irriterende å rendre dokumentet på nytt å på nytt å vente 10min hver gang så her er det en try og except for å slippe å gjøre det
+try: 
+    df = pd.read_csv('trafikkdata.csv')
+    df_historical = pd.read_csv('historical.csv')
+    geotag = pd.read_csv('geotag.csv')
+    df_buss = pd.read_csv('buss.csv')
+except Exception as e:
+    # Lim in PostUrl som spørringen skal postes mot
+    postUrl = "https://www.vegvesen.no/trafikkdata/api/"
+    # Definerer overskriftene for spørringen inkludert innholdstypen Det er rare kommentarer her siden jeg først tenkte å lage en liten tutorial å sende.
+    headers = {
+        "content-type": "application/json"
+    }
 
-#kodeblokker til slutt
+    # Spørringen og endepunktet til API-et må skrives etter hva du vil hente ut i GraphQL format.
+    apiQuery = """
+    {
+      trafficRegistrationPoints(searchQuery: {}) {
+        id
+        name
+        location {
+          municipality {
+            name
+            number
+            county{
+              name
+            }
+          }
+          coordinates {
+            latLon {
+              lat
+              lon
+            }
+          }
+        }
+      }
+    }
+
+    """
+
+    # Konverter spørringen til en JSON-streng
+    payload = json.dumps({
+        "query": apiQuery
+    })
+
+    # Gjør en POST-forespørsel til API-et med overskriftene og nyttelasten
+    response = requests.post(postUrl, headers=headers, data=payload)
+
+    # Sjekk om svarstatuskoden er 200 (vellykket)
+    if response.status_code == 200:
+        # Analyser JSON-dataene i svaret
+        response_data = response.json()
+        # vi må unneste dataen slik at vi får det i kolonner
+        df = pd.json_normalize(response_data['data']['trafficRegistrationPoints'])
+    else:
+        # Skriv ut en feilmelding hvis statuskoden ikke er 200
+        print(f"Error: {response.status_code}")
+
+    #location.municipality.name = Tromsø
+    df = df[df['location.municipality.name'] == 'Tromsø']
+    df = df.reset_index(drop=True)
+    #drop location.municipality.number and name and county
+    df = df.drop(['location.municipality.number', 'location.municipality.name', 'location.municipality.county.name'], axis=1)
+    #clean column names from location.coordinates.latLon.lat to lat and location.coordinates.latLon.lon to lon
+    df.columns = df.columns.str.replace('location.coordinates.latLon.lat', 'lat', regex=False) #setter regex to false siden jeg vil bare skifte nøyaktig det navnet
+    df.columns = df.columns.str.replace('location.coordinates.latLon.lon', 'lon', regex=False)
+
+
+
+    # henter trafficRegistrationPointIds fra df
+    traffic_registration_point_ids = df['id'].tolist()
+
+    ##NY SPØRING
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+
+
+
+
+    # Define the start and end datetime objects
+    start_datetime = datetime.datetime(2018, 1, 1, 23, 0, 0)
+    end_datetime = datetime.datetime(2023, 6, 1, 23, 0, 0)
+
+    # Define the time delta for each iteration
+    time_delta = datetime.timedelta(hours=100)
+
+    # Initialize the list to store the results
+    all_rows = []
+
+    # Loop through the time range and send the requests
+    while start_datetime < end_datetime:
+        # Definerer GraphQL query med "test" for hver trafficRegistrationPointId og setter en new line for hver for å lese i request outputtet om det er rett
+        query = """
+        {
+        """ + "\n".join(
+            f"""
+          test_{id.replace(':', '_')}: trafficData(trafficRegistrationPointId: "{id}") {{
+            volume {{
+              byHour(
+                from: "{start_datetime.isoformat()}+02:00"
+                to: "{(start_datetime + time_delta).isoformat()}+02:00"
+              ) {{
+                edges {{
+                  node {{
+                    from
+                    to
+                    byDirection {{
+                      heading
+                      total {{
+                          volumeNumbers {{
+                              volume
+                          }}
+                          coverage {{
+                            percentage
+                            }}
+                      }}
+                    }}
+                  }}
+                }}
+              }}
+            }}
+          }}
+            """
+            for id in traffic_registration_point_ids
+        ) + "}"
+        
+        # setter inn link og overskrifter og definerer data for query
+        url = "https://www.vegvesen.no/trafikkdata/api/"
+        headers = {"Content-Type": "application/json"}
+        data = {"query": query}
+
+        # Sender requesten og henter resultatet
+        response = requests.post(url, headers=headers, json=data)
+        result = response.json()
+
+        # henter resultatet fra data som er nestet
+        data = result['data']
+
+        # lager en liste of dictionaries, en for hver trafficregistrationpoint. jeg fjerner alias siden jeg ikke trenger det lengere. setter en "if" statement for å fjerne problem om nonetype og legger til 0 istedenfor der det er None
+        rows = [    
+            {        
+                'id': key.replace("test_", ""),        
+                'from': item['node']['from'],
+                'to': item['node']['to'],
+                'heading': heading['heading'],
+                'volume': heading['total']['volumeNumbers']['volume'] if heading['total']['volumeNumbers'] is not None else 0,
+                'coverage': heading['total']['coverage']['percentage'] if heading['total']['coverage'] is not None else 0
+            }
+            for key, value in data.items()
+            for item in value['volume']['byHour']['edges']
+            for heading in item['node']['byDirection']
+        ]
+        
+        # Append the rows to the list of all rows
+        all_rows += rows
+        
+        # Increment the start datetime
+        start_datetime += time_delta
+
+    # lager et dataframe fra listen av dictionaries
+    df1 = pd.DataFrame.from_dict(all_rows)
+
+
+    ##
+
+    #KOMBINERER
+
+
+    #i merge df og df1
+    df = df.merge(df1, on='id', how='left')
+
+
+
+
+
+
+
+
+    #i make a copy
+    df = df.copy()
+    df[['from_date', 'from_time']] = df['from'].str.split('T', expand=True)
+    df[['to_date', 'to_time']] = df['to'].str.split('T', expand=True)
+
+    #drop 
+    df = df.drop(['from', 'to'], axis=1)
+
+
+    #seperate weekdays from weekends
+    df['from_date'] = pd.to_datetime(df['from_date'])
+
+    df['weekday'] = df['from_date'].dt.dayofweek
+
+    df['weekday'] = df['weekday'].replace([0, 1, 2, 3, 4], 'weekday')
+    df['weekday'] = df['weekday'].replace([5, 6], 'weekend')
+
+
+    df = df.drop(df[df['name'] == 'Ryatunnelen'].index) #fjerner Ryatunnelen siden det ligger ute av fokus
+
+
+
+
+    #make list of name for Fastlandet
+    fastlandet = ['FAGERNES SØR', 'FAGERNES NORD', 'FAGERNES ØST', 'Sandvikeidet', 'Rundnes', 'Lunheim', 'HUNGEREN', 'Skjelnan', 'Solstrandvegen Sykkel', 'Tromsøysundvegen Sykkel', 'Kraftforsyningen']
+    kvaloya = ['Eidvegen', 'Kvaløysletta Sykkel', 'Kvaløysletta nord', 'Kvaløysletta sør', 'Eidkjosen sør', 'KVALSUNDTUNNELEN']
+    tilkobling = ['Tromsøbrua sykkel', 'Sandnessbrua Sykkel', 'Tromsøysundtunnelen T2', 'Tromsøysundtunnelen T1', 'TROMSØBRUA', 'Sandnessundbrua']
+    #new column in df for location. ones in kvaloya, fastlandet, tilkobling and rest of tromsøya
+    df['location'] = np.where(df['name'].isin(fastlandet), 'Fastlandet', np.where(df['name'].isin(kvaloya), 'Kvaløya', np.where(df['name'].isin(tilkobling), 'Tilkoblinger til Tromsøya', 'Tromsøya')))
+
+
+
+
+    #One df with only id, name, lat, lon
+    geotag = df[['id', 'name', 'lat', 'lon']]
+    geotag = geotag.drop_duplicates(subset=['id'])
+    geotag = geotag.reset_index(drop=True)
+
+    #drop id lat lon from df
+    df = df.drop(['id', 'lat', 'lon'], axis=1)
+
+
+
+
+
+
+
+    #weekday time between 06 and 09 and 15-17 is rush hour, everything else is not rush hour including weekends
+    df['rush'] = np.where((df['weekday'] == 'weekday') & ((df['from_time'] >= '06:00') & (df['from_time'] <= '09:00') | (df['from_time'] >= '15:00') & (df['from_time'] <= '17:00')), 'rush', 'not rush')
+
+    #new col for 2023-01-05 for "bompenger" yes from 05 and no before
+    df['bompenger'] = np.where(df['from_date'] >= '2023-01-05', '1', '0')
+
+    #one column for time between 06 to 09 and 15-17
+    df['from_time'] = pd.to_datetime(df['from_time'], utc=True) #I also set the time to UTC time for easier data handling. When looking at time later, i have to take into account that it is UTC time when looking at rush and not rush hour
+    df['to_time'] = pd.to_datetime(df['to_time'], utc=True)
+
+    df['from_time'] = df['from_time'].dt.time
+    df['to_time'] = df['to_time'].dt.time
+
+
+
+    df['from_time'] = df['from_time'].astype(str)
+    df['to_time'] = df['to_time'].astype(str)
+
+    df['from_time'] = df['from_time'].str.extract(r'(\d{2}:\d{2})')
+    df['to_time'] = df['to_time'].str.extract(r'(\d{2}:\d{2})')
+
+    df['time'] = df['from_time'] + ' - ' + df['to_time']
+
+    df = df.drop(['from_time', 'to_time', 'to_date'], axis=1)
+
+
+
+
+
+
+
+
+
+    #Adding vehicle type since i have one column that contains both car and bicycle. found out later that there are some values that dont use capital letter and some do so ykkel it is.
+    df['Vehicle type'] = np.where(df['name'].str.contains('ykkel'), 'bicycle', 'car')
+
+    #drop rows with NA
+    df = df.dropna()
+
+
+
+
+    df = df.reset_index(drop=True)
+
+
+
+    #Converting to daily data as i do not need hourly data now that ive made rushtime and not rushtime.
+
+    #group by name, heading, from_date, weekday, rush and sum volume and and take mean of coverage
+    df = df.groupby(['name', 'heading', 'from_date', 'weekday', 'location', 'rush', 'Vehicle type', 'bompenger']).agg({'volume': 'sum', 'coverage': 'mean'}).reset_index()
+    #rename from_date to daily
+    df = df.rename(columns={'from_date': 'daily_data'})
+
+
+    #Lager en dictionary for farger slik at jeg er konsistent med fargebruk for Tromsøya, Fastlandet, Kvaløya og bruene og tunnellene.
+    location_colors = {
+        'Tromsøya': 'red',
+        'Fastlandet': 'blue',
+        'Kvaløya': 'orange',
+        'Tilkoblinger til Tromsøya': 'green'}
+
+    df_historical = df.copy() #for å bruke i historisk analyse
+
+    #we use data from 2022-01-01
+    df = df[df['daily_data'] >= '2022-01-01']
+
+
+    df.reset_index(drop=True, inplace=True)
+    geotag.reset_index(drop=True, inplace=True)
+    df_historical.reset_index(drop=True, inplace=True)
+
+    df_buss = pd.read_csv("https://raw.githubusercontent.com/uit-sok-1006-v23/uit-sok-1006-v23.github.io/main/data/antall%20p%C3%A5stigende.csv")
+    #dfbuss write to csv
+    df_buss.to_csv('buss.csv', index=False)
+
+
+    #BRUKES FOR Å JOBBE UTEN Å LASTE HELE KODEN
+    #write to csv
+    df.to_csv('trafikkdata.csv', index=False)
+    geotag.to_csv('geotag.csv', index=False)
+    df_historical.to_csv('historical.csv', index=False)
+
+
+df = pd.read_csv('trafikkdata.csv')
+df_historical = pd.read_csv('historical.csv')
+geotag = pd.read_csv('geotag.csv')
+df_buss = pd.read_csv('buss.csv')
+
+
+
+#monthly data
+df['daily_data'] = pd.to_datetime(df['daily_data'])
+df['month'] = df['daily_data'].dt.month
+df['year'] = df['daily_data'].dt.year
+
+
+# Filter DataFrame to only include specified date ranges for oppgave jobbing. Denne må endres til 05.
+date_ranges = [(pd.to_datetime('2022-01-01'), pd.to_datetime('2022-05-31')),
+               (pd.to_datetime('2023-01-01'), pd.to_datetime('2023-05-31'))]
+
+
+#another datarange but from 2018-2023
+date_ranges_historical = [(pd.to_datetime('2018-01-01'), pd.to_datetime('2018-05-31')),
+                (pd.to_datetime('2019-01-01'), pd.to_datetime('2019-05-31')),
+                (pd.to_datetime('2020-01-01'), pd.to_datetime('2020-05-31')),
+                (pd.to_datetime('2021-01-01'), pd.to_datetime('2021-05-31')),
+                (pd.to_datetime('2022-01-01'), pd.to_datetime('2022-05-31')),
+                (pd.to_datetime('2023-01-01'), pd.to_datetime('2023-05-31'))]
+
 
 ```
 
 ```{python}
-#TEMP
+df_buss = pd.read_csv('buss.csv')
+df = pd.read_csv('trafikkdata.csv')
+df_historical = pd.read_csv('historical.csv')
+geotag = pd.read_csv('geotag.csv')
+
+#monthly data
+df['daily_data'] = pd.to_datetime(df['daily_data'])
+df['month'] = df['daily_data'].dt.month
+df['year'] = df['daily_data'].dt.year
+
+location_colors = {
+    'Tromsøya': 'red',
+    'Fastlandet': 'blue',
+    'Kvaløya': 'orange',
+    'Tilkoblinger til Tromsøya': 'green'}
 
 
-#TEMP
+# Filter DataFrame to only include specified date ranges for oppgave jobbing. Denne må endres til 05.
+date_ranges = [(pd.to_datetime('2022-01-01'), pd.to_datetime('2022-05-31')),
+               (pd.to_datetime('2023-01-01'), pd.to_datetime('2023-05-31'))]
+
+
+#another datarange but from 2018-2023
+date_ranges_historical = [(pd.to_datetime('2018-01-01'), pd.to_datetime('2018-05-31')),
+                (pd.to_datetime('2019-01-01'), pd.to_datetime('2019-05-31')),
+                (pd.to_datetime('2020-01-01'), pd.to_datetime('2020-05-31')),
+                (pd.to_datetime('2021-01-01'), pd.to_datetime('2021-05-31')),
+                (pd.to_datetime('2022-01-01'), pd.to_datetime('2022-05-31')),
+                (pd.to_datetime('2023-01-01'), pd.to_datetime('2023-05-31'))]
+
+```
+
+```{python}
+
+%%capture
+
+#group by name, heading, from_date, weekday, rush and sum volume and and take mean of coverage
+df_location = df.groupby(['location', 'Vehicle type', 'month', 'year']).agg({'volume': 'sum', 'coverage': 'mean'}).reset_index()
+#adding together year month again
+df_location['month'] = df_location['year'].astype(str) + '-' + df_location['month'].astype(str)
+
+df_location['month'] = pd.to_datetime(df_location['month'])
+
+
+
+
+
+#plotting df_location by location and one line for car and one for bicycle
+df_location_car = df_location[df_location['Vehicle type'] == 'car'].copy()
+df_location_bicycle = df_location[df_location['Vehicle type'] == 'bicycle'].copy()
+
+#starting plot
+fig, ax = plt.subplots(figsize=(15, 6))
+
+#plotting car with one line for each location
+for location in df_location_car['location'].unique():
+    df_location_car[df_location_car['location'] == location].plot(x='month', y='volume', label='Bil', ax=ax, color=location_colors[location])
+
+
+
+#plotting bicycle with one line for each location on the other y axis with a dashed line
+ax2 = ax.twinx()
+for location in df_location_bicycle['location'].unique():
+    df_location_bicycle[df_location_bicycle['location'] == location].plot(x='month', y='volume', label='sykkel ' + location, ax=ax2, linestyle="dashed",color=location_colors[location]) 
+
+
+
+
+
+
+#x ticks as month names
+ax.set_xticks(df_location_car['month'].unique())
+ax.set_xticklabels(df_location_car['month'].dt.strftime('%b %Y').unique(), rotation=45)
+
+#setting title and labels
+ax.set_title('Månedlig trafikkvolum i Tromsø', fontsize=18)
+ax.set_xlabel('', fontsize=16)
+ax.set_ylabel('Bil volum i tusener', fontsize=16)
+ax2.set_ylabel('Sykkel volum', fontsize=16)
+
+
+ax.text(0.5, 0.96, 'NB forskjellige verdier på Y aksene ', transform=ax.transAxes, ha='center', fontsize=14, color='black')
+
+ax.text(0.8, 0.05, 'Data fra Statens Vegvesen', transform=ax.transAxes, ha='center', fontsize=14, color='black')
+
+#ax in thousands
+ax.yaxis.set_major_formatter(lambda x, pos: '{:.0f}'.format(x/1000) + '')
+
+#removing space between line and y axis
+ax.margins(x=0)
+ax2.margins(x=0);
+
+
+#line from 2023-01 up to car volume for 2023-01
+
+#finding max value for car in 2023-01
+max_car = df_location_car[df_location_car['month'] == '2023-01']['volume'].max()
+
+#plotting line from 2023-01 up to max value for car in 2023-01
+ax.plot([pd.to_datetime('2023-01'), pd.to_datetime('2023-01')], [500000, max_car], color='black', linestyle='--', linewidth=1)
+#and a line from that point and to hte left
+ax.plot([pd.to_datetime('2023-01'), pd.to_datetime('2022-01')], [max_car, max_car], color='black', linestyle='--', linewidth=1)
+
+#text saying "Bompenger start" with arrow pointing to the line
+ax.annotate('Bompenger starter', xy=(pd.to_datetime('2023-01'), max_car), xytext=(pd.to_datetime('2023-01'), max_car + 500000), arrowprops=dict(facecolor='black', shrink=0.05), ha='center', fontsize=14)
+
+
+#plotting legend
+ax.legend(loc='upper left', bbox_to_anchor=(0.0, 0.75), fontsize=10)
+ax2.legend(loc='upper left', bbox_to_anchor=(0.06, 0.75), fontsize=10)
+#legend no box
+ax.get_legend().set_frame_on(False)
+ax2.get_legend().set_frame_on(False)
+
+#ax text with coverage %
+ax.text(0.8, 0.025, 'Dekningsgrad bil: ' + str(round(df_location_car['coverage'].mean(), 2)) + '%', transform=ax.transAxes, ha='center', fontsize=10, color='grey')
+ax.text(0.8, 0.005, 'Dekningsgrad sykkel: ' + str(round(df_location_bicycle['coverage'].mean(), 2)) + '%', transform=ax.transAxes, ha='center', fontsize=10, color='grey')
+
+#xlim stop before 2023-05
+ax.set_xlim(pd.to_datetime('2022-01'), pd.to_datetime('2023-05'))
+
+#saving plot
+plt.savefig('trafikkvolum_manedlig.png', bbox_inches='tight', dpi=300);
+
+
+```
+
+```{python}
+%%capture
+#When working with the data i didnt know that when writing to csv and later reading from csv it changed the dtypes of the columns. Therefor i need the next couple of lines of code.
+
+#convert daily_data to object
+df_historical['daily_data'] = df_historical['daily_data'].astype(str)
+#convert bompenger to int64
+df_historical['bompenger'] = df_historical['bompenger'].astype(np.int64)
+
+
+df_historical = df_historical[df_historical['Vehicle type'] == 'car']
+#Har brukt chatgpt
+
+# Merge geotag with df_historical by name
+df_historical = df_historical.merge(geotag, on='name', how='left')
+
+# Create a GeoDataFrame from unique locations
+unique_locations = df_historical[['name', 'lat', 'lon']].drop_duplicates()
+
+# Separate locations based on the condition
+included_locations = unique_locations[unique_locations['name'].isin(df_historical[df_historical['daily_data'] == '2018-01-01']['name'].unique())]
+excluded_locations = unique_locations[~unique_locations['name'].isin(df_historical[df_historical['daily_data'] == '2018-01-01']['name'].unique())]
+
+
+#drop id, lat, lon
+df_historical = df_historical.drop(['id', 'lat', 'lon'], axis=1)
+
+
+#keep only them
+df_historical = df_historical[df_historical['name'].isin(df_historical[df_historical['daily_data'] == '2018-01-01']['name'].unique())]
+
+#group by daily_data, weekday, rush, location, vehicle type, bompenger and sum volume and and take mean of coverage
+df_historical = df_historical.groupby(['daily_data', 'weekday', 'rush', 'location', 'Vehicle type', 'bompenger']).agg({'volume': 'sum', 'coverage': 'mean'}).reset_index()
+
+#weekday
+df_historical['daily_data'] = pd.to_datetime(df_historical['daily_data'])
+
+
+#CHATGPT
+#change daily_data to UNIX timestamp (in days)
+df_historical['daily_data'] = df_historical['daily_data'].astype(np.int64) // (10**9 * 24 * 3600)
+#CHATGPT
+
+#arrange by daily_data
+df_historical = df_historical.sort_values(by=['daily_data'])
+
+
+
+
+#two plots with one for rush and one for not rush with lines for each location
+fig, (ax, ax2) = plt.subplots(2, 1, figsize=(15, 10), sharex=True)
+
+for location in df_historical['location'].unique():
+    df_historical[(df_historical['location'] == location) & (df_historical['rush'] == 'rush')].plot(x='daily_data', y='volume', label=location, ax=ax, color=location_colors[location], title='Trafikkvolum i rushtid', alpha=0.5)
+
+for location in df_historical['location'].unique():
+    df_historical[(df_historical['location'] == location) & (df_historical['rush'] == 'not rush')].plot(x='daily_data', y='volume', label=location, ax=ax2, color=location_colors[location], title="Traffikkvolum i helger og hverdager utenom rushtid", alpha=0.5)
+
+
+
+for location in df_historical['location'].unique():
+    for rush_value in ['rush', 'not rush']:
+
+        df_historical_subset = df_historical[(df_historical['location'] == location) & (df_historical['rush'] == rush_value)]
+
+        X = df_historical_subset[['daily_data', 'bompenger']]
+        y = df_historical_subset['volume']
+        X = sm.add_constant(X)
+
+        # Fit the model
+        model = sm.OLS(y, X)
+        results = model.fit()
+
+
+        #Plot regression line
+        if rush_value == 'rush': #increase thickness of rush lines
+            ax.plot(df_historical_subset['daily_data'], results.fittedvalues, color=location_colors[location], linewidth=3)
+        else:
+            ax2.plot(df_historical_subset['daily_data'], results.fittedvalues, color=location_colors[location], linewidth=3)
+
+
+#ChatGPT 
+# Get the first day of each month in the daily_data column (converted back to datetime)
+unique_dates = pd.date_range(pd.to_datetime(df_historical['daily_data'].min(), unit='D'), pd.to_datetime(df_historical['daily_data'].max(), unit='D'), freq='4MS')
+
+# Convert unique_dates to UNIX timestamp (in days)
+unique_dates_unix = (unique_dates.astype(np.int64) // (10**9 * 24 * 3600)).tolist() 
+#ChatGPT
+
+
+#Set xticks for each month
+ax.set_xticks(unique_dates_unix)
+ax.set_xticklabels(unique_dates.strftime('%b %Y'), rotation=45)
+
+#no space between line and y axis
+ax.margins(x=0)
+#no x label
+ax2.set_xlabel('');
+
+ax.get_legend().set_visible(False)
+#spines
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax2.spines['top'].set_visible(False)
+ax2.spines['right'].set_visible(False)
+
+
+#ax2 legend between plots
+ax2.legend(loc='upper left', bbox_to_anchor=(0.0, 1.22), fontsize=10)
+
+ax.tick_params(axis='x', which = 'minor', bottom=False, top=False, labelbottom=True)
+ax2.tick_params(axis='x', which = 'minor', bottom=False, top=False, labelbottom=True)
+
+
+#plt.savefig
+plt.savefig('lm_bil_daglig_bompenger.png', bbox_inches='tight', dpi=300)
+
+
+
+
+
+
+#https://contextily.readthedocs.io/en/latest/intro_guide.html#TL;DR Har lest mye her å fikk da hjelp av ChatGPT til å hjelpe meg legge inn verdier og hvordan jeg skulle strukutere kode.
+#Her er det brukt ChatGPT for å hjelpe meg med å lage kart. Jeg har spurt den om å bruke Geopandas og contextily for å lage kartet ved bruk av lat og lon i datasettet og jeg har modifisert dette ganske mye.
+
+#chatgpt
+# Create GeoDataFrames
+gdf_included = gpd.GeoDataFrame(included_locations, geometry=gpd.points_from_xy(included_locations['lon'], included_locations['lat']))
+gdf_excluded = gpd.GeoDataFrame(excluded_locations, geometry=gpd.points_from_xy(excluded_locations['lon'], excluded_locations['lat']))
+
+# Set the CRS (Coordinate Reference System) to WGS84
+gdf_included.crs = 'epsg:4326'
+gdf_excluded.crs = 'epsg:4326'
+
+# Reproject to Web Mercator
+gdf_included = gdf_included.to_crs(epsg=3857)
+gdf_excluded = gdf_excluded.to_crs(epsg=3857)
+#chatgpt
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+#markers for 2018 og etter
+gdf_included.plot(ax=ax, markersize=50, color='red', alpha=0.7, label="2018")
+gdf_excluded.plot(ax=ax, markersize=50, color='blue', alpha=0.7, label="lagt til etter 2018")
+
+
+#chatgpt
+# Add basemap using contextily
+ctx.add_basemap(ax, source=ctx.providers.CartoDB.Positron)
+#chatgpt
+
+
+# Set axis limits to zoom in on the area of interest
+#setter x og y limit for å kunne ha kartet sentrert på Tromsø og jeg endrer på zoom for å få det til å se bra ut
+ax.set_xlim(gdf_excluded.geometry.x.min() - 2500, gdf_excluded.geometry.x.max() + 2500)
+ax.set_ylim(gdf_excluded.geometry.y.min() - 2500, gdf_excluded.geometry.y.max() + 2500)
+
+
+#drop all spines
+ax.axis('off')
+#drop labels and ticks
+ax.set_xticks([])
+ax.set_yticks([])
+ax.legend(loc='upper left', bbox_to_anchor=(0.0, 0.7), fontsize=15)
+
+#plt savefig
+plt.savefig('kart.png', dpi=300);
+
+```
+
+```{python}
+%%capture
+#from location drop kvaløya and fastlandet
+df_location_bicycle = df_location_bicycle[~df_location_bicycle['location'].isin(['Kvaløya', 'Fastlandet'])].copy()
+df_location_car = df_location_car[~df_location_car['location'].isin(['Kvaløya', 'Fastlandet'])].copy()
+
+
+df_location_car = df_location_car[df_location_car['month'].apply(lambda x: any(start <= x <= end for start, end in date_ranges))].copy()
+df_location_bicycle = df_location_bicycle[df_location_bicycle['month'].apply(lambda x: any(start <= x <= end for start, end in date_ranges))].copy()
+
+
+
+#month as str
+df_location_bicycle['month'] = df_location_bicycle['month'].astype(str)
+#from month column remove first 5 characters and final 3
+df_location_bicycle['month'] = df_location_bicycle['month'].str[5:-3]
+#as int
+df_location_bicycle['month'] = df_location_bicycle['month'].astype(int)
+
+#month as str
+df_location_car['month'] = df_location_car['month'].astype(str)
+#from month column remove first 5 characters and final 3
+df_location_car['month'] = df_location_car['month'].str[5:-3]
+#as int
+df_location_car['month'] = df_location_car['month'].astype(int)
+
+
+fig, ax = plt.subplots(figsize=(7, 5))
+for location in df_location_bicycle['location'].unique():
+    for year in [2022, 2023]:
+        df_location_bicycle_subset = df_location_bicycle[(df_location_bicycle['location'] == location) & (df_location_bicycle['year'] == year)]
+
+        # Setter linestyle based on bompenger_value
+        linestyle = "dashed" if year == 2023 else "solid"
+
+        #label
+        label = location + ' ' + str(year) if year == 2023 else str(year)
+        
+        # Plotter
+        ax.plot(df_location_bicycle_subset['month'], df_location_bicycle_subset['volume'], linestyle=linestyle, color=location_colors[location], label=label)
+
+
+
+
+ax.set_xlabel('')
+ax.set_ylabel('')
+ax.set_title('Sykkeltrafikkvolum på Tromsøya og bruer i 2022 og 2023')
+
+
+handles, labels = ax.get_legend_handles_labels() #lagrer handles og labels i variabler slik at jeg kan endre rekkefølge
+# vil ha 2022 verdiene først slik at jeg kan enkelt sette ncol=2
+test = [2, 0, 3, 1]
+
+# endrer rekkefølle etter listen
+handles = [handles[i] for i in test]
+labels = [labels[i] for i in test]
+
+ax.legend(handles, labels, loc='upper left', bbox_to_anchor=(0.15, 1), fontsize=10, ncol=2)
+
+# Set xticks for each month
+ax.set_xticks(range(1,6))
+ax.set_xticklabels(['Januar', 'Februar', 'Mars', 'April', 'Mai'])
+
+ax.set_xlim([1, 5])
+ax.text(0.8, 0.05, 'Data fra Statens Vegvesen', transform=ax.transAxes, ha='center', fontsize=10, color='black')
+#no top and right spines
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+plt.savefig('sykkel_manedlig_tromsoya.png', bbox_inches='tight', dpi=300);
+
+
+
+#ny figur
+
+
+fig, ax = plt.subplots(figsize=(7, 5))
+for location in df_location_bicycle['location'].unique():
+    for year in [2022, 2023]:
+        df_location_bicycle_subset = df_location_bicycle[(df_location_bicycle['location'] == location) & (df_location_bicycle['year'] == year)]
+        X = df_location_bicycle_subset['month']
+        y = df_location_bicycle_subset['volume']
+        X = sm.add_constant(X)
+
+        
+        model = sm.OLS(y, X)
+        results = model.fit() #setter regresjonslinjene
+
+        # Setter linestyle based on bompenger_value
+        linestyle = "dashed" if year == 2023 else "solid"
+        
+        # Plotter
+        ax.plot(df_location_bicycle_subset['month'], results.fittedvalues, linestyle=linestyle, color=location_colors[location], label=str(year))
+
+
+
+#fargene ble litt rar så jeg omsetter fargene igjen
+for location in df_location_bicycle['location'].unique():
+    ax.plot([], [], linestyle="solid", color=location_colors[location], label='2022')
+    ax.plot([], [], linestyle="dashed", color=location_colors[location], label=location + ' 2023') 
+
+
+
+ax.set_title('Lineær regresjonslinjer for sykkeltrafikken i Tromsø før og etter bompenger')
+
+
+
+
+#setter legend i plot 2 for å vise at det er 2022 og 2023. må bruke line2d for å sette custom legend
+ax.legend([Line2D([0], [0], color='black', linestyle='solid'), Line2D([0], [0], color='black', linestyle='dashed')], ['2022', '2023'])
+
+
+
+# Set xticks for each month
+ax.set_xticks(range(1,6))
+ax.set_xticklabels(['Januar', 'Februar', 'Mars', 'April', 'Mai'])
+
+ax.set_xlim([1, 5])
+
+ax.text(0.8, 0.05, 'Data fra Statens Vegvesen', transform=ax.transAxes, ha='center', fontsize=10, color='black')
+
+#no top and right spines
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+plt.savefig('lm_sykkel_manedlig_bompenger.png', bbox_inches='tight', dpi=300);
+
+
+
+#Biler
+
+fig, ax = plt.subplots(figsize=(15, 4))
+for location in df_location_car['location'].unique():
+    for year in [2022, 2023]:
+        df_location_car_subset = df_location_car[(df_location_car['location'] == location) & (df_location_car['year'] == year)]
+        X = df_location_car_subset['month']
+        y = df_location_car_subset['volume']
+        X = sm.add_constant(X)
+
+        
+        model = sm.OLS(y, X)
+        results = model.fit() #setter regresjonslinjene
+
+        linestyle = "dashed" if year == 2023 else "solid"
+        label = location + ' ' + str(year) if year == 2023 else str(year)
+        # Plotter
+        ax.plot(df_location_car_subset['month'], results.fittedvalues, linestyle=linestyle, color=location_colors[location], label=label)
+
+#title
+ax.set_title('Lineær regresjonslinjer for biltrafikken i Tromsø før og etter bompenger')
+
+
+handles, labels = ax.get_legend_handles_labels() #lagrer handles og labels i variabler slik at jeg kan endre rekkefølge
+# vil ha 2022 verdiene først slik at jeg kan enkelt sette ncol=2
+
+# endrer rekkefølle etter listen
+handles = [handles[i] for i in test]
+labels = [labels[i] for i in test]
+
+ax.legend(handles, labels, loc='upper left', bbox_to_anchor=(0.02, 0.7), fontsize=10, ncol=2)
+
+#y ticks dividerer med 1000 for å få tusen tall
+ax.yaxis.set_major_formatter(lambda x, pos: '{:.0f}'.format(x/1000) + '')
+#text
+ax.text(0.5, 0.95, 'Y akse gitt i tusener', transform=ax.transAxes, ha='center', fontsize=10, color='black')
+
+#source
+ax.text(0.8, 0.15, 'Data fra Statens Vegvesen', transform=ax.transAxes, ha='center', fontsize=10, color='black')
+
+# Set xticks for each month
+ax.set_xticks(range(1,6))
+ax.set_xticklabels(['Januar', 'Februar', 'Mars', 'April', 'Mai'])
+
+ax.set_xlim([1, 5])
+
+
+
+#no top and right spines
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+#savefig
+plt.savefig('lm_bil_manedlig_bompenger.png', bbox_inches='tight', dpi=300);
+
+```
+
+```{python}
+%%capture
+#sum påstigende for each day in date
+df_buss = df_buss.groupby('date').sum().reset_index()
+df_buss = df_buss.drop('Linje', axis=1)
+
+#drop last 5 characters from date
+df_buss['date'] = df_buss['date'].str[:-6]
+
+#replace / with -
+df_buss['date'] = df_buss['date'].str.replace('/', '-')
+
+#date column is yyyy-mm-dd format and not datetime
+df_buss['date'] = pd.to_datetime(df_buss['date'], format='%d-%m-%Y')
+
+#weekday/weekend column
+df_buss['weekday'] = df_buss['date'].dt.dayofweek
+
+#weekend = 1, weekday = 0
+df_buss['weekday'] = np.where(df_buss['weekday'] > 4, "helg", "hverdag")
+
+
+
+#arrange date
+df_buss = df_buss.sort_values(by='date')
+
+#new column for bompenger. 1 when past 01/05/2023 and 0
+df_buss['bompenger'] = np.where(df_buss['date'] > '2023-01-05', 1, 0)
+
+#change daily_data to UNIX timestamp (in days)
+df_buss['date'] = df_buss['date'].astype(np.int64) // (10**9 * 24 * 3600)
+
+#arrange by daily_data
+df_buss = df_buss.sort_values(by=['date'])
+
+
+
+#i will now make the same plot but using daily data and not monthly
+#two plots with one for rush and one for not rush with lines for each location
+fig, (ax, ax2) = plt.subplots(2, 1, figsize=(15, 10), sharex=True)
+
+for weekday in df_buss['weekday'].unique():#reduce alpha
+    df_buss[(df_buss['weekday'] == 'hverdag')].plot(x='date', y='Påstigende', ax=ax, title='Daglige påstigninger på bybuss i hverdager', alpha=0.5, marker='o', linestyle='', color='grey', fontsize=15)
+
+for weekday in df_buss['weekday'].unique():
+    df_buss[(df_buss['weekday'] == "helg")].plot(x='date', y='Påstigende', ax=ax2, title="Daglige påstigninger på bybuss i helger", alpha=0.5, marker='o', linestyle='', color='grey', fontsize=15)
+
+
+
+# Add interaction term
+df_buss['date_bompenger'] = df_buss['date'] * df_buss['bompenger']
+
+
+
+
+for weekday_value in ['helg', 'hverdag']:
+    df_buss_subset = df_buss[df_buss['weekday'] == weekday_value]
+
+    # Prepare data for regression
+    X = df_buss_subset[['date', 'bompenger']]
+    y = df_buss_subset['Påstigende']
+    X = sm.add_constant(X)
+
+    # Fit the model
+    model = sm.OLS(y, X)
+    results = model.fit()
+
+    # Plot regression line
+    if weekday_value == 'hverdag': 
+        ax.plot(df_buss_subset['date'], results.fittedvalues, linewidth=3)
+    else:
+        ax2.plot(df_buss_subset['date'], results.fittedvalues, linewidth=3)
+
+
+
+
+# Get the first day of each month in the daily_data column (converted back to datetime)
+unique_dates = pd.date_range(pd.to_datetime(df_buss['date'].min(), unit='D'), pd.to_datetime(df_buss['date'].max(), unit='D'), freq='1MS')
+
+# Convert unique_dates to UNIX timestamp (in days)
+unique_dates_unix = (unique_dates.astype(np.int64) // (10**9 * 24 * 3600)).tolist()
+
+# Set xticks for each month
+ax.set_xticks(unique_dates_unix)
+ax.set_xticklabels(unique_dates.strftime('%b %Y'), rotation=25)
+
+
+ax.margins(x=0)
+
+
+
+ax.get_legend().set_visible(False)
+ax2.get_legend().set_visible(False)
+#spines
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax2.spines['top'].set_visible(False)
+ax2.spines['right'].set_visible(False)
+
+
+#x label
+ax.set_xlabel('')
+ax2.set_xlabel('')
+
+
+
+#fjerner alt av minor ticks
+ax.tick_params(axis='x', which = 'minor', bottom=False, top=False, labelbottom=True) 
+ax2.tick_params(axis='x', which = 'minor', bottom=False, top=False, labelbottom=True)
+#roterer labels, gjør det i ny linje pga den over bare går etter minor ticks.
+ax2.tick_params(axis='x', rotation=45)
+
+#increasing title size
+ax.title.set_size(25)
+ax2.title.set_size(25)
+
+#source
+ax2.text(0.8, 0.07, 'Data fra Troms fylkestrafikk', transform=ax.transAxes, ha='center', fontsize=15, color='black')
+ax2.text(0.8, 0.02, 'Tilgang til data gitt fra Derek John Clark', transform=ax.transAxes, ha='center', fontsize=15, color='black')
+
+
+plt.savefig('buss_daglig.png', bbox_inches='tight', dpi=300);
+
+```
+
+```{python}
+%%capture
+#henter inn data på hvilke typer biler som er i Tromsø. Kommer frem til ca 15% elbiler i 2022
+postUrl = "https://data.ssb.no/api/v0/no/table/07849/"
+
+
+apiQuery = {
+  "query": [
+    {
+      "code": "Region",
+      "selection": {
+        "filter": "agg:KommSummer",
+        "values": [
+          "K-5401"
+        ]
+      }
+    },
+    {
+      "code": "DrivstoffType",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "Personbil1"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2018",
+          "2019",
+          "2020",
+          "2021",
+          "2022"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}
+
+# Funksjon for å konvertere uttrekket til 2 dataframes, tar 2 paramtre
+
+def apiToDataframe(postUrl, query):
+
+    # postUrl som spørringen skal postes mot
+    # Spørringen og endepunktet til API-et kan hentes fra Statistikkbanken.
+
+    res = requests.post(postUrl, json=query)
+    # legger resultat i ds. DS har i tillegg en del metadata
+    ds = pyjstat.Dataset.read(res.text)
+    # skriver resultatet til to dataframes
+    # først dataframe med tekst
+    df = ds.write('dataframe')
+    # deretter dataframe med koder
+    df_id = ds.write('dataframe', naming='id')
+    # returnerer også ds i tilfelle en trenger metadata
+    return df, df_id, ds
+
+df_bilandeler, df_id, ds = apiToDataframe(postUrl, apiQuery)
+
+
+#new column. 1 if drivstofftype contains "El." and 0 if not
+df_bilandeler = df_bilandeler.copy()
+df_bilandeler['elbil'] = np.where(df_bilandeler['drivstofftype'].str.contains('El.'), 1, 0)
+#group by year and elbil
+df_bilandeler = df_bilandeler.groupby(['år', 'elbil']).agg({'value': 'sum'}).reset_index()
+#elbil percent of total per year
+df_bilandeler['elbil_prosent'] = df_bilandeler.groupby('år', group_keys=False)['value'].apply(lambda x: x / float(x.sum()) * 100)
+
+#plot the two percentages as stackplot per year
+fig, ax = plt.subplots(figsize=(5, 5))
+
+#bar plot each year stacked on top of each other. 
+ax.bar(df_bilandeler['år'], df_bilandeler['elbil_prosent'], color='green', label='Elbil')
+ax.bar(df_bilandeler['år'], 100 - df_bilandeler['elbil_prosent'], bottom=df_bilandeler['elbil_prosent'], color='#1B79AC', label='Bensin/diesel/annet')
+
+
+for index, row in df_bilandeler.iterrows():
+    ax.text(row['år'], row['elbil_prosent'], str(round(row['elbil_prosent'], 2)) + '%', ha='center', fontsize=10, color='black')
+
+
+#percent on y axis
+ax.yaxis.set_major_formatter(lambda x, pos: '{:.0f}'.format(x) + '%')
+
+
+#legend
+ax.legend(loc='upper left', bbox_to_anchor=(0.0, 0.7), fontsize=10)
+
+#title and labels
+ax.set_title('Andel elbiler i Tromsø', fontsize=18)
+ax.set_xlabel('', fontsize=16)
+ax.set_ylabel('', fontsize=16)
+
+#source
+ax.text(0.8, 0.02, 'Data fra SSB tabell 07849', transform=ax.transAxes, ha='center', fontsize=10, color='black')
+
+
+plt.savefig('elbil_andeler.png', bbox_inches='tight', dpi=300);
+
 ```
 
 ```{python}
 
 
+postUrl = "https://data.ssb.no/api/v0/no/table/12576/"
 
 
-```
+apiQuery = {
+  "query": [
+    {
+      "code": "Region",
+      "selection": {
+        "filter": "vs:FylkerAlle",
+        "values": [
+          "54",
+          "19",
+          "20"
+        ]
+      }
+    },
+    {
+      "code": "Kjoretoytype",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "15"
+        ]
+      }
+    },
+    {
+      "code": "DrivstoffType",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "1",
+          "2",
+          "18",
+          "14",
+          "15",
+          "16",
+          "17",
+          "3",
+          "4",
+          "13",
+          "7"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "GjsnittKjorelengde"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2018",
+          "2019",
+          "2020",
+          "2021",
+          "2022"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}
 
-```{python}
+
+def apiToDataframe(postUrl, query):
+
+    # postUrl som spørringen skal postes mot
+    # Spørringen og endepunktet til API-et kan hentes fra Statistikkbanken.
+
+    res = requests.post(postUrl, json=query)
+    # legger resultat i ds. DS har i tillegg en del metadata
+    ds = pyjstat.Dataset.read(res.text)
+    # skriver resultatet til to dataframes
+    # først dataframe med tekst
+    df = ds.write('dataframe')
+    # deretter dataframe med koder
+    df_id = ds.write('dataframe', naming='id')
+    # returnerer også ds i tilfelle en trenger metadata
+    return df, df_id, ds
+
+df_kjorelengde, df_id, ds = apiToDataframe(postUrl, apiQuery)
+
+df_kjorelengde['region'] = df_kjorelengde['region'].str.replace('Troms og Finnmark - Romsa ja Finnmárku', 'Troms og Finnmark')
+
+df_kjorelengde = df_kjorelengde.replace(np.nan, 0)
+#i remove rows with Troms og Finnmark and put it in a new dataframe
+df_troms_og_finnmark = df_kjorelengde[df_kjorelengde['region'] == 'Troms og Finnmark']
+df_troms = df_kjorelengde[df_kjorelengde['region'] != 'Troms og Finnmark']
+#I combine all values for nordland and troms og finnmark and group by år and bustadland
+#mean of value for each year and drivstofftype
+df_troms = df_troms.groupby(['år','drivstofftype']).mean(numeric_only=True)
+df_troms_og_finnmark = df_troms_og_finnmark.groupby(['år','drivstofftype']).mean(numeric_only=True)
+#index as int type
+df_troms.index = df_troms.index.set_levels(df_troms.index.levels[0].astype(int), level=0)
+df_troms_og_finnmark.index = df_troms_og_finnmark.index.set_levels(df_troms_og_finnmark.index.levels[0].astype(int), level=0)
+#df_troms drop rows år > 2020
+df_troms = df_troms[df_troms.index.get_level_values('år') < 2020]
+df_troms_og_finnmark = df_troms_og_finnmark[df_troms_og_finnmark.index.get_level_values('år') >= 2020]
+#rowbind
+df_kjorelengde = pd.concat([df_troms, df_troms_og_finnmark])
+#index to column names
+df_kjorelengde = df_kjorelengde.reset_index(level=['drivstofftype'])
+
+#new col for drivstofftype contains "Elektrisitet" 1 for yes 0 for no
+df_kjorelengde['elbil'] = np.where(df_kjorelengde['drivstofftype'] == 'Elektrisitet', 1, 0)
+
+#if value == 0 drop row
+df_kjorelengde = df_kjorelengde[df_kjorelengde['value'] != 0]
+
+
+#group by elbil and år
+df_kjorelengde = df_kjorelengde.groupby(['år', 'elbil']).mean(numeric_only=True)
+df_kjorelengde = df_kjorelengde.reset_index(level=['elbil'])
+df_kjorelengde = df_kjorelengde.reset_index(level=['år'])
+df_kjorelengde = df_kjorelengde.pivot(index='år', columns='elbil', values='value')
+#siste steg. regne ut kjørelengder
+kjorelengde_2022 = df_kjorelengde[df_kjorelengde.index == 2022]
+#bensinbil is row1 col 1
+kjorelengde_2022_bensinbil = round(kjorelengde_2022.iloc[0, 0])
+kjorelengde_2022_elbil = round(kjorelengde_2022.iloc[0, 1])
 
 
 
 
-
-```
-
-```{python}
+postUrl = "https://data.ssb.no/api/v0/no/table/12852/"
 
 
+apiQuery = {
+  "query": [
+    {
+      "code": "Region",
+      "selection": {
+        "filter": "vs:KommunerFastIkkeFast",
+        "values": [
+          "5401"
+        ]
+      }
+    },
+    {
+      "code": "MaaleMetode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "02"
+        ]
+      }
+    },
+    {
+      "code": "ArbBostedRegion",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2"
+        ]
+      }
+    },
+    {
+      "code": "Alder",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "Ialt"
+        ]
+      }
+    },
+    {
+      "code": "AvtaltVanlig",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "0"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "Manedslonn"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2022"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}
 
 
+def apiToDataframe(postUrl, query):
+
+    # postUrl som spørringen skal postes mot
+    # Spørringen og endepunktet til API-et kan hentes fra Statistikkbanken.
+
+    res = requests.post(postUrl, json=query)
+    # legger resultat i ds. DS har i tillegg en del metadata
+    ds = pyjstat.Dataset.read(res.text)
+    # skriver resultatet til to dataframes
+    # først dataframe med tekst
+    df = ds.write('dataframe')
+    # deretter dataframe med koder
+    df_id = ds.write('dataframe', naming='id')
+    # returnerer også ds i tilfelle en trenger metadata
+    return df, df_id, ds
+
+df_lonn, df_id, ds = apiToDataframe(postUrl, apiQuery)
+lonn = df_lonn.iloc[0, -1]*12
 ```
 
 ```{=tex}
-S\newpage
+\newpage
 \listoffigures
 \listoftables
 \renewcommand*{\figureautorefname}{Figur}
@@ -132,9 +1390,7 @@ S\newpage
 
 ## Bakrunn
 
-Tromsø er en by i vekst blabla
-
-Den 5 Januar 2023 så ble det innført bompenger på Tromsøya som en del av byutviklingsprosjektet Tenk Tromsø.\
+Tromsø er en by i vekst og for å som del av byutviklingsprosjektet "Tenk Tromsø" så ble det innført bompenger på Tromsøya den 5 Januar 2023.\
 
 ## Bompenger
 
@@ -184,37 +1440,43 @@ Bypakken må finansieres og da denne oppgaven skrives så er det er bestemt at m
 
 ## Erfaringer
 
-litt her\
+Bompenger i Norge har økt betydelig de siste ti årene. I 2009 ble det betalt inn rundt 6.6 milliarder kroner i bompenger, og dette beløpet ble doblet på ti år til 12,4 milliarder kroner i 2019. I 2022 ble det betalt inn 12,9 milliarder kroner i bompenger I 2023 er rammen for hvor mye bompenger innkreves 16 milliarder kroner. [^5]
+
+[^5]: @handagard_2023_bompengerekord
+
+\clearpage
 
 ## Struktur i utredningen
 
-\
+### Kapittel 1 Innledning
 
-### Kapittel 1
+I kapittel 1 så forklarer jeg begrepet bompenger og hvorfor dette innføres i Tromsø.
 
-Går igjennom hva som er skrevet\
+Det er mange grunner for innføring av bompenger men jeg fokuserer i hovedsak på nedgang i personbiltrafikk som formål.\
 
-### Kapittel 2
+### Kapittel 2 Trafikkbildet i Tromsø før og etter innføring av bompenger
 
-Går igjennom markedet\
+Vi går igjennom hvordan trafikken i Tromsø har vært de siste 5 årene.
 
-### Kapittel 3
+Jeg fokuserer på 2022 og 2023 og vi ser at bompenger har ledet til en reduksjon i biltrafikken. Det er registrert en økning i sykkeltrafikkvolum og en økning i antall busspassasjerer.\
 
-forklarer litt om konsumenens tilpasning.
+### Kapittel 3 Bilisters tilpasning til bompenger
 
-stone-geary ligning. konsumentpreferanser.
+Her er forklaring av begreper og hvilken modell jeg bruker. Jeg forteller om konsumentens tilpasning.
 
-vise konsumentens tilpasning før og etters prisøkning. forskjellige typer bilister. sykkel bil elbil osv.\
+Jeg bruker en Stone-Geary ligning for å vise konsumentens preferanser og konsumentens tilpasning før og etter prisøkning. Det blir gjort for både nullutslipp biler og for biler med forbrenningsmotor.
 
-### Kapittel 4
+Vi ser her på prisen billister betaler per kilometer kjørt før og etter bompenger og vi lager 3 scenarioer der vi ser forskjellen på om de kjører 30% i rushtid og 70% utenom, 100% i rush eller bare kjører utenom rushtid.\
 
-konklusjon\
+### Kapittel 4 Konklusjon
+
+Vi konkluderer med at innføringen av bompenger har en betydelig effekt på bilistenes atferd. Det bidrar til å redusere biltrafikken og øke inntektene til myndighetene. Vi har hatt en økning i busspåstigninger og syklister så dette kan være bra for miljøet og også kanskje gi en samfunnsøkonomisk gevinst i reduksjon av svevestøv og bedre fysisk helse blandt syklister. Det kan dermed være nødvendig med å investere mer i kollektiv transport og bygge flere sykkelveier.\
 
 \newpage
 
 # Kapittel 2 - Trafikkbildet i Tromsø før og etter innføring av bompenger
 
-\
+## Trafikken 2018-2023
 
 ```{=tex}
 \begin{wrapfigure}{r}{0.5\textwidth} 
@@ -224,7 +1486,7 @@ konklusjon\
     \label{fig:fig1}
 \end{wrapfigure}
 ```
-Som vi ser i \autoref{fig:fig1} så har det kommet flere trafikkregistreringsstasjoner i Tromsø fra 2018-2022 som gjør det litt vanskelig å få et komplett bilde av hvordan trafikken har endret seg men ved ved å se på stasjonene som har vært der siden 2018 så får vi trenden i \autoref{fig:fig2} der vi ser at trafikken har holdt seg stabilt frem til 2023 når innkreving av bompenger startet. Med denne dataen så har vi med 2020 og 2021 da koronapandemien fremdeles hadde stort intrykk på samfunnet. Siden vi kan se at trenden hvert år har vært veldig likt så blir vi videre å se på 2022 og 2023 for å se hvordan trafikken har endret seg etter innføringen av bompenger. \nameref{appendix:appendixkart}
+Som vi ser i \autoref{fig:fig1} så har det kommet flere trafikkregistreringsstasjoner i Tromsø fra 2018-2022 som gjør det litt vanskelig å få et komplett bilde av hvordan trafikken har endret seg men ved å se på stasjonene som har vært der siden 2018 så får vi trenden i \autoref{fig:fig2} der vi ser at trafikken har holdt seg stabilt frem til 2023 når innkreving av bompenger startet. Med denne dataen så har vi med 2020 og 2021 da koronapandemien fremdeles hadde stort intrykk på samfunnet. Siden vi kan se at biltrafikken i 2022 ikke er særlig ulikt til årene før så blir vi videre å se på 2022 og 2023 for å se hvordan trafikken har endret seg etter innføringen av bompenger. \nameref{appendix:appendixkart}
 
 ```{=tex}
 \begin{figure}[b!]
@@ -236,7 +1498,9 @@ Som vi ser i \autoref{fig:fig1} så har det kommet flere trafikkregistreringssta
 ```
 \clearpage
 
-Hvis vi ser på alle trafikkregistreringsstasjonene i 2022 og 2023 så kan vi se bedre på hvordan trafikken var på de forskjellige stedene i Tromsø. I \autoref{fig:fig3} så er "Tilkoblinger til Tromsøya" er bruen til Tromsdalen, bruen til Kvaløya og tunnellen mellom Tromsøya og Tromsdalen. På venstre akse så kan vi se volumet for biltrafikk i Tromsø som er vist i tusener, og på høyre akse kan vi se volumet for sykkeltrafikk. Det vi da kan se er at det har vært en tydelig nedgang i biltrafikken i starten når bompenger ble innført men det ser ut som det har begynt å øke igjen.
+## Trafikkendring etter bompenge innføring
+
+Hvis vi ser på alle trafikkregistreringsstasjonene i 2022 og 2023 så kan vi se bedre på hvordan trafikken var på de forskjellige stedene i Tromsø. I \autoref{fig:fig3} så er "Tilkoblinger til Tromsøya" bruen til Tromsdalen, bruen til Kvaløya og tunnellen mellom Tromsøya og Tromsdalen. På venstre akse så kan vi se volumet for biltrafikk i Tromsø som er vist i **tusener**, og på høyre akse kan vi se volumet for sykkeltrafikk.
 
 ```{=tex}
 \begin{figure}[h!]
@@ -246,9 +1510,11 @@ Hvis vi ser på alle trafikkregistreringsstasjonene i 2022 og 2023 så kan vi se
     \label{fig:fig3}
 \end{figure}
 ```
-Siden vi ser at effekten på Kvaløya og Fastlandet er veldig liten så fjerner jeg disse fra videre analyse. Jeg velger å se på Tromsøya og Tromsdalen siden det er her det er mest trafikk og det er her det er innført bompenger.
+Denne figuren viser dekningsgrad. Denne er under 100% så dette betyr at det er tider der stasjonen ikke har fungert så tallene her kan være høyere eller helt likt som vist på figurene. Dekningsgraden er gjeldene for resterende figurer i kapittel 2.
 
-Siden det er flere trafikkregistreringsstasjoner i 2022 så får vi et bedre innblikk på de faktiske trafikkmønsterene siden det er et større mangfold av data. Ved å ha sett på trafikkendringen 2018-2022 så kan vi se at 2022 er tilnærmet et "normal år" siden trenden fra 2018 til 2021 hvert år utenom 2020 er veldig likt 2022. I de 2 regresjonslinjene her fra Januar til Mai 2022 og 2023 så kan vi se at det har vært et tydelig fall i biltrafikken i Tromsø etter innføringen av bompenger.
+Siden vi ser at effekten på Kvaløya og Fastlandet er liten så fjerner jeg disse fra videre analyse. Jeg velger å se på Tromsøya siden det er her det er innført bompenger.
+
+Siden det er flere trafikkregistreringsstasjoner i 2022 så får vi et bedre innblikk på de faktiske trafikkmønsterene siden det er et større mangfold av data. Som vi så på side 8 så går jeg ut ifra at 2022 er et "normal år" siden trafikken fra 2018 til 2021 hvert år utenom 2020 er veldig likt 2022. I de 2 regresjonslinjene her fra Januar til Mai 2022 og 2023 så kan vi se at det har vært et tydelig fall i biltrafikken i Tromsø etter innføringen av bompenger.
 
 ```{=tex}
 \begin{figure}[h!]
@@ -276,11 +1542,13 @@ Siden det er flere trafikkregistreringsstasjoner i 2022 så får vi et bedre inn
     \label{fig:fig7}
 \end{wrapfigure}
 ```
-Siden vi er i starten av juni så har vi ikke nokk data til å se den komplette effekten men som vi så i figurene på forrige side så kan vi anta at 2022 kan sammenlignes med 2023 uten å tenke for mye på korona effekt. Det vi ser ved å se på de første månedne av 2022 og 2023 på sykkeltrafikken i \autoref{fig:fig5} er at det er en økning til hvor mange passeringer på de forskjellige sykkelregistreringspunktene. Ved å sette en lineær regresjonslinje i \autoref{fig:fig6} så kan se en trend der det har vært en økning i trafikken. Det virker som det var mange som sykklet over bruene i Januar så her ser det da ut som det er en nedgående trend på sykler over bruene.
+## Sykkel og kollektivtransport
 
-Over de siste 5 årene så kan vi se at antall elbiler har økt, og det kan virke som denne økningen blir å fortsette som vi kan se i \autoref{fig:fig7}. Siden elbiler har en rabatt som vi så i \autoref{table:1} og dermed betaler mindre i bomringen så kan det hende at denne rabatten må omtenkes på sikt dersom alle prosjektene skal finansieres ved hjelp av bompenger.
+Jeg er i starten av juni så vi har bare data til mai og dan dermed ikke se den komplette effekten bompenger har hatt på biltrafikken men som vi så i figurene på forrige side så vil jeg anta at 2022 kan sammenlignes med 2023 uten å tenke for mye på korona effekt. Ved å se på de de første månedene 2022 og 2023 på sykkeltrafikken i \autoref{fig:fig5} så er det er en økning i passeringer på de forskjellige sykkelregistreringspunktene. Ved å sette en lineær regresjonslinje i \autoref{fig:fig6} så kan se en trend der det har vært en økning i trafikken på øya. Det var mange som sykklet over bruene i Januar så her ser det da ut som det er en nedgående trend på sykler over bruene.
 
-Det vi kan se på påstigninger på buss i \autoref{fig:fig8} er at rett etter innføring av bompenger så er det en tydelig økning i påstigninger på buss. Denne økningen ser ut til å ha vedvart så det kan hende at det nå er nødvendig med større investering i kollektivtransport
+De siste 5 årene så kan vi se at antall elbiler har økt. Dersom økningen vi ser i \autoref{fig:fig7} fortsetter og elbiler beholder rabatten som vi så i \autoref{table:1} så kan det hende at denne biltrafikken vil ta seg opp igjen.
+
+Det vi kan se på påstigninger på buss i \autoref{fig:fig8} er at umiddelbart etter innføring av bompenger så er det en tydelig økning i påstigninger på buss. Denne økningen ser ut til å ha vedvart så det kan hende at det nå er nødvendig med større investering i kollektivtransport.
 
 ```{=tex}
 
@@ -296,8 +1564,6 @@ Det vi kan se på påstigninger på buss i \autoref{fig:fig8} er at rett etter i
 \
 
 # Kapittel 3 - Bilisters tilpasning til bompenger
-
-\
 
 ## Konsumentadferd
 
@@ -327,15 +1593,17 @@ Konsumentens preferanser har tre hovedegenskaper:
 
 3.  Ikke-metning: Konsumenten foretrekker alltid mer av et gode fremfor mindre og mer er alltid bedre.
 
-Grensenytte er hvor mye nytte øker ved en ekstra enhet av et gode. Vi antar at grensenytten avtar med økende forbruk.
+Grensenytte er hvor mye nytte øker ved en ekstra enhet av et gode. Vi antar at grensenytten avtar med økende forbruk.[^6]
 
-Sett inn appendix del her for at chatgpt hjalp meg omskrive det jeg hadde å bedret strukturen min.
+[^6]: @clark_2023_sok1006_f13
+
+\nameref{appendix:skrift}
 
 ### Indifferansekurver
 
-Indifferansekurve betyr at konsumenten er likegyldig mellom to kombinasjoner av goder. Indifferansekurvene er konvekse mot origo. Dette betyr at konsumenten er villig til å bytte mellom godene. Den marginale substitusjonsbrøken (MSB) er den relative endringen i mengden av et gode som konsumenten er villig til å bytte for en enhet av et annet gode. MSB er gitt ved forholdet mellom grensenytten av gode 1 og grensenytten av gode 2. MSB er også lik forholdet mellom prisene på gode 1 og gode 2. Dette betyr at konsumenten er villig til å bytte mellom godene til prisen på gode 1 er lik prisen på gode 2. Dette er fordi konsumenten vil maksimere nytten sin og vil derfor velge den kombinasjonen av godene som gir mest nytte. Dette er der MSB er lik forholdet mellom prisene på gode 1 og gode 2. Dette er fordi konsumenten vil maksimere nytten sin og vil derfor velge den kombinasjonen av godene som gir mest nytte. Dette er der MSB er lik forholdet mellom prisene på gode 1 og gode 2. Dette er fordi konsumenten vil maksimere nytten sin og vil derfor velge den kombinasjonen av godene som gir mest nytte.[^5]
+Indifferansekurve betyr at konsumenten er likegyldig mellom to kombinasjoner av goder. Indifferansekurvene er konvekse mot origo. Dette betyr at konsumenten er villig til å bytte mellom godene. Den marginale substitusjonsbrøken (MSB) er den relative endringen i mengden av et gode som konsumenten er villig til å bytte for en enhet av et annet gode. MSB er gitt ved forholdet mellom grensenytten av gode 1 og grensenytten av gode 2. MSB er også lik forholdet mellom prisene på gode 1 og gode 2. Dette betyr at konsumenten er villig til å bytte mellom godene til prisen på gode 1 er lik prisen på gode 2. Dette er fordi konsumenten vil maksimere nytten sin og vil derfor velge den kombinasjonen av godene som gir mest nytte. Dette er der MSB er lik forholdet mellom prisene på gode 1 og gode 2. Dette er fordi konsumenten vil maksimere nytten sin og vil derfor velge den kombinasjonen av godene som gir mest nytte. Dette er der MSB er lik forholdet mellom prisene på gode 1 og gode 2. Dette er fordi konsumenten vil maksimere nytten sin og vil derfor velge den kombinasjonen av godene som gir mest nytte.[^7]
 
-[^5]: @kandidatnummer_2022_sok1004
+[^7]: @kandidatnummer_2022_sok1004
 
 ### Nyttefunksjon
 
@@ -345,14 +1613,13 @@ $$U(x_1, x_2) = \beta_1 ln (x_1-\gamma_1) + \beta_2 ln (x_2-\gamma_2)$$
 Denne består av $x_1$, $x_2$, $\beta_1$, $\beta_2$, $\gamma_1$ og $\gamma_2$.\
 $\beta_1+\beta_2=1$, og logaritmen til et negativt tall er ikke definert og da må $x_1 - \gamma_1>0$, $x_2 -\gamma_2>0$.\
 
-Når $\gamma_1$ øker, ser vi at for alle inntektsnivåer, øker etterspørselen etter vare 1. Dette skyldes at minimumskonsumet av vare 1 har steget, noe som fører til en økning i etterspørselen etter vare 1. Derimot, hvis $\gamma_2$ øker, viser det seg at for hvert inntektsnivå reduseres etterspørselen etter vare 1. Dette er fordi minimumskonsumet av vare 2 har økt, noe som resulterer i en nedgang i etterspørselen etter vare 1.
+Når $\gamma_1$ øker, ser vi at for alle inntektsnivåer, øker etterspørselen etter vare 1. Dette skyldes at minimumskonsumet av vare 1 har steget, noe som fører til en økning i etterspørselen etter vare 1. Men, hvis $\gamma_2$ øker, viser det seg at for hvert inntektsnivå reduseres etterspørselen etter vare 1. Dette er fordi minimumskonsumet av vare 2 har økt, noe som resulterer i en nedgang i etterspørselen etter vare 1.
 
 Ved en økning i $\beta_1$, vil vi se en økning i etterspørselen etter vare 1 for alle inntektsnivåer. Dette skyldes at forbrukerens preferanse for vare 1 har blitt styrket, noe som igjen fører til en økning i etterspørselen etter denne varen.
 
 Når $p_1$ øker, vil vi observere en nedgang i etterspørselen etter vare 1 for alle inntektsnivåer. Dette er fordi vare 1 har blitt relativt dyrere. En ekstra krone i inntekt fører fortsatt til en økning i etterspørselen etter vare 1, men denne økningen er mindre enn før prisøkningen. Hvis $p_2$ øker, vil vi se en nedgang i etterspørselen etter vare 1 for alle inntektsnivåer. Grunnen til dette er at kostnaden ved å oppnå minimumskonsumet øker, noe som fører til en reduksjon i etterspørselen etter vare 1.
 
 \clearpage
-
 
 ### Priser
 
@@ -391,44 +1658,31 @@ Når $p_1$ øker, vil vi observere en nedgang i etterspørselen etter vare 1 for
 \label{table:2}
 \end{table}
 ```
+I Scenario 1 så bruker jeg data fra trafikkvolumet i Tromsø og deler trafikken slik at 30% av bompasseringene er i rush, og 70% er utenom rush. I scenario 2 sier jeg at alle bompasseringene er i rush, og i scenario 3 så er ingen i rushtid. Dette gir meg kilometerprisene som vist i \autoref{table:2}. \nameref{kapittel:utregning} for denne tabellen finner du på neste side.
+
 $p_1$ blir gitt av totalsum per km vist i \autoref{table:2}. $p_2$ blir gitt som 1 slik at vi får antall kroner på Y aksen.
 
-Jeg hentet data fra SSB som kommer frem til at elbiler i Troms og Finnmark kjørte ca 11334km og biler med forbrenningsmotor kjørte ca 12321km i 2022. Jeg gjør en forenkling der jeg sier billister kjører bil 2 ganger daglig hver dag så jeg kan regne en kilometerpris på bompenger. Jeg lager 3 scenarioer. For å komme frem til kostnaden per kilometer så går jeg ut ifra at hver person kjører bil hver dag og de kjører igjennom bom 2 ganger dagen. Jeg går også ut ifra at alle har AutoPASS avtale, og jeg antar at de ikke kjører innenfor timesgrensen.
+Jeg hentet data fra SSB[^8] som kommer frem til at elbiler i Troms og Finnmark kjørte ca 11334km og biler med forbrenningsmotor kjørte ca 12321km i 2022. Jeg gjør en forenkling der jeg sier billister kjører bil 2 ganger daglig hver dag så jeg kan regne en kilometerpris på bompenger. Jeg lager 3 scenarioer. For å komme frem til kostnaden per kilometer så går jeg ut ifra at hver person kjører bil hver dag og de kjører igjennom bom 2 ganger dagen. Jeg går også ut ifra at alle har AutoPASS avtale, og jeg antar at de ikke kjører innenfor timesgrensen.
 
-I Scenario 1 så bruker jeg data fra trafikkvolumet i Tromsø og deler trafikken slik at 30% av bompasseringene er i rush, og 70% er utenom rush. I scenario 2 sier jeg at alle bompasseringene er i rush, og i scenario 3 så er ingen i rushtid. Dette gir meg kilometerprisene som vist i \autoref{table:2}.
+[^8]: @statistisksentralbyr_12576
 
-Prisene gitt for andre kostnader er hentet fra Transportøkonomisk institutt. Konseptvalgutredning veibruksavgift og bompenger tabell 4.16[^6]
+Prisene gitt for andre kostnader er hentet fra Transportøkonomisk institutt. Konseptvalgutredning veibruksavgift og bompenger tabell 4.16[^9]
 
-[^6]: @steinsland_2022_konseptvalgutredning
+[^9]: @steinsland_2022_konseptvalgutredning
 
-Inntektselasisitet er hentet fra Understanding Transport Demands and Elasticities How Prices and Other Factors Affect Travel Behavior Tabell 13[^7]
+Inntektselasisitet er hentet fra Understanding Transport Demands and Elasticities How Prices and Other Factors Affect Travel Behavior Tabell 13[^10]
 
-[^7]: @litman_2019_understanding
+[^10]: @litman_2019_understanding
 
-Priselasisitet er hentet fra Konsumfordelingssystemet i KVARTS og MODAG tabell 2[^8]
+Priselasisitet er hentet fra Konsumfordelingssystemet i KVARTS og MODAG tabell 2[^11]
 
-[^8]: @jansen_2013_konsumfordelingssystemet
+[^11]: @jansen_2013_konsumfordelingssystemet
 
 \clearpage
 
 ## Utregning \label{kapittel:utregning}
 
 ```{python}
-
-kjorelengde_2022_elbil = 11334
-kjorelengde_2022_bensinbil = 12321
-lonn = 627240
-
-komp_elbil_sc1 = 632792
-komp_elbil_sc2 = 637581
-komp_elbil_sc3 = 630722
-komp_bensinbil_sc1 = 638326
-komp_bensinbil_sc2 = 647870
-komp_bensinbil_sc3 = 634196
-
-
-
-
 #gjennomsnittlig kjørelengde per år
 #elbil 11500
 #bensinbil 13500
@@ -518,7 +1772,6 @@ beta_1 = 0.20*0.249  #andel av inntekt ganger inntektselastisitet
 beta_2 = 1-beta_1    #beta 2 = beta1+beta2 = 1
 
 
-gma_1_elbil_eq = (gma_1*(1-beta_1)/kjorelengde_2022_elbil*elbil_p_1)-1
 gma_1_elbil_eq = (gma_1*(1-beta_1)/kjorelengde_2022_elbil)-1
 
 #solving for gma_1 
@@ -529,7 +1782,6 @@ gma_1_elbil = sp.solve(gma_1_elbil, gma_1)
 gma_1_elbil = float(gma_1_elbil[0])
 
 
-gma_1_bensinbil_eq = (gma_1*(1-beta_1)/kjorelengde_2022_bensinbil*bensinbil_p_1)-1
 gma_1_bensinbil_eq = (gma_1*(1-beta_1)/kjorelengde_2022_bensinbil)-1
 
 #solving for gma_1
@@ -596,6 +1848,45 @@ bensinbil_nytte_sc3 = float(V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma
 
 
 
+elbil_nytte_komp_sc1 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (p_1, elbil_p_1_sc1), (p_2, 1)])
+elbil_nytte_komp_sc2 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (p_1, elbil_p_1_sc2), (p_2, 1)])
+elbil_nytte_komp_sc3 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (p_1, elbil_p_1_sc3), (p_2, 1)])
+
+bensinbil_nytte_komp_sc1 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (p_1, bensinbil_p_1_sc1), (p_2, 1)])
+bensinbil_nytte_komp_sc2 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (p_1, bensinbil_p_1_sc2), (p_2, 1)])
+bensinbil_nytte_komp_sc3 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (p_1, bensinbil_p_1_sc3), (p_2, 1)])
+
+
+i=lonn
+while (elbil_nytte_komp_sc1.subs(m,i)-elbil_nytte<0):
+    i=i+1
+komp_elbil_sc1 = i
+
+i=lonn
+while (elbil_nytte_komp_sc2.subs(m,i)-elbil_nytte<0):
+    i=i+1
+komp_elbil_sc2 = i
+
+i=lonn
+while (elbil_nytte_komp_sc3.subs(m,i)-elbil_nytte<0):
+    i=i+1
+komp_elbil_sc3 = i
+
+i=lonn
+while (bensinbil_nytte_komp_sc1.subs(m,i)-bensinbil_nytte<0):
+    i=i+1
+komp_bensinbil_sc1 = i
+
+i=lonn
+while (bensinbil_nytte_komp_sc2.subs(m,i)-bensinbil_nytte<0):
+    i=i+1
+komp_bensinbil_sc2 = i
+
+i=lonn
+while (bensinbil_nytte_komp_sc3.subs(m,i)-bensinbil_nytte<0):
+    i=i+1
+komp_bensinbil_sc3 = i
+
 x_1_elbil_komp_sc1 = x_1_eq.subs([(bta_1, beta_1), (m, komp_elbil_sc1), (p_1, elbil_p_1_sc1), (p_2, 1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil)])
 x_2_elbil_komp_sc1 = x_2_eq.subs([(bta_2, beta_2), (m, komp_elbil_sc1), (p_1, elbil_p_1_sc1), (p_2, 1), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil)])
 
@@ -615,43 +1906,235 @@ x_1_bensin_komp_sc3 = x_1_eq.subs([(bta_1, beta_1), (m, komp_bensinbil_sc3), (p_
 x_2_bensin_komp_sc3 = x_2_eq.subs([(bta_2, beta_2), (m, komp_bensinbil_sc3), (p_1, bensinbil_p_1_sc3), (p_2, 1), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil)])
 
 
-elbil_nytte_komp_sc1 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (p_1, elbil_p_1_sc1), (p_2, 1)])
-elbil_nytte_komp_sc2 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (p_1, elbil_p_1_sc2), (p_2, 1)])
-elbil_nytte_komp_sc3 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_elbil), (gma_2, gma_2_elbil), (p_1, elbil_p_1_sc3), (p_2, 1)])
+```
 
-bensinbil_nytte_komp_sc1 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (p_1, bensinbil_p_1_sc1), (p_2, 1)])
-bensinbil_nytte_komp_sc2 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (p_1, bensinbil_p_1_sc2), (p_2, 1)])
-bensinbil_nytte_komp_sc3 = V.subs([(bta_1, beta_1),(bta_2, beta_2), (gma_1, gma_1_bensinbil), (gma_2, gma_2_bensinbil), (p_1, bensinbil_p_1_sc3), (p_2, 1)])
+```{python}
+%%capture
+#masse plots
+# Create an array X that ensures x-gamma > 0
+x=np.linspace(0.001,1000000, 100000)
+X_elbil = np.linspace ((gma_1_elbil+0.01), lonn, 100000)
+X_bensinbil = np.linspace ((gma_1_bensinbil+0.01), lonn, 100000)
+
+
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+ax.plot(x, budsjett(lonn, x, elbil_p_1, 1), label = 'Konsumentens budsjett', color="blue")
+
+
+ax.fill_between(x, 0, budsjett(lonn, x, elbil_p_1, 1), color = "pink",alpha = 0.5,label='Mulighetsområde')
+
+ax.set_ylabel('$x_2$ NOK ', loc='top', rotation=0)
+ax.set_xlabel('$x_1$ Årlige kjørte kilometer ', loc='right', rotation=0)
+
+
+ax.set_title('Konsumentens budsjettlinje og mulighetsområde elbil', size=18)
+ax.legend(loc='best', fontsize=16)
+ax.set_xlim(0, 500000)
+ax.set_ylim(0, 650000)
+#increase tick size
+ax.tick_params(axis='both', which='major', labelsize=15)
+
+plt.savefig('elbil_budsjett.png', dpi=300, bbox_inches='tight')
+
+
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+ax.plot(x, budsjett(lonn, x, elbil_p_1, 1), label = 'Konsumentens budsjett', color="blue")
+ax.plot(x, budsjett(lonn, x, elbil_p_1_sc1, 1), label = 'Konsumentens budsjett i scenario 1', color="orange")
+
+
+ax.fill_between(x, budsjett(lonn, x, elbil_p_1_sc1, 1), budsjett(lonn, x, elbil_p_1, 1), color = "black",alpha = 0.5,label='Tapt mulighetsområde i scenario 1')
+ax.fill_between(x, 0, budsjett(lonn, x, elbil_p_1_sc1, 1), color = "lightgreen",alpha = 0.5,label='Nytt mulighetsområdet')
+
+ax.set_ylabel('$x_2$ NOK ', loc='top', rotation=0, labelpad=-30)
+ax.set_xlabel('$x_1$ Årlige kjørte kilometer ', loc='right', rotation=0)
+
+
+ax.set_title('Konsumentens budsjettlinje og mulighetsområde elbil scenario 1', size=18)
+ax.legend(loc='best', fontsize=16)
+ax.set_xlim(0, 400000)
+ax.set_ylim(0, 650000)
+#increase tick size
+ax.tick_params(axis='both', which='major', labelsize=15)
+
+plt.savefig('elbil_budsjett_sc1.png', dpi=300, bbox_inches='tight')
+
+
+
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+
+ax.set_ylabel('$x_2$', loc='top', rotation=0)
+ax.set_xlabel('$x_1$ Årlige kjørte kilometer ', loc='right', rotation=0)
+
+ax.plot(X_elbil, ind_k_fn(beta_1,gma_1_elbil,gma_2_elbil,X_elbil,elbil_nytte), color='grey',label='Indifferansekurve')
+
+
+# Set x limits
+ax.set_xlim(7000, 20000)
+ax.set_ylim(590000, 620000)
+# Show the legend
+ax.legend(loc='best', fontsize=16)
+
+#increase tick size
+ax.tick_params(axis='both', which='major', labelsize=15)
+
+plt.savefig('Indifferansekurve.png', dpi=300, bbox_inches='tight')
+
+
+
+x_Inntektseffekt = float(x_1_elbil_bil_sc1-x_1_elbil_komp_sc1)
+x_Substitusjonseffekt = float(x_1_elbil_komp_sc1-x_1_elbil_bil)
+
+y_Inntektseffekt = float(x_2_elbil_bil_sc1-x_2_elbil_komp_sc1)
+y_Substitusjonseffekt = float(x_2_elbil_komp_sc1-x_2_elbil_bil)
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+
+ax.set_ylabel('$x_2$', loc='top', rotation=0)
+ax.set_xlabel('$x_1$ Årlige kjørte kilometer ', loc='right', rotation=0)
+
+ax.plot(X_elbil, ind_k_fn(beta_1,gma_1_elbil,gma_2_elbil,X_elbil,elbil_nytte), color='grey',label='Indifferansekurve')
+
+#showing points on the indifferance curve
+ax.plot(x_1_elbil_bil, x_2_elbil_bil, 'o', color='blue',label='Elbil')
+
+#showing points on the indifferance curve komp
+ax.plot(x_1_elbil_komp_sc1, x_2_elbil_komp_sc1, 'o', color='orange',label='Elbil kompensert')
+ax.plot(x_1_elbil_bil_sc1, x_2_elbil_bil_sc1 , marker='o', color='red', label= "Tilpasning i scenario 1")
+ax.plot(x, budsjett(lonn, x, elbil_p_1, 1), color='blue', label='Opprinnelig budsjett', alpha=0.5)
+ax.plot(x, budsjett(komp_elbil_sc1, x, elbil_p_1_sc1, 1), color='purple', label='Kompensert budsjett i scenario 1', alpha=0.5)
+ax.plot(x, budsjett(lonn, x, elbil_p_1_sc1, 1), color='orange', alpha=0.5)
+ax.plot(X_elbil, ind_k_fn(beta_1,gma_1_elbil,gma_2_elbil,X_elbil,elbil_nytte_sc1), color='black',alpha=0.5)
+
+
+ax.hlines(y=x_2_elbil_bil, xmin=(x_1_elbil_bil + x_Substitusjonseffekt), xmax=x_1_elbil_bil, linestyle='dashed', color='blue', label='Substitusjonseffekt')
+ax.hlines(y=x_2_elbil_bil, xmin=(x_1_elbil_bil + x_Inntektseffekt + x_Substitusjonseffekt), xmax=x_1_elbil_bil + x_Substitusjonseffekt, linestyle='dashed', color='orange', label='Inntektseffekt')
+ax.vlines(x=x_1_elbil_bil_sc1, ymin=(x_2_elbil_bil + y_Substitusjonseffekt), ymax=x_2_elbil_bil, linestyle='dashed', color='blue')
+ax.vlines(x=x_1_elbil_bil_sc1, ymin=(x_2_elbil_bil + y_Inntektseffekt + y_Substitusjonseffekt), ymax=x_2_elbil_bil, linestyle='dashed', color='orange')
+
+ax.annotate("A", (x_1_elbil_bil, x_2_elbil_bil), xytext=(x_1_elbil_bil, x_2_elbil_bil), size=15)
+ax.annotate("B", (x_1_elbil_bil_sc1, x_2_elbil_bil_sc1), xytext=(x_1_elbil_bil_sc1, x_2_elbil_bil_sc1), size=15)
+ax.annotate("C", (x_1_elbil_komp_sc1, x_2_elbil_komp_sc1), xytext=(x_1_elbil_komp_sc1, x_2_elbil_komp_sc1), size=15)
+
+# Set x limits
+ax.set_xlim(10800, 11500)
+ax.set_ylim(599000, 606000)
+# Show the legend
+ax.legend(loc='best', fontsize=16)
+ax.set_title('Inntekts og Substitusjonseffekt', size=18)
+
+#increase tick size
+ax.tick_params(axis='both', which='major', labelsize=15)
+
+plt.savefig('inntekt_sub.png', dpi=300, bbox_inches='tight')
+
+
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+
+ax.set_ylabel('$x_2$', loc='top', rotation=0)
+ax.set_xlabel('$x_1$ Årlige kjørte kilometer ', loc='right', rotation=0)
+
+ax.plot(x, budsjett(lonn, x, elbil_p_1, 1), color='blue', label='Opprinnelig budsjett')
+ax.plot(X_elbil, ind_k_fn(beta_1,gma_1_elbil,gma_2_elbil,X_elbil,elbil_nytte), color='grey',label='Opprinnelig indifferansekurve')
+
+ax.plot(x_1_elbil_bil, x_2_elbil_bil , marker='o', color='green', label = "Opprinnelig tilpasning")
+
+
+#v line
+ax.vlines(x_1_elbil_bil, 0, x_2_elbil_bil, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_elbil_bil, 0, x_1_elbil_bil, ls='dashed', color='black', alpha=0.5)
+
+ax.plot(x, budsjett(lonn, x, elbil_p_1_sc1, 1), color='orange', label='Nytt budsjett i scenario 1')
+ax.plot(X_elbil, ind_k_fn(beta_1,gma_1_elbil,gma_2_elbil,X_elbil,elbil_nytte_sc1), color='black',label='Ny indifferansekurve i scenario 1')
+
+ax.plot(x_1_elbil_bil_sc1, x_2_elbil_bil_sc1 , marker='o', color='red', label= "Ny tilpasning i scenario 1")
+
+ax.vlines(x_1_elbil_bil_sc1, 0, x_2_elbil_bil_sc1, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_elbil_bil_sc1, 0, x_1_elbil_bil_sc1, ls='dashed', color='black', alpha=0.5)
+
+ax.annotate("A", (x_1_elbil_bil, x_2_elbil_bil), xytext=(x_1_elbil_bil, x_2_elbil_bil), size=15)
+ax.annotate("B", (x_1_elbil_bil_sc1, x_2_elbil_bil_sc1), xytext=(x_1_elbil_bil_sc1, x_2_elbil_bil_sc1), size=15)
+
+# Set x limits
+ax.set_xlim(7000, 20000)
+ax.set_ylim(590000, 620000)
+# Show the legend
+ax.legend(loc='best', fontsize=14)
+ax.set_title('Budsjett og indifferanse kurver elbil scenario 1', size=18)
+
+plt.savefig('elbil_sc1.png', dpi=300, bbox_inches='tight')
+
+ax.set_title('Kompensert budsjett elbil scenario 1', size=18)
+ax.plot(x, budsjett(komp_elbil_sc1, x, elbil_p_1_sc1, 1), color='purple', label='Kompensert budsjett i scenario 1')
+
+ax.vlines(x_1_elbil_komp_sc1, 0, x_2_elbil_komp_sc1, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_elbil_komp_sc1, 0, x_1_elbil_komp_sc1, ls='dashed', color='black', alpha=0.5)
+ax.plot(x_1_elbil_komp_sc1, x_2_elbil_komp_sc1 , marker='o', color='purple', label= "Kompensert tilpasning i scenario 1")
+
+
+ax.annotate("C", (x_1_elbil_komp_sc1, x_2_elbil_komp_sc1), xytext=(x_1_elbil_komp_sc1, x_2_elbil_komp_sc1), size=15)
+ax.legend(loc='best', fontsize=16)
+
+#increase tick size
+ax.tick_params(axis='both', which='major', labelsize=15)
+
+plt.savefig('elbil_sc1_komp.png', dpi=300, bbox_inches='tight')
 
 ```
 
-### Antagelser
+### Pris per kilometer
 
-Jeg ser på SSB at nordmenn gjennomsnittlig bruker ca 15% av sin inntekt på transport og jeg går ut ifra at det er villig til å bruke opp til 20%. https://www.ssb.no/nasjonalregnskap-og-konjunkturer/nasjonalregnskap/artikler/dette-bruker-nordmenn-penger-pa
+For å utregne et kilometer pris så bruker jeg kjørelengden jeg får fra SSB[^12] som er gjennomsnittlig årlig kjørelengde. Denne er på 11334km for elbiler og 12131km for biler med forbrenningsmotor i 2022 og jeg går ut ifra å kjøre disse distansene gir konsumenten maksimal nytte.
 
-Det virker som det er noen skjulte preferanser på bompenger. Ved bensinpris endring så er det lite til ingen endring i bilkjøring men ved bompenger så har folk reagert.
+[^12]: @statistisksentralbyr_12576
 
-Antagelse 1. årslønn 627240kr. Tatt etter gjennomsnittslønn Tromsø 2022, og gjennomsnittlig kjørte kilometer per år i Troms og Finnmark.
+Lønnen jeg bruker er fra gjennomsnittslønnen i Tromsø og denne ligger da på 627240kr i 2022.[^13]
 
-Antagelse 2. Gjennomsnittlig antall kilometer kjørt i dag gir konsumenten maksimal nytte.
+[^13]: @statistisksentralbyr_12852
 
-Antagelse 3. 20% av lønn kan brukes på bil, 80% brukes på andre goder. inkluderer mat, bolig osv.
+Jeg ser på SSB at nordmenn gjennomsnittlig bruker ca 15%[^14] av sin inntekt på transport og jeg går ut ifra at det er villig til å bruke opp til 20%. De resterende 80% av inntekten går dermed til skatt, bolig osv.
+
+[^14]: @vegard_2018_dette
+
+I \autoref{table:1} så tar jeg rushtid kostnaden på 14.4kr i rush og 9.6kr utenom for nullutslippskjøretøy, og 28.8kr i rush og 9.6kr utenom rush for biler med forbrenningsmotor.
+
+Siden jeg går ut ifra at alle billister kjører 2 ganger dagen igjennom bomringen så tar jeg å deler gjennomsnittlig kjørelengde for hver biltype på 365 for å få pris per dag og med dette kan jeg beregne pristillegg for de forskjellige scenarioene ved å gange inn de forskjellige prisene på bompasseringer. $\frac{\textnormal{Gjennomsnittlig kjørelengde}}{365} = \textnormal{Daglig kjørte kilometer}$ og for elbiler blir dette da $\frac{11334}{365}\approx 31km \> daglig$
+
+$Scenario\>1\>pris\>per\>kilometer\>= \> (\frac{14.4\cdot 2}{31})\cdot0.3 + (\frac{9.6\cdot2}{31})\cdot0.7 \approx 0.49kr$
+
+$Scenario\>2\>pris\>per\>kilometer\>= \> \frac{14.4\cdot 2}{31} \approx0.93kr$
+
+$Scenario\>3\>pris\>per\>kilometer\>= \> \frac{9.6\cdot2}{31}\approx0.31kr$
+
+De samme regnestykkene blir gjort for forbrenningsmotor og dette adderes med den kostnaden hentet fra Transport økonomisk institutt.
 
 \clearpage
 
-Vi regner beta fra $\beta = w_i e_i$ Vi setter inn for $w_i$ som er 0.2 siden vi sier at konsumenten er villig til å bruke 20% av budsjettet sitt på bilkjøring, og $e_i$ som er inntektselastisiteten for bilkjøring som er -0.249[^9]. Vi får da $\beta = 0.2 * -0.249 = -0.0498$
+### Stone-Geary Nyttefunksjon
 
-[^9]: @jansen_2013_konsumfordelingssystemet
+For å kunne estimere $\beta_1$, $\beta_2$, $\gamma_1$ og $\gamma_2$ for elbiler og bensinbiler så setter jeg inn de ligning 6 og 8 fra artikkelen The estimation of LES demand elasticities for CGE models[^15].
 
-For å kunne estimere en $\gamma_1$ og $\gamma_2$ for elbiler og bensinbiler så setter vi først opp våre 2 ligninger fra artikkelen The estimation of LES demand elasticities for CGE models[^10].
+[^15]: @jussila_2012_the
 
-[^10]: @jussila_2012_the
+Ligning 6: $$e_i = \frac{\beta_i \gamma}{p_i x_i} \> = \frac{\beta_i}{w_i} > 0 \> => \> \beta_i = \frac{p_i x_i e_i}{\gamma} = w_i e_i$$
 
-$e_{ii} = \frac{\gamma_i(1-\beta_i)}{x_i} - 1 < 0$
+Siden jeg har en inntektselasisitet jeg bruker og jeg har en antagelse om hvor mye konsumenten er villig til å bruke så setter jeg inn for $w_i$ som er 0.2 siden jeg sier at konsumenten er villig til å bruke 20% av budsjettet sitt på bilkjøring, og $e_i$ som er inntektselastisiteten for bilkjøring som er 0.249[^16]. Jeg får da $\beta_1 = 0.2 * 0.249 = 0.0498$ og siden $\beta_1 + \beta_2 = 1$ så tar vi $\beta_2 = 1-\beta_1$ og får da $\beta_2 = 1-0.0498 = 0.9502$.
 
-Vi setter inn for ligningen lik -0.14 som er priselasisiteten funnet i MODAG dokumentet.
+[^16]: @jansen_2013_konsumfordelingssystemet
 
-Vi får da $-0.14 = \frac{\gamma_i(1-0.0498)}{x_i}-1 - 1$ og for $x_i$ setter jeg inn kjørelengden i 2022 for elbiler og gjør det igjen med en ny ligning for bensinbiler.
+Ligning 8: $$e_{ii} = \frac{\gamma_i(1-\beta_i)}{x_i} - 1 < 0$$
+
+Jeg setter inn for ligningen lik -0.14 som er priselasisiteten funnet i MODAG dokumentet.
+
+Jeg får da $-0.14 = \frac{\gamma_i(1-0.0498)}{x_i}-1$ og for $x_i$ setter jeg inn kjørelengden i 2022 for elbiler og gjør det igjen med en ny ligning for bensinbiler.
 
 Dette betyr at jeg går ut ifra at dagens tall på kjøring er det optimale for konsumenten.
 
@@ -665,7 +2148,7 @@ display(Math(r'Bensinbil\> sin\> \gamma_2 = %g' % gma_2_bensinbil))
 
 ```
 
-Det vi nå ser er at $\gamma$ verdiene er forskjellig fra elbil og bensinbil, dette er fordi de i gjennomsnitt kjører forskjellige antall kilometer per år. Dette betyr at de har forskjellige minimumskonsum av bilkjøring og andre goder. Begrunnelsen til hvorfor det er sånn kan være at flere av de som kjører bensinbil kjører lengre distanser enn de som kjører elbil. Dette kan være fordi de som kjører elbil har en elbil som er en familiebil og de kjører derfor ikke så langt. De som kjører bensinbil kan ha en bil som er en arbeidsbil og de kjører derfor lengre distanser. Dette er bare en antagelse og det kan være flere grunner til at det er sånn og det vil være nødvendig med ny analyse for å finne dette ut.
+Det vi nå ser er at $\gamma$ verdiene er forskjellig fra elbil og bensinbil, dette er fordi de i gjennomsnitt kjører forskjellige antall kilometer per år. Dette betyr at de har forskjellige minimumskonsum av bilkjøring og andre goder. For å finne begrunnelsen til dette så vil det være nødvendig med ny analyse for å finne dette ut.
 
 Med dette så kan vi nå regne og tegne indifferansekurven. $U$ er nytten vi regner ut ved å sette inn tallene våre i vår nytte funksjon, når vi har dette, så setter vi det inn i denne funksjonen for å tegne indifferansekurven
 
@@ -712,6 +2195,18 @@ bkm13 = np.round(float(x_1_bensin_komp_sc3-x_1_bensin_bil),2)
 bkm23 = np.round(float(x_1_bensin_bil_sc3-x_1_bensin_komp_sc3),2)
 bkm33 = np.round(float(x_1_bensin_bil_sc3-x_1_bensin_bil),2)
 
+bkr11 = np.round(float(x_2_bensin_komp_sc1-x_2_bensin_bil),2)
+bkr21 = np.round(float(x_2_bensin_bil_sc1-x_2_bensin_komp_sc1),2)
+bkr31 = np.round(float(x_2_bensin_bil_sc1-x_2_bensin_bil),2)
+
+bkr12 = np.round(float(x_2_bensin_komp_sc2-x_2_bensin_bil),2)
+bkr22 = np.round(float(x_2_bensin_bil_sc2-x_2_bensin_komp_sc2),2)
+bkr32 = np.round(float(x_2_bensin_bil_sc2-x_2_bensin_bil),2)
+
+bkr13 = np.round(float(x_2_bensin_komp_sc3-x_2_bensin_bil),2)
+bkr23 = np.round(float(x_2_bensin_bil_sc3-x_2_bensin_komp_sc3),2)
+bkr33 = np.round(float(x_2_bensin_bil_sc3-x_2_bensin_bil),2)
+
 
 
 tbl1 = rf"""
@@ -741,11 +2236,11 @@ Penger brukt på andre goder & Scenario 2 & ${kr12}~kr$                  & ${kr2
 Penger brukt på andre goder & Scenario 3 & ${kr13}~kr$                  & ${kr23}~kr$             & ${kr33}~kr$           \\ \hline
 \textbf{{Effekt}} & \textbf{{Bensinbil}} & \textbf{{Substitusjonseffekt}} & \textbf{{Inntektseffekt}} & \textbf{{Total effekt}} \\ \hline
 Årlige kjørte kilometer & Scenario 1 & ${bkm11}~km$                  & ${bkm21}~km$             & ${bkm31}~km$           \\ \hline
-Penger brukt på andre goder & Scenario 1 & ${bkm11}~kr$                  & ${bkm21}~kr$             & ${bkm31}~kr$           \\ \hline
+Penger brukt på andre goder & Scenario 1 & ${bkr11}~kr$                  & ${bkr21}~kr$             & ${bkr31}~kr$           \\ \hline
 Årlige kjørte kilometer & Scenario 2 & ${bkm12}~km$                  & ${bkm22}~km$             & ${bkm32}~km$           \\ \hline
-Penger brukt på andre goder & Scenario 2 & ${bkm12}~kr$                  & ${bkm22}~kr$             & ${bkm32}~kr$           \\ \hline
+Penger brukt på andre goder & Scenario 2 & ${bkr12}~kr$                  & ${bkr22}~kr$             & ${bkr32}~kr$           \\ \hline
 Årlige kjørte kilometere & Scenario 3 & ${bkm13}~km$                  & ${bkm23}~km$             & ${bkm33}~km$           \\ \hline
-Penger brukt på andre goder & Scenario 3 & ${bkm13}~kr$                  & ${bkm23}~kr$             & ${bkm33}~kr$           \\ \hline
+Penger brukt på andre goder & Scenario 3 & ${bkr13}~kr$                  & ${bkr23}~kr$             & ${bkr33}~kr$           \\ \hline
 \end{{tabular}}
 \caption{{Subsitusjons,inntekt og total effekt for elbiler og bensinbiler}}
 \label{{table:4}}
@@ -782,6 +2277,268 @@ Langs denne kurven i \autoref{fig:fig11} så får konsumenten like mye nytte. Vi
 
 \clearpage
 
+```{python}
+%%capture
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+
+ax.set_ylabel('$x_2$', loc='top', rotation=0)
+ax.set_xlabel('$x_1$ Årlige kjørte kilometer ', loc='right', rotation=0)
+
+ax.plot(x, budsjett(lonn, x, elbil_p_1, 1), color='blue', label='Opprinnelig budsjett')
+ax.plot(X_elbil, ind_k_fn(beta_1,gma_1_elbil,gma_2_elbil,X_elbil,elbil_nytte), color='grey',label='Opprinnelig indifferansekurve')
+
+ax.plot(x_1_elbil_bil, x_2_elbil_bil , marker='o', color='green', label = "Opprinnelig tilpasning")
+
+
+#v line
+ax.vlines(x_1_elbil_bil, 0, x_2_elbil_bil, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_elbil_bil, 0, x_1_elbil_bil, ls='dashed', color='black', alpha=0.5)
+
+
+ax.plot(x, budsjett(lonn, x, elbil_p_1_sc2, 1), color='orange', label='Nytt budsjett i scenario 1')
+ax.plot(X_elbil, ind_k_fn(beta_1,gma_1_elbil,gma_2_elbil,X_elbil,elbil_nytte_sc2), color='black',label='Ny indifferansekurve i scenario 2')
+
+ax.plot(x_1_elbil_bil_sc2, x_2_elbil_bil_sc2 , marker='o', color='red', label= "Ny tilpasning i scenario 2")
+
+ax.vlines(x_1_elbil_bil_sc2, 0, x_2_elbil_bil_sc2, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_elbil_bil_sc2, 0, x_1_elbil_bil_sc2, ls='dashed', color='black', alpha=0.5)
+
+
+ax.plot(x, budsjett(komp_elbil_sc2, x, elbil_p_1_sc2, 1), color='purple', label='Kompensert budsjett i scenario 2')
+
+ax.vlines(x_1_elbil_komp_sc2, 0, x_2_elbil_komp_sc2, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_elbil_komp_sc2, 0, x_1_elbil_komp_sc2, ls='dashed', color='black', alpha=0.5)
+ax.plot(x_1_elbil_komp_sc2, x_2_elbil_komp_sc2 , marker='o', color='purple', label= "Kompensert tilpasning i scenario 2")
+
+ax.set_title('Inntekt og substitusjonseffekt elbil scenario 2', size=18)
+
+ax.annotate("A", (x_1_elbil_bil, x_2_elbil_bil), xytext=(x_1_elbil_bil, x_2_elbil_bil), size=15)
+ax.annotate("B", (x_1_elbil_bil_sc2, x_2_elbil_bil_sc2), xytext=(x_1_elbil_bil_sc2, x_2_elbil_bil_sc2), size=15)
+ax.annotate("C", (x_1_elbil_komp_sc2, x_2_elbil_komp_sc2), xytext=(x_1_elbil_komp_sc2, x_2_elbil_komp_sc2), size=15)
+
+#increase tick size
+ax.tick_params(axis='both', which='major', labelsize=15)
+
+# Set x limits
+ax.set_xlim(7000, 20000)
+ax.set_ylim(590000, 620000)
+# Show the legend
+ax.legend(loc='best', fontsize=14)
+plt.savefig('elbil_sc2.png', dpi=300, bbox_inches='tight')
+```
+
+```{python}
+%%capture
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+
+ax.set_ylabel('$x_2$', loc='top', rotation=0)
+ax.set_xlabel('$x_1$ Årlige kjørte kilometer ', loc='right', rotation=0)
+
+ax.plot(x, budsjett(lonn, x, elbil_p_1, 1), color='blue', label='Opprinnelig budsjett')
+ax.plot(X_elbil, ind_k_fn(beta_1,gma_1_elbil,gma_2_elbil,X_elbil,elbil_nytte), color='grey',label='Opprinnelig indifferansekurve')
+
+ax.plot(x_1_elbil_bil, x_2_elbil_bil , marker='o', color='green', label = "Opprinnelig tilpasning")
+
+
+#v line
+ax.vlines(x_1_elbil_bil, 0, x_2_elbil_bil, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_elbil_bil, 0, x_1_elbil_bil, ls='dashed', color='black', alpha=0.5)
+
+
+ax.plot(x, budsjett(lonn, x, elbil_p_1_sc3, 1), color='orange', label='Nytt budsjett i scenario 3')
+ax.plot(X_elbil, ind_k_fn(beta_1,gma_1_elbil,gma_2_elbil,X_elbil,elbil_nytte_sc3), color='black',label='Ny indifferansekurve i scenario 3')
+
+ax.plot(x_1_elbil_bil_sc3, x_2_elbil_bil_sc3 , marker='o', color='red', label= "Ny tilpasning i scenario 2")
+
+ax.vlines(x_1_elbil_bil_sc3, 0, x_2_elbil_bil_sc3, ls='dashed', color='black', alpha = 0.5)
+ax.hlines(x_2_elbil_bil_sc3, 0, x_1_elbil_bil_sc3, ls='dashed', color='black', alpha = 0.5)
+
+
+ax.plot(x, budsjett(komp_elbil_sc3, x, elbil_p_1_sc3, 1), color='purple', label='Kompensert budsjett i scenario 3')
+
+ax.vlines(x_1_elbil_komp_sc3, 0, x_2_elbil_komp_sc3, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_elbil_komp_sc3, 0, x_1_elbil_komp_sc3, ls='dashed', color='black', alpha=0.5)
+ax.plot(x_1_elbil_komp_sc3, x_2_elbil_komp_sc3 , marker='o', color='purple', label= "Kompensert tilpasning i scenario 3")
+
+ax.set_title('Inntekt og substitusjonseffekt elbil scenario 3', size=18)
+
+ax.annotate("A", (x_1_elbil_bil, x_2_elbil_bil), xytext=(x_1_elbil_bil, x_2_elbil_bil), size=15)
+ax.annotate("B", (x_1_elbil_bil_sc3, x_2_elbil_bil_sc3), xytext=(x_1_elbil_bil_sc3, x_2_elbil_bil_sc3), size=15)
+ax.annotate("C", (x_1_elbil_komp_sc3, x_2_elbil_komp_sc3), xytext=(x_1_elbil_komp_sc3, x_2_elbil_komp_sc3), size=15)
+
+
+#increase tick size
+ax.tick_params(axis='both', which='major', labelsize=15)
+
+# Set x limits
+ax.set_xlim(7000, 20000)
+ax.set_ylim(590000, 620000)
+# Show the legend
+ax.legend(loc='best', fontsize=14)
+plt.savefig('elbil_sc3.png', dpi=300, bbox_inches='tight')
+```
+
+```{python}
+%%capture
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+
+ax.set_ylabel('$x_2$', loc='top', rotation=0)
+ax.set_xlabel('$x_1$ Årlige kjørte kilometer ', loc='right', rotation=0)
+
+ax.plot(x, budsjett(lonn, x, bensinbil_p_1, 1), color='blue', label='Opprinnelig budsjett')
+ax.plot(X_bensinbil, ind_k_fn(beta_1,gma_1_bensinbil,gma_2_bensinbil,X_bensinbil,bensinbil_nytte), color='grey',label='Opprinnelig indifferansekurve')
+
+ax.plot(x_1_bensin_bil, x_2_bensin_bil , marker='o', color='green', label = "Opprinnelig tilpasning")
+
+
+#v line
+ax.vlines(x_1_bensin_bil, 0, x_2_bensin_bil, ls='dashed', color='black')
+ax.hlines(x_2_bensin_bil, 0, x_1_bensin_bil, ls='dashed', color='black')
+
+
+ax.plot(x, budsjett(lonn, x, bensinbil_p_1_sc1, 1), color='orange', label='Nytt budsjett i scenario 1')
+ax.plot(X_bensinbil, ind_k_fn(beta_1,gma_1_bensinbil,gma_2_bensinbil,X_bensinbil,bensinbil_nytte_sc1), color='black',label='Ny indifferansekurve i scenario 1')
+
+ax.plot(x_1_bensin_bil_sc1, x_2_bensin_bil_sc1 , marker='o', color='red', label= "Ny tilpasning i scenario 1")
+
+ax.vlines(x_1_bensin_bil_sc1, 0, x_2_bensin_bil_sc1, ls='dashed', color='black')
+ax.hlines(x_2_bensin_bil_sc1, 0, x_1_bensin_bil_sc1, ls='dashed', color='black')
+
+
+ax.plot(x, budsjett(komp_bensinbil_sc1, x, bensinbil_p_1_sc1, 1), color='purple', label='Kompensert budsjett i scenario 1')
+
+ax.vlines(x_1_bensin_komp_sc1, 0, x_2_bensin_komp_sc1, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_bensin_komp_sc1, 0, x_1_bensin_komp_sc1, ls='dashed', color='black', alpha=0.5)
+ax.plot(x_1_bensin_komp_sc1, x_2_bensin_komp_sc1 , marker='o', color='purple', label= "Kompensert tilpasning i scenario 1")
+
+ax.set_title('Inntekt og substitusjonseffekt Forbrenningsmotor scenario 1', size=18)
+
+ax.annotate("A", (x_1_bensin_bil, x_2_bensin_bil), xytext=(x_1_bensin_bil, x_2_bensin_bil), size=15)
+ax.annotate("B", (x_1_bensin_bil_sc1, x_2_bensin_bil_sc1), xytext=(x_1_bensin_bil_sc1, x_2_bensin_bil_sc1), size=15)
+ax.annotate("C", (x_1_bensin_komp_sc1, x_2_bensin_komp_sc1), xytext=(x_1_bensin_komp_sc1, x_2_bensin_komp_sc1), size=15)
+
+#increase tick size
+ax.tick_params(axis='both', which='major', labelsize=15)
+
+# Set x limits
+ax.set_xlim(9000, 20000)
+ax.set_ylim(560000, 620000)
+# Show the legend
+ax.legend(loc='best', fontsize=14)
+plt.savefig('bensin_sc1.png', dpi=300, bbox_inches='tight')
+```
+
+```{python}
+%%capture
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+
+ax.set_ylabel('$x_2$', loc='top', rotation=0)
+ax.set_xlabel('$x_1$ Årlige kjørte kilometer ', loc='right', rotation=0)
+
+ax.plot(x, budsjett(lonn, x, bensinbil_p_1, 1), color='blue', label='Opprinnelig budsjett')
+ax.plot(X_bensinbil, ind_k_fn(beta_1,gma_1_bensinbil,gma_2_bensinbil,X_bensinbil,bensinbil_nytte), color='grey',label='Opprinnelig indifferansekurve')
+
+ax.plot(x_1_bensin_bil, x_2_bensin_bil , marker='o', color='green', label = "Opprinnelig tilpasning")
+
+
+#v line
+ax.vlines(x_1_bensin_bil, 0, x_2_bensin_bil, ls='dashed', color='black')
+ax.hlines(x_2_bensin_bil, 0, x_1_bensin_bil, ls='dashed', color='black')
+
+
+ax.plot(x, budsjett(lonn, x, bensinbil_p_1_sc2, 1), color='orange', label='Nytt budsjett i scenario 2')
+ax.plot(X_bensinbil, ind_k_fn(beta_1,gma_1_bensinbil,gma_2_bensinbil,X_bensinbil,bensinbil_nytte_sc2), color='black',label='Ny indifferansekurve i scenario 2')
+
+ax.plot(x_1_bensin_bil_sc2, x_2_bensin_bil_sc2 , marker='o', color='red', label= "Ny tilpasning i scenario 2")
+
+ax.vlines(x_1_bensin_bil_sc2, 0, x_2_bensin_bil_sc2, ls='dashed', color='black')
+ax.hlines(x_2_bensin_bil_sc2, 0, x_1_bensin_bil_sc2, ls='dashed', color='black')
+
+
+ax.plot(x, budsjett(komp_bensinbil_sc2, x, bensinbil_p_1_sc2, 1), color='purple', label='Kompensert budsjett i scenario 2')
+
+ax.vlines(x_1_bensin_komp_sc2, 0, x_2_bensin_komp_sc2, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_bensin_komp_sc2, 0, x_1_bensin_komp_sc2, ls='dashed', color='black', alpha=0.5)
+ax.plot(x_1_bensin_komp_sc2, x_2_bensin_komp_sc2 , marker='o', color='purple', label= "Kompensert tilpasning i scenario 2")
+
+ax.set_title('Inntekt og substitusjonseffekt Forbrenningsmotor scenario 2', size=15)
+
+ax.annotate("A", (x_1_bensin_bil, x_2_bensin_bil), xytext=(x_1_bensin_bil, x_2_bensin_bil), size=15)
+ax.annotate("B", (x_1_bensin_bil_sc2, x_2_bensin_bil_sc2), xytext=(x_1_bensin_bil_sc2, x_2_bensin_bil_sc2), size=15)
+ax.annotate("C", (x_1_bensin_komp_sc2, x_2_bensin_komp_sc2), xytext=(x_1_bensin_komp_sc2, x_2_bensin_komp_sc2), size=15)
+
+#increase tick size
+ax.tick_params(axis='both', which='major', labelsize=15)
+
+# Set x limits
+ax.set_xlim(9000, 20000)
+ax.set_ylim(560000, 620000)
+# Show the legend
+ax.legend(loc='best', fontsize=14)
+plt.savefig('bensin_sc2.png', dpi=300, bbox_inches='tight')
+```
+
+```{python}
+%%capture
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+
+ax.set_ylabel('$x_2$', loc='top', rotation=0)
+ax.set_xlabel('$x_1$ Årlige kjørte kilometer ', loc='right', rotation=0)
+
+ax.plot(x, budsjett(lonn, x, bensinbil_p_1, 1), color='blue', label='Opprinnelig budsjett')
+ax.plot(X_bensinbil, ind_k_fn(beta_1,gma_1_bensinbil,gma_2_bensinbil,X_bensinbil,bensinbil_nytte), color='grey',label='Opprinnelig indifferansekurve')
+
+ax.plot(x_1_bensin_bil, x_2_bensin_bil , marker='o', color='green', label = "Opprinnelig tilpasning")
+
+
+#v line
+ax.vlines(x_1_bensin_bil, 0, x_2_bensin_bil, ls='dashed', color='black')
+ax.hlines(x_2_bensin_bil, 0, x_1_bensin_bil, ls='dashed', color='black')
+
+
+ax.plot(x, budsjett(lonn, x, bensinbil_p_1_sc3, 1), color='orange', label='Nytt budsjett i scenario 3')
+ax.plot(X_bensinbil, ind_k_fn(beta_1,gma_1_bensinbil,gma_2_bensinbil,X_bensinbil,bensinbil_nytte_sc3), color='black',label='Ny indifferansekurve i scenario 3')
+
+ax.plot(x_1_bensin_bil_sc3, x_2_bensin_bil_sc3 , marker='o', color='red', label= "Ny tilpasning i scenario 3")
+
+ax.vlines(x_1_bensin_bil_sc3, 0, x_2_bensin_bil_sc3, ls='dashed', color='black')
+ax.hlines(x_2_bensin_bil_sc3, 0, x_1_bensin_bil_sc3, ls='dashed', color='black')
+
+
+ax.plot(x, budsjett(komp_bensinbil_sc3, x, bensinbil_p_1_sc3, 1), color='purple', label='Kompensert budsjett i scenario 3')
+
+ax.vlines(x_1_bensin_komp_sc3, 0, x_2_bensin_komp_sc3, ls='dashed', color='black', alpha=0.5)
+ax.hlines(x_2_bensin_komp_sc3, 0, x_1_bensin_komp_sc3, ls='dashed', color='black', alpha=0.5)
+ax.plot(x_1_bensin_komp_sc3, x_2_bensin_komp_sc3 , marker='o', color='purple', label= "Kompensert tilpasning i scenario 3")
+
+ax.set_title('Inntekt og substitusjonseffekt Forbrenningsmotor scenario 3', size=15)
+
+ax.annotate("A", (x_1_bensin_bil, x_2_bensin_bil), xytext=(x_1_bensin_bil, x_2_bensin_bil), size=15)
+ax.annotate("B", (x_1_bensin_bil_sc3, x_2_bensin_bil_sc3), xytext=(x_1_bensin_bil_sc3, x_2_bensin_bil_sc3), size=15)
+ax.annotate("C", (x_1_bensin_komp_sc3, x_2_bensin_komp_sc3), xytext=(x_1_bensin_komp_sc3, x_2_bensin_komp_sc3), size=15)
+
+#increase tick size
+ax.tick_params(axis='both', which='major', labelsize=15)
+
+
+# Set x limits
+ax.set_xlim(9000, 20000)
+ax.set_ylim(570000, 620000)
+# Show the legend
+ax.legend(loc='best', fontsize=14)
+plt.savefig('bensin_sc3.png', dpi=300, bbox_inches='tight')
+```
+
 ```{=tex}
 \begin{wrapfigure}{r}{0.5\textwidth} 
     \centering
@@ -813,9 +2570,9 @@ De blåe striplete er substitusjonseffekten som kommer av at gode 2 ble billiger
 Da har vi den totale effekten som går fra A til B. Etterspørselen etter begge godene reduseres.\
 Substitusjonseffekten går fra punkt A til C og er negativ for gode 1 som er blitt relativt dyrere, og positiv for gode 2 men inntektseffekten er negativ for begge godene (C til B).
 
-Vi ser at både inntekts- og substitusjonseffekten er negativ for gode 1, mens den positive substitusjonseffekten for gode 2 er mindre enn den negative inntektseffekten slik at den totale effekten er negativ. [^11]
+Vi ser at både inntekts- og substitusjonseffekten er negativ for gode 1, mens den positive substitusjonseffekten for gode 2 er mindre enn den negative inntektseffekten slik at den totale effekten er negativ. [^17]
 
-[^11]: @clark_2023_sok1006
+[^17]: @clark_2023_sok1006
 
 ```{python}
 display(Latex(tbl1))
@@ -825,11 +2582,11 @@ display(Latex(tbl1))
 
 I \autoref{table:4} så ser vi nå på hvordan effekten er for alle billister. Det vi nå kan se er at uansett hvordan billister tilpasser seg så er det en reduksjon i kilometer kjørt. Spesielt vises dette i \autoref{fig:fig15c}
 
-Scenario 2 er når all kjøring er i rushtid og Scenario 3 er når ingen kjøring er i rushtid.
-
 ```{python}
 display(Latex(tbl2))
 ```
+
+På neste side så er figurer for alle de forskjellige scenarioene og viser da forskjellen det har for billister om de har nullutslipp kjøretøy eller ikke, og hvilken effekt det har å kjøre i rush eller utenom. **Merk forskjell på verdier i X og Y aksene.**
 
 \clearpage
 
@@ -867,28 +2624,23 @@ display(Latex(tbl2))
 
 # Kapittel 4 - Konklusjon
 
-Bompenger har stor effekt på kjøremønsteret til billister. Busstrafikk økes, det blir flere sykklister og det blir mindre bilkjøring. Det er samtidig en økning i inntekter til myndighetene.
+## Observasjoner
 
-Som vi har sett i Kapittel 1 så var et av formålene å ha nullvekst i biltrafikken. Innføringen av bompenger virker ihvertfall til å ha fungert mot det formålet, ihvertfall på kort sikt. Det er ulike elasisiteter på bilkjøring og jeg fokuserte på en der det på både medium og lang sikt hadde samme elasisitet men det er andre studier som viser høyere elasisitet på lang sikt. Dersom det viser seg at bilkjøring er mer elastisk på lang sikt så vil dette resultere i en enda større nedgang i biltrafikken. Det vi så i Kapittel 2 var derimot at biltrafikken redusertes raskt men har en trender opp, noe som kan tyde på at trafikken går mot normalen eller noe under normalen.
+Bompenger har stor effekt på kjøremønsteret til billister. Busstrafikk økes, det blir flere syklister og det blir mindre bilkjøring. Det er samtidig en økning i inntekter til myndighetene.
 
-må kildehenvise statens vegvesen og ssb
+Som vi har sett i Kapittel 1 så var et av formålene å ha nullvekst i biltrafikken. Innføringen av bompenger ser ut til å ha hatt effekt i denne retningen, i hvert fall på kort sikt. Det er ulike elasisiteter på bilkjøring og jeg fokuserte på en der det på både medium og lang sikt hadde samme elasisitet. Andre studier indikerer imidlertid en høyere elastisitet over lengre tid. Hvis det viser seg at bilkjøring er mer elastisk på lang sikt, vil dette resultere i en enda større nedgang i biltrafikken. Det vi observerte i Kapittel 2 var at biltrafikken reduserte raskt, men har en svak trend oppover, noe som kan tyde på at trafikken går mot normalen eller noe under normalen.
 
+I kapittel 3 så viser jeg at bilistene, uansett hvordan de tilpasser seg, opplever en reduksjon i kjørte kilometer. Dette er spesielt tydelig i \autoref{fig:fig15c}. Dette er da bil med forbrenningsmotor i scenario 2 der all kjøring skjer i rushtiden. I alle scenarioer selv med et kompensert budsjett så er det en reduksjon i kjørte kilometer og en reduksjon i penger brukt på andre goder, da den økte kostnaden går til bompenger.
 
+I løpet av de siste 5 årene så kan vi se at antall elbiler har økt. Dersom økningen vi ser i \autoref{fig:fig7} fortsetter og elbiler beholder rabatten som vi så i \autoref{table:1} så kan det hende at denne rabatten må omtenkes på sikt dersom alle prosjektene skal finansieres i like stor grad som i dag ved hjelp av bompenger.
 
+Konklusjonen er da at vi kan se at innføringen av bompenger har en betydelig effekt på bilistenes atferd. Det kan bidra til å redusere biltrafikken og øke inntektene til myndighetene. Siden vi også kan se at det er en økning i antall elbiler så kan det hende at inntekten fra bomringen viser seg å komme under målet og det på sikt må endres i rabattordningene. Vi har hatt en økning i busspåstigninger og syklister så dette kan være bra for miljøet og også kanskje gi en samfunnsøkonomisk gevinst i reduksjon av svevestøv og bedre fysisk helse blandt syklister. Det kan dermed være nødvendig med å investere mer i kollektiv transport og bygge flere sykkelveier.
 
-Bompenger har en betydelig innvirkning på bilistenes kjøremønster. Det observeres en økning i busstrafikken, flere syklister, og en reduksjon i bilkjøring. Samtidig er det en økning i inntektene til myndighetene. Som vi så i Kapittel 1, var ett av målene å oppnå nullvekst i biltrafikken. Innføringen av bompenger ser ut til å ha fungert mot dette målet, i det minste på kort sikt. Det er ulike elastisiteter for bilkjøring, og jeg fokuserte på en der det på både medium og lang sikt hadde samme elastisitet. Det er imidlertid andre studier som viser høyere elastisitet på lang sikt. Hvis det viser seg at bilkjøring er mer elastisk på lang sikt, vil dette resultere i en enda større nedgang i biltrafikken. Det vi så i Kapittel 2, var derimot at biltrafikken redusertes raskt, men har en trend opp, noe som kan tyde på at trafikken går mot normalen eller noe under normalen.
+Det er viktig å huske at vi denne oppgaven er skrevet under et halvt år etter innføringen av bompenger og at det kan være mange faktorer som har innvirkning. Det har nå vært høy inflasjon og renteøkninger som kan ha bidratt til å redusere trafikken.
 
-Videre viser studien at uansett hvordan bilister tilpasser seg, er det en reduksjon i kjørte kilometer. Dette er spesielt tydelig i Figur 15c. Scenario 2 er når all kjøring er i rushtid, og Scenario 3 er når ingen kjøring er i rushtid. I alle scenarier er det en reduksjon i kjørte kilometer og en reduksjon i penger brukt på andre goder, da den økte kostnaden går til bompenger. Dette er når 70% av kjøring skjer utenfor rushtid og 30% er i rushtid.
+## Videre analyse
 
-I konklusjon, viser denne studien at innføringen av bompenger har en betydelig effekt på bilisters atferd, og kan bidra til å redusere biltrafikken og øke inntektene til myndighetene. Imidlertid er det viktig å merke seg at effekten kan variere avhengig av forskjellige faktorer, inkludert tidsperioden og bilistenes tilpasningsevne. Videre indikerer studien at effektene av bompenger kan være mer merkbare over tid, noe som tyder på at langvarige tiltak kan være nødvendig for å oppnå varige endringer i bilistenes atferd.
-
-
-
-
-
-
-
-
+Det kan være nødvendig og kartlegge de samfunnsøkonomiske gevinstene fra endringen i bymiljøet når det er en reduksjon i billister og en økning i syklister og busspåstigninger. Det er også registrert en reduksjon i trafikkvolum over Tilkoblingene til Tromsøya så det kan være negative konsekvenser for bedrifter og personer på Kvaløya og Fastlandet og dette kan være nødvendig å kartlegge.
 
 \newpage
 
@@ -902,23 +2654,23 @@ I konklusjon, viser denne studien at innføringen av bompenger har en betydelig 
 \appendix
 
 ```{=tex}
-\section {Kapittel 1 KI bruk}
-
-\label{appendix:appendix1}
+\section {Appendix Kapittel 1 KI bruk} \label{appendix:appendix1}
 ```
-I løpet av kapittel 1 så er ChatGPT brukt til hjelp av setningsstruktur. Jeg har selv skrevet teksten, og noe av den er blitt lagt i ChatGPT for å bearbeides mer for å fjerne setninger som starter på og, og slikt. Jeg har prøvd å luke ut generelle skrivefeil.
+I løpet av kapittel 1 så er ChatGPT brukt til hjelp av setningsstruktur. Jeg har selv skrevet teksten, og noe av den er blitt lagt i ChatGPT for å bearbeides mer for å fjerne setninger som starter på og, og slikt. Jeg har altså brukt chatgpt til å prøve å luke ut generelle skrivefeil og setninger som starter på og.
 
-\section {Kapittel 2 KI bruk}
+\section {Appendix Kapittel 2 KI bruk}
 
-Til innhenting av data så er Vegvesenet sin API brukt. Her har jeg funnet ut selv ved graphql.org/learn men jeg fikk hjelp av ChatGPT til å komme frem til en løsning på et problem der API'en bare ga 100 verdier om gangen. Dette var en enkel løsning som var å lage en While loop. Dette er kommentert i koden.
+Til innhenting av data så er Vegvesenet sin API brukt. Her har jeg funnet ut selv ved graphql.org/learn men jeg fikk hjelp av ChatGPT til å komme frem til en løsning på et problem der API'en bare ga 100 verdier om gangen. Dette var en enkel løsning som var å lage en simpel While loop. Dette er kommentert i koden. I kildekode så er dette linjer 164-175. Så linjer 238-242 for å legge disse i listen igjen. 
+
+I regresjonslinjene så er det også brukt til å lage "UNIX timestamp" for å gjøre om dato til tall jeg kan bruke i regresjonsmodellen. Linje 588-591 lages UNIX Timestamp og i linje 631-637.
 
 I løpet av kode så er det brukt en form for KI som heter Github Copilot som modul i Visual Studio Code. Dette vil ses i at det ofte er kommentarer som #plotting
 
 Ved å bruke slike kommentarer så fyller den modulen i Visual Studio Code inn repetetivt arbeid. Men disse er beholdt i kode der jeg har prøvd å se om den finner løsning. Det har noen ganger funket men har trengt bearbeiding men har vært enkle ting denne har ordnet så det er ikke godt kommentert i kode når det er ren Github Copilot kode, eller ikke.
 
-\subsection{KI bruk S21 appendix} \label{appendix:appendixkart}
+\subsection{Kart KI bruk se S21 appendix} \label{appendix:appendixkart}
 
-Side 7 Kart. #KODELINJER# her er det brukt Chatgpt. Jeg har selv lest mye på https://contextily.readthedocs.io/en/latest/intro_guide.html#TL;DR men da jeg ikke fikk helt til, så fikk jeg da hjelp av ChatGPT til å legge inn verdier for å få se Tromsø på et kart. Jeg kommenterer dette i kode der jeg legger ##CHATGPT## over kodelinjen og under kodelinjen når chatgpt har skrevet dette.
+Side 7 Kart. Kodelinjer 672-687 og 696-699 er fra brukt Chatgpt. Jeg har selv lest mye på https://contextily.readthedocs.io/en/latest/intro_guide.html#TL;DR men da jeg ikke fikk helt til, så fikk jeg da hjelp av ChatGPT til å legge inn verdier for å få se Tromsø på et kart. Jeg kommenterer dette i kode der jeg legger ##CHATGPT## over kodelinjen og under kodelinjen når chatgpt har skrevet dette.
 
 \label{appendix:appendix22}
 
@@ -926,6 +2678,22 @@ Jeg måtte spørre ChatGPT om å spesifikt bruke de pakkene jeg ville og jeg må
 
 Jeg fikk også noe hjelp av ChatGPT til å lage regresjonslinjer originalt men disse var feil og jeg har siden endret hvordan jeg gjorde dette. Det kan hende det er noen deler igjen fra ChatGPT som jeg ikke husker. Viste seg å være mer plagsomt enn ikke å bruke ChatGPT
 
-\section {Kapittel 3 KI bruk} \\label{appendix:appendix3}
+I linje 771 så har jeg lagd en liste for å legend rekkefølge. Jeg fikk ideen fra ChatGPT men jeg måtte lage dette selv.
+
+```{=tex}
+\section {Appendix Kapittel 3 KI bruk} \label{appendix:appendix3}
+
+\subsection{Skrift KI bruk se S22 appendix} \label{appendix:skrift}
+
+```
+Ved å sette teksten jeg hadde inn i Chatgpt og be den bedre struktur i teksten så hjalp meg omskrive det jeg hadde. Den har gjort noen små endringer i hva som er skrevet men jeg tenker fremdeles dette er rett.
+
+\subsection{KI tabell 3 og 4 bruk se S22 appendix}
 
 Ved konstruering av tabell 3 og 4 så hadde jeg lagt disse i Markdown men dette viste seg å ikke kunne se bra ut i PDF. Jeg spurte så ChatGPT om hjelp, den mente så at det ikke var noe latex support og den ba meg fylle verdier selv men den ga meg ide om å se etter noe i IPython.display der jeg fant Latex. ChatGPT fortalte meg om at jeg måtte ha dobbel {{}} rundt verdier, dette var feil men det trengtes for latex kommandoer.
+
+
+```{=tex}
+\section {Appendix Kapittel 4 KI bruk} \label{appendix:appendix4}
+```
+I Kapittel 4 så har jeg i svært liten grad brukt KI. Jeg prøvde originalt å sette pdf'en i chatgpt å be den konkludere for meg men den begynte å halisunere ut ting som ikke var sant så jeg endte med å skrive konklusjonen selv men jeg har postet den i ChatGPT og bedt den forbedre og brukt det den ga ut til å selv skrive om på teksten. 
