@@ -188,13 +188,13 @@ ab_enten_ij <- choose(6, 3) * 2
 uten_abij <- choose(6, 6)
 
 
-i_eller_j_uten_ab <- choose(8, 6)
+i_eller_j_uten_ab <- choose(6, 5) * 2
 
 
-ab_uten_ij <- choose(6, 4) * 2  
 
+print(ab_uten_i_og_j + ab_enten_ij + uten_abij + i_eller_j_uten_ab)
 
-print(ab_uten_i_og_j + ab_enten_ij + uten_abij + i_eller_j_uten_ab + ab_uten_ij)
+#(choose(6, 4) + choose(6, 3) + choose(6, 3) + choose(6, 6) + choose(6, 5)+ choose(6, 5))
 
 ```
 
@@ -203,7 +203,7 @@ print(ab_uten_i_og_j + ab_enten_ij + uten_abij + i_eller_j_uten_ab + ab_uten_ij)
 
 -   Hva er sannsynligheten for at A kommer med?
 ```{r}
-1 - (choose(9, 8) / choose(10, 8))
+choose(9, 7) / choose(10, 8)
 ```
 -   Hva er sannsynligheten for at minst ́en av A og B kommer med?
 
@@ -220,19 +220,57 @@ Det er kjent at 10% av laksepopulasjonen i et vassdrag har en bestemt parasitt, 
 
 ### a) Er hendelsene A = "laks har parasitt A" og B = "laks har parasitt B" uavhengige?
 
-Er de disjunkte?
+Dersom P(B|A) = P(B) eller P(A|B) = P(A) så er de uavhengige. Men P(B) = 0.2 men P(B|A) = 0.5 så de er ikke uavhengige.
 
-### b) Regn ut sannsynligheten for at en laks har begge parasittene, P (A ∩ B).
+Er de disjunkte? 
 
+Nei, fordi P(A $\cap$ B) > 0.
+
+### b) Regn ut sannsynligheten for at en laks har begge parasittene P (A $\cap$ B).
+
+```{r}
+b_gitt_a = 0.5
+p_a = 0.1
+p_b = 0.2
+
+p_og_b = b_gitt_a * p_a
+p_og_b
+```
 Regn ut sannsynligheten for at en laks har minst en parasitt.
 
-### c) Gitt at en laks har minst en parasitt, hva er sannsynligheten for at den har parasitt A?
+```{r}
+p_eller_b = p_a + p_b - p_og_b
+p_eller_b
+```
 
-Gitt at en laks ikke har parasitt A, hva er sannsynligheten for at den har parasitt B? Vi tenker oss at n = 10 laks blir sjekka for parasitt A.
+
+### c) Gitt at en laks har minst en parasitt, hva er sannsynligheten for at den har parasitt A?
+```{r}
+p_a_gitt_eller_b = p_a / p_eller_b
+p_a_gitt_eller_b
+```
+
+Gitt at en laks ikke har parasitt A, hva er sannsynligheten for at den har parasitt B? 
+
+
+```{r}
+p_b_gitt_kompli_a = (p_b - p_og_b) / (1 - p_a)
+p_b_gitt_kompli_a
+```
+
+Vi tenker oss at n = 10 laks blir sjekka for parasitt A.
 
 ### d) Hva er sannsynligheten for at minst ́en laks har parasitt A?
+```{r}
+1 - (1 - 0.1)^10
+```
 
 Hva er sannsynligheten for at akkurat ́en laks har parasitt A?
+
+```{r}
+choose(10, 1) * 0.1^1 * (1 - 0.1)^(10-1) #må dobbelsjekke når jeg har tid. eksemepl 5.3 s167
+```
+
 
 ## 5
 
@@ -242,14 +280,57 @@ $$
 f(x) = \frac{2}{5} x e^{-\frac{1}{2}x^2}, \quad x > 0
 $$
 
-a) Skisser tettheten i R.  
-Vis at dette er ei ekte fordeling.  
+### a) Skisser tettheten i R.  
+Vis at dette er ei ekte fordeling. 
+
+
+```{r}
+
+curve((2/5)*x*exp(-1/5*x^2), from = 0, to = 5)
+
+```
+
+```{r}
+
+integrate(function(x) (2/5)*x*exp(-1/5*x^2), 0, Inf)
+
+```
+Areal under kurven er 1, så det er en ekte fordeling.
+
+
+
+
+
 Finn den kumulative fordelingsfunksjonen, \( F(x) \), og skissér også denne.
 
-b) Når er det siste tidspunktet du fremdeles kan være 90% sikker på at et batteri virker?
 
-c) Finn sannsynligheten for at et tilfeldig valgt batteri skal virke etter ett år.  
+```{r}
+curve(1 - exp(-1/5*x^2), from = 0, to = 5)
+```
+
+
+
+
+### b) Når er det siste tidspunktet du fremdeles kan være 90% sikker på at et batteri virker?
+
+```{r}
+uniroot(function(x) 1 - exp(-1/5*x^2) - 0.9, c(0, 5))
+```
+3.4år?
+
+
+
+### c) Finn sannsynligheten for at et tilfeldig valgt batteri skal virke etter ett år.  
+
+
+```{r}
+exp(-1/5*1^2)
+```
 Om du inspiserer et batteri etter ett år og finner at det virker, hva er sannsynligheten for at det ikke vil virke om du inspiserer det ett år seinere?
+
+```{r}
+1 - (exp(-1/5*2^2) / exp(-1/5*1^2))
+```
 
 ## 6
 
@@ -258,18 +339,32 @@ Vi antar følgende simultane sannsynlighetstetthet for de stokastiske variablene
 $$
 f(x,y) = 
 \begin{cases} 
-2e^{-(2+x+y)}, & x > 0, y > 0 \\
+2e^{-(2x+y)}, & x > 0, y > 0 \\
 0, & \text{ellers}
 \end{cases}
 $$
 
-a) Finn de marginale fordelingene (sannsynlighetstetthetene) for X og Y?  
+### a) Finn de marginale fordelingene (sannsynlighetstetthetene) for X og Y?  
+
+$$ f_X(x) = \int_0^\infty 2e^{-(2x+y)} dy = 2e^{-2x} \int_0^\infty e^{-y} dy = 2e^{-2x} $$
+
+
 Hva blir den betinga fordelinga (sannsynlighetstettheten) for X?  
+
 Er X og Y uavhengige?
 
 Nå er vi interessert i hva som blir summen av X og Y.
 
-b) Finn ved integrasjon av den simultane sannsynlighetstettheten \( f(x,y) \) hva som blir sannsynligheten for at summen av X og Y er under 2. Det vil si finn \( P(X + Y < 2) \).
+```{r}
+# integrate(function(x) 2*exp(-2*x), 0, Inf)
+# integrate(function(y) 2*exp(-y), 0, Inf)
+
+```
+
+
+
+### b) Finn ved integrasjon av den simultane sannsynlighetstettheten
+\( f(x,y) \) hva som blir sannsynligheten for at summen av X og Y er under 2. Det vil si finn \( P(X + Y < 2) \).
 
 
 
