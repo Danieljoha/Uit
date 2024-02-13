@@ -154,6 +154,7 @@
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \KOMAoption{captions}{tableheading}
+\usepackage{cancel}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -213,7 +214,7 @@
 
 \title{OBLIGATORISK INNLEVERING 1, STA-1001 2024}
 \author{}
-\date{12-02-2024}
+\date{13-02-2024}
 
 \begin{document}
 \maketitle
@@ -356,11 +357,8 @@ bruke. La oss kalle låtene: A B C D E F G H I J
 \subsubsection{a) Om han skal velge 8 av de 10
 låtene:}\label{a-om-han-skal-velge-8-av-de-10-luxe5tene}
 
-\begin{itemize}
-\tightlist
-\item
-  Hvor mange mulige kombinasjoner av 8 låter finnes det?
-\end{itemize}
+\paragraph{Hvor mange mulige kombinasjoner av 8 låter finnes
+det?}\label{hvor-mange-mulige-kombinasjoner-av-8-luxe5ter-finnes-det}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -373,11 +371,9 @@ låtene:}\label{a-om-han-skal-velge-8-av-de-10-luxe5tene}
 [1] 45
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  Hvor mange mulige kombinasjoner finnes det om A, B og C skal være med?
-\end{itemize}
+\paragraph{Hvor mange mulige kombinasjoner finnes det om A, B og C skal
+være
+med?}\label{hvor-mange-mulige-kombinasjoner-finnes-det-om-a-b-og-c-skal-vuxe6re-med}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -398,11 +394,8 @@ låtene:}\label{a-om-han-skal-velge-8-av-de-10-luxe5tene}
 \subsubsection{b) Om han skal velge 8 av de 10
 låtene:}\label{b-om-han-skal-velge-8-av-de-10-luxe5tene}
 
-\begin{itemize}
-\tightlist
-\item
-  Hvor mange mulige rekkefølger av 8 låter finns det?
-\end{itemize}
+\paragraph{Hvor mange mulige rekkefølger av 8 låter finns
+det?}\label{hvor-mange-mulige-rekkefuxf8lger-av-8-luxe5ter-finns-det}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -415,11 +408,8 @@ låtene:}\label{b-om-han-skal-velge-8-av-de-10-luxe5tene}
 [1] 1814400
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  Hvor mange av rekkefølgene er i alfabetisk ordning?
-\end{itemize}
+\paragraph{Hvor mange av rekkefølgene er i alfabetisk
+ordning?}\label{hvor-mange-av-rekkefuxf8lgene-er-i-alfabetisk-ordning}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -472,14 +462,12 @@ kombinasjoner av 6 låter finns det?
 \subsubsection{d) Om han skal velge 8 av de 10 låtene og velger
 tilfeldig:}\label{d-om-han-skal-velge-8-av-de-10-luxe5tene-og-velger-tilfeldig}
 
-\begin{itemize}
-\tightlist
-\item
-  Hva er sannsynligheten for at A kommer med?
-\end{itemize}
+\paragraph{Hva er sannsynligheten for at A kommer
+med?}\label{hva-er-sannsynligheten-for-at-a-kommer-med}
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\CommentTok{\#antall gunstie delt på antall mulige}
 \FunctionTok{choose}\NormalTok{(}\DecValTok{9}\NormalTok{, }\DecValTok{7}\NormalTok{) }\SpecialCharTok{/} \FunctionTok{choose}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{8}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -488,15 +476,12 @@ tilfeldig:}\label{d-om-han-skal-velge-8-av-de-10-luxe5tene-og-velger-tilfeldig}
 [1] 0.8
 \end{verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  Hva er sannsynligheten for at minst ́en av A og B kommer med?
-\end{itemize}
+\paragraph{Hva er sannsynligheten for at minst ́en av A og B kommer
+med?}\label{hva-er-sannsynligheten-for-at-minst-en-av-a-og-b-kommer-med}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ (}\FunctionTok{choose}\NormalTok{(}\DecValTok{8}\NormalTok{, }\DecValTok{8}\NormalTok{) }\SpecialCharTok{/} \FunctionTok{choose}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{8}\NormalTok{))}
+\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{/} \FunctionTok{choose}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{8}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -520,7 +505,7 @@ Dersom P(B\textbar A) = P(B) eller P(A\textbar B) = P(A) så er de
 uavhengige. Men P(B) = 0.2 men P(B\textbar A) = 0.5 så de er ikke
 uavhengige.
 
-Er de disjunkte?
+\paragraph{Er de disjunkte?}\label{er-de-disjunkte}
 
 Nei, fordi P(A \(\cap\) B) \textgreater{} 0.
 
@@ -543,7 +528,8 @@ B).}{b) Regn ut sannsynligheten for at en laks har begge parasittene P (A \textb
 [1] 0.05
 \end{verbatim}
 
-Regn ut sannsynligheten for at en laks har minst en parasitt.
+\paragraph{Regn ut sannsynligheten for at en laks har minst en
+parasitt.}\label{regn-ut-sannsynligheten-for-at-en-laks-har-minst-en-parasitt.}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -571,8 +557,9 @@ A?}\label{c-gitt-at-en-laks-har-minst-en-parasitt-hva-er-sannsynligheten-for-at-
 [1] 0.4
 \end{verbatim}
 
-Gitt at en laks ikke har parasitt A, hva er sannsynligheten for at den
-har parasitt B?
+\paragraph{Gitt at en laks ikke har parasitt A, hva er sannsynligheten
+for at den har parasitt
+B?}\label{gitt-at-en-laks-ikke-har-parasitt-a-hva-er-sannsynligheten-for-at-den-har-parasitt-b}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -585,7 +572,8 @@ har parasitt B?
 [1] 0.1666667
 \end{verbatim}
 
-Vi tenker oss at n = 10 laks blir sjekka for parasitt A.
+\paragraph{Vi tenker oss at n = 10 laks blir sjekka for parasitt
+A.}\label{vi-tenker-oss-at-n-10-laks-blir-sjekka-for-parasitt-a.}
 
 \subsubsection{d) Hva er sannsynligheten for at minst ́en laks har
 parasitt
@@ -601,7 +589,8 @@ A?}\label{d-hva-er-sannsynligheten-for-at-minst-en-laks-har-parasitt-a}
 [1] 0.6513216
 \end{verbatim}
 
-Hva er sannsynligheten for at akkurat ́en laks har parasitt A?
+\paragraph{Hva er sannsynligheten for at akkurat ́en laks har parasitt
+A?}\label{hva-er-sannsynligheten-for-at-akkurat-en-laks-har-parasitt-a}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -613,7 +602,7 @@ Hva er sannsynligheten for at akkurat ́en laks har parasitt A?
 [1] 0.3874205
 \end{verbatim}
 
-\subsection{5}\label{section}
+\subsection{Oppgave 5}\label{oppgave-5}
 
 For en type backup-batterier er det kjent at levetida (tida, i år, det
 tar før de svikter) er gitt ved sannsynlighetstettheten
@@ -625,11 +614,37 @@ f(x) = \frac{2}{5} x e^{-\frac{1}{2}x^2}, \quad x > 0
 \subsubsection{a) Skisser tettheten i
 R.}\label{a-skisser-tettheten-i-r.}
 
-Vis at dette er ei ekte fordeling.
+\paragraph{Vis at dette er ei ekte
+fordeling.}\label{vis-at-dette-er-ei-ekte-fordeling.}
+
+Jeg har brukt kode jeg har funnet i et pdf dokument gitt på canvas
+Elvebakk (2023)
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{curve}\NormalTok{((}\DecValTok{2}\SpecialCharTok{/}\DecValTok{5}\NormalTok{)}\SpecialCharTok{*}\NormalTok{x}\SpecialCharTok{*}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{/}\DecValTok{5}\SpecialCharTok{*}\NormalTok{x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{from =} \DecValTok{0}\NormalTok{, }\AttributeTok{to =} \DecValTok{5}\NormalTok{)}
+\CommentTok{\# dford1 = function(x) x*exp({-}x) \# "d" for "density".}
+\CommentTok{\# \#Litt meir korrekt er  ̊a sette andre verdier til 0, for eksempel:}
+\CommentTok{\# dford1 = function(x)}
+\CommentTok{\#   \{tetthet = vector(length=length(x))}
+\CommentTok{\# for (i in 1:length(x))}
+\CommentTok{\#   \{if (x[i]\textgreater{}0) tetthet[i] = x[i]*exp({-}x[i])}
+\CommentTok{\#   else tetthet[i] = 0\}}
+\CommentTok{\#   return(tetthet)\}}
+
+\NormalTok{dford2 }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x) (}\DecValTok{2}\SpecialCharTok{/}\DecValTok{5}\NormalTok{)}\SpecialCharTok{*}\NormalTok{x}\SpecialCharTok{*}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{/}\DecValTok{5}\SpecialCharTok{*}\NormalTok{x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+
+\NormalTok{dford2 }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x) \{tetthet }\OtherTok{=} \FunctionTok{vector}\NormalTok{(}\AttributeTok{length=}\FunctionTok{length}\NormalTok{(x))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(x))}
+\NormalTok{  \{}\ControlFlowTok{if}\NormalTok{ (x[i]}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{) tetthet[i] }\OtherTok{=}\NormalTok{ (}\DecValTok{2}\SpecialCharTok{/}\DecValTok{5}\NormalTok{)}\SpecialCharTok{*}\NormalTok{x[i]}\SpecialCharTok{*}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{/}\DecValTok{5}\SpecialCharTok{*}\NormalTok{x[i]}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+  \ControlFlowTok{else}\NormalTok{ tetthet[i] }\OtherTok{=} \DecValTok{0}\NormalTok{\}}
+  \FunctionTok{return}\NormalTok{(tetthet)\}}
+
+
+\CommentTok{\#curve((2/5)*x*exp({-}1/5*x\^{}2), from = 0, to = 5)}
+
+\CommentTok{\#curve(dford1,from=0,to=10,xlab="x",ylab="f(x)",main="Sannsynlighetstetthet",col="blue")}
+
+\FunctionTok{curve}\NormalTok{(dford2,}\AttributeTok{from=}\DecValTok{0}\NormalTok{,}\AttributeTok{to=}\DecValTok{10}\NormalTok{,}\AttributeTok{xlab=}\StringTok{"x"}\NormalTok{,}\AttributeTok{ylab=}\StringTok{"f(x)"}\NormalTok{,}\AttributeTok{main=}\StringTok{"Sannsynlighetstetthet"}\NormalTok{,}\AttributeTok{col=}\StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -637,22 +652,42 @@ Vis at dette er ei ekte fordeling.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{integrate}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x) (}\DecValTok{2}\SpecialCharTok{/}\DecValTok{5}\NormalTok{)}\SpecialCharTok{*}\NormalTok{x}\SpecialCharTok{*}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{/}\DecValTok{5}\SpecialCharTok{*}\NormalTok{x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\DecValTok{0}\NormalTok{, }\ConstantTok{Inf}\NormalTok{)}
+\CommentTok{\#integrate(function(x) (2/5)*x*exp({-}1/5*x\^{}2), 0, Inf)}
+\FunctionTok{integrate}\NormalTok{(dford2,}\AttributeTok{lower=}\DecValTok{0}\NormalTok{,}\AttributeTok{upper=}\ConstantTok{Inf}\NormalTok{)}\SpecialCharTok{$}\NormalTok{value}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-1 with absolute error < 2.5e-07
+[1] 1
 \end{verbatim}
 
 Areal under kurven er 1, så det er en ekte fordeling.
 
-Finn den kumulative fordelingsfunksjonen, ( F(x) ), og skissér også
-denne.
+\paragraph{Finn den kumulative fordelingsfunksjonen, ( F(x) ), og
+skissér også
+denne.}\label{finn-den-kumulative-fordelingsfunksjonen-fx-og-skissuxe9r-ogsuxe5-denne.}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{curve}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{/}\DecValTok{5}\SpecialCharTok{*}\NormalTok{x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{from =} \DecValTok{0}\NormalTok{, }\AttributeTok{to =} \DecValTok{5}\NormalTok{)}
+\CommentTok{\#curve(1 {-} exp({-}1/5*x\^{}2), from = 0, to = 5)}
+
+\CommentTok{\# pford1 = function(x) \# "p" for "(cumulative) probablility".}
+\CommentTok{\# \{kum = vector(length=length(x))}
+\CommentTok{\# for (i in 1:length(x))}
+\CommentTok{\# \{if (x[i]\textgreater{}0) kum[i] = 1 {-} (x[i]+1)*exp({-}x[i])}
+\CommentTok{\# else kum[i] = 0\}}
+\CommentTok{\# return(kum)\}}
+
+
+\NormalTok{pford2 }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x) }\CommentTok{\# "p" for "(cumulative) probablility".}
+\NormalTok{  \{kum }\OtherTok{=} \FunctionTok{vector}\NormalTok{(}\AttributeTok{length=}\FunctionTok{length}\NormalTok{(x))}
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(x))}
+\NormalTok{  \{}\ControlFlowTok{if}\NormalTok{ (x[i]}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{) kum[i] }\OtherTok{=} \FunctionTok{integrate}\NormalTok{(dford2, }\AttributeTok{lower=}\DecValTok{0}\NormalTok{, }\AttributeTok{upper =}\NormalTok{ x[i])}\SpecialCharTok{$}\NormalTok{value }
+  \ControlFlowTok{else}\NormalTok{ kum[i] }\OtherTok{=} \DecValTok{0}\NormalTok{\}}
+  \FunctionTok{return}\NormalTok{(kum)\}}
+
+\CommentTok{\# curve(pford1,from=0,to=10,xlab="x",ylab="F(x)",main="Kumulativ fordelingsfunksjon",col="blue")}
+\FunctionTok{curve}\NormalTok{(pford2,}\AttributeTok{from=}\DecValTok{0}\NormalTok{,}\AttributeTok{to=}\DecValTok{5}\NormalTok{,}\AttributeTok{xlab=}\StringTok{"x"}\NormalTok{,}\AttributeTok{ylab=}\StringTok{"F(x)"}\NormalTok{,}\AttributeTok{main=}\StringTok{"Kumulativ fordelingsfunksjon"}\NormalTok{,}\AttributeTok{col=}\StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -664,7 +699,8 @@ virker?}\label{b-nuxe5r-er-det-siste-tidspunktet-du-fremdeles-kan-vuxe6re-90-sik
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{uniroot}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x) }\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{/}\DecValTok{5}\SpecialCharTok{*}\NormalTok{x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{{-}} \FloatTok{0.9}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+\CommentTok{\#in pford2 when is y=0.9}
+\FunctionTok{uniroot}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{pford2}\NormalTok{(}\FunctionTok{c}\NormalTok{(x))[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{{-}} \FloatTok{0.9}\NormalTok{, }\AttributeTok{lower=}\DecValTok{0}\NormalTok{, }\AttributeTok{upper=}\DecValTok{5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -685,7 +721,7 @@ $estim.prec
 [1] 6.103516e-05
 \end{verbatim}
 
-3.4år?
+3.4år
 
 \subsubsection{c) Finn sannsynligheten for at et tilfeldig valgt batteri
 skal virke etter ett
@@ -693,7 +729,8 @@ skal virke etter ett
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{/}\DecValTok{5}\SpecialCharTok{*}\DecValTok{1}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\CommentTok{\#exp({-}1/5*1\^{}2)}
+\DecValTok{1}\SpecialCharTok{{-}} \FunctionTok{pford2}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -701,13 +738,14 @@ skal virke etter ett
 [1] 0.8187308
 \end{verbatim}
 
-Om du inspiserer et batteri etter ett år og finner at det virker, hva er
-sannsynligheten for at det ikke vil virke om du inspiserer det ett år
-seinere?
+\paragraph{Om du inspiserer et batteri etter ett år og finner at det
+virker, hva er sannsynligheten for at det ikke vil virke om du
+inspiserer det ett år
+seinere?}\label{om-du-inspiserer-et-batteri-etter-ett-uxe5r-og-finner-at-det-virker-hva-er-sannsynligheten-for-at-det-ikke-vil-virke-om-du-inspiserer-det-ett-uxe5r-seinere}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ (}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{/}\DecValTok{5}\SpecialCharTok{*}\DecValTok{2}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{/} \FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{/}\DecValTok{5}\SpecialCharTok{*}\DecValTok{1}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{(}\FunctionTok{pford2}\NormalTok{(}\DecValTok{2}\NormalTok{) }\SpecialCharTok{{-}} \FunctionTok{pford2}\NormalTok{(}\DecValTok{1}\NormalTok{))}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{pford2}\NormalTok{(}\DecValTok{1}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -715,7 +753,7 @@ seinere?
 [1] 0.4511884
 \end{verbatim}
 
-\subsection{6}\label{section-1}
+\subsection{Oppgave 6}\label{oppgave-6}
 
 Vi antar følgende simultane sannsynlighetstetthet for de stokastiske
 variablene X og Y:
@@ -732,18 +770,67 @@ f(x,y) =
 (sannsynlighetstetthetene) for X og
 Y?}\label{a-finn-de-marginale-fordelingene-sannsynlighetstetthetene-for-x-og-y}
 
-\[ f_X(x) = \int_0^\infty 2e^{-(2x+y)} dy = 2e^{-2x} \int_0^\infty e^{-y} dy = 2e^{-2x} \]
+\[f_X(x) = 2e^{-2x}\] \[f_X(x) = e^{-y}\]
 
-Hva blir den betinga fordelinga (sannsynlighetstettheten) for X?
+Integrerer for x
 
-Er X og Y uavhengige?
+\[f_X(x) = \int_0^\infty 2e^{-(2x+y)} dy\]
 
-Nå er vi interessert i hva som blir summen av X og Y.
+\[f_X(x) = 2\left(-e^{-(2x+y)}\right)_{y=0}^{y=\infty}\]
+
+\[f_X(x) = 2\left(-e^{-(2x+\infty)} + e^{-(2x+0)}\right)\]
+\[f_X(x) = 2\left(0 - (-e^{-(2x+0)})\right)\] \[f_X(x) = 2e^{-2x}\]
+
+Gjør det samme for y \[f_Y(y) = \int_0^\infty 2e^{-(2x+y)} dx\]
+
+\[f_Y(y) = 2\left(\frac{-1}{2}e^{-(2x+y)}\right)_{x=0}^{x=\infty}\]
+\[f_X(x) = 2\left(0 - (\frac{-1}{2}e^{-(0+y)})\right)\]
+\[f_X(x) = 2\left( \frac{1}{2}e^{-y}\right)\] \[f_X(x) = e^{-y}\]
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# integrate(function(x) 2*exp({-}2*x), 0, Inf)}
-\CommentTok{\# integrate(function(y) 2*exp({-}y), 0, Inf)}
+\ImportTok{import}\NormalTok{ sympy }\ImportTok{as}\NormalTok{ sp}
+\NormalTok{x, y }\OperatorTok{=}\NormalTok{ sp.symbols(}\StringTok{\textquotesingle{}x y\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{f\_xy }\OperatorTok{=} \DecValTok{2}\OperatorTok{*}\NormalTok{sp.exp(}\OperatorTok{{-}}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{x }\OperatorTok{+}\NormalTok{ y))}
+
+\NormalTok{f\_X }\OperatorTok{=}\NormalTok{ sp.integrate(f\_xy, (y, }\DecValTok{0}\NormalTok{, sp.oo))}
+
+
+\NormalTok{f\_Y }\OperatorTok{=}\NormalTok{ sp.integrate(f\_xy, (x, }\DecValTok{0}\NormalTok{, sp.oo))}
+
+\NormalTok{f\_X, f\_Y}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+(2*exp(-2*x), exp(-y))
+\end{verbatim}
+
+\paragraph{Hva blir den betinga fordelinga (sannsynlighetstettheten) for
+X?}\label{hva-blir-den-betinga-fordelinga-sannsynlighetstettheten-for-x}
+
+Siden x\textgreater0, y\textgreater0 så henter jeg formelen fra s119 i
+pensum boken.
+
+\[f_{X|Y}(x|y) = \frac{2e^{-(2x+y)}}{e^{-y}}\]
+
+\begin{equation*}
+f_{X|Y}(x|y) = \frac{2\cancel{e}^{-(2x+\cancel{y})}}{\cancel{e^{-y}}}
+\end{equation*}
+
+\[f_{X|Y}(x|y) = 2e^{-2x}\]
+
+\paragraph{Er X og Y uavhengige?}\label{er-x-og-y-uavhengige}
+
+Ja den betingede sannsynlighetstettheten er ikke avhengig av y
+
+\paragraph{Nå er vi interessert i hva som blir summen av X og
+Y.}\label{nuxe5-er-vi-interessert-i-hva-som-blir-summen-av-x-og-y.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#sum of x and y in 2e\^{}\{{-}(2x+y)\}}
 \end{Highlighting}
 \end{Shaded}
 
@@ -759,11 +846,26 @@ sannsynlighetstettheten}\label{b-finn-ved-integrasjon-av-den-simultane-sannsynli
 
 \phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-Elvebakk2023}
+Elvebakk, G. (2023). \emph{Introduksjon til r i STA-1001: Del 2:
+Funksjoner og fordelingsfunksjoner}.
+\url{https://uit.instructure.com/courses/33518/files/2871351?wrap=1}
+
 \bibitem[\citeproctext]{ref-kristensen_2019_sannsynlighetsregning}
 Kristensen, Ø. \& Wikan, A. (2019). \emph{Sannsynlighetsregning og
 statistikk - for høyere utdanning} (2nd ed., p. 29). Fagbokforlaget.
 
 \end{CSLReferences}
+
+\clearpage
+
+\appendix
+
+\section {Appendix Oppgave 5 KI bruk}
+
+Jeg har brukt ChatGPT til å spørre om referering til pdf dokument der
+kode er hentet fra. Den ga meg da koden jeg la i references.bib filen.
+\url{https://chat.openai.com/share/dc97e9f2-7002-4df9-a01d-28f2ad22ad56}
 
 
 

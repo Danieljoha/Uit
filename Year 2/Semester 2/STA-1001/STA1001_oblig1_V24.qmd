@@ -55,6 +55,8 @@ bibliography: references.bib
 csl: norsk-apa-manual.csl
 nocite: |
   @*
+header-includes:
+  - \usepackage{cancel}
 ---
 
 \clearpage
@@ -141,29 +143,31 @@ En artist skal gi ut et album. Problemet er at artisten har ti låter, og må ve
 
 ### a) Om han skal velge 8 av de 10 låtene:
 
--   Hvor mange mulige kombinasjoner av 8 låter finnes det?
+#### Hvor mange mulige kombinasjoner av 8 låter finnes det?
+
 ```{r}
 #factorial(10)/(factorial(8)*factorial(10-8))
 choose(10, 8)
 ```
--   Hvor mange mulige kombinasjoner finnes det om A, B og C skal være med?
+
+#### Hvor mange mulige kombinasjoner finnes det om A, B og C skal være med?
+
 ```{r}
 choose(7, 5)
 #factorial(7)/(factorial(5)*factorial(7-5))
 ```
 
-
 ### b) Om han skal velge 8 av de 10 låtene:
 
--   Hvor mange mulige rekkefølger av 8 låter finns det?
+#### Hvor mange mulige rekkefølger av 8 låter finns det?
 
 ```{r}
 #(factorial(10)/(factorial(8)*factorial(10-8)))*factorial(8)
 choose(10, 8)*factorial(8)
 ```
 
+#### Hvor mange av rekkefølgene er i alfabetisk ordning?
 
--   Hvor mange av rekkefølgene er i alfabetisk ordning?
 ```{r}
 #factorial(10)/(factorial(8)*factorial(10-8))
 choose(10, 8)
@@ -174,7 +178,6 @@ Merk at i oppgave c) skal det bare velges ut 6 låter
 ### c) Om han skal velge 6 av de 10 låtene, men må ha med B om han har med A (om motsatt), og kan
 
 ikke ha med J om han har med I (og motsatt): - Hvor mange mulige kombinasjoner av 6 låter finns det?
-
 
 ```{r}
 
@@ -198,21 +201,20 @@ print(ab_uten_i_og_j + ab_enten_ij + uten_abij + i_eller_j_uten_ab)
 
 ```
 
-
 ### d) Om han skal velge 8 av de 10 låtene og velger tilfeldig:
 
--   Hva er sannsynligheten for at A kommer med?
+#### Hva er sannsynligheten for at A kommer med?
+
 ```{r}
+#antall gunstie delt på antall mulige
 choose(9, 7) / choose(10, 8)
 ```
--   Hva er sannsynligheten for at minst ́en av A og B kommer med?
+
+#### Hva er sannsynligheten for at minst ́en av A og B kommer med?
 
 ```{r}
-1 - (choose(8, 8) / choose(10, 8))
+1 - (1/ choose(10, 8))
 ```
-
-
-
 
 ## Oppgave 4
 
@@ -220,11 +222,11 @@ Det er kjent at 10% av laksepopulasjonen i et vassdrag har en bestemt parasitt, 
 
 ### a) Er hendelsene A = "laks har parasitt A" og B = "laks har parasitt B" uavhengige?
 
-Dersom P(B|A) = P(B) eller P(A|B) = P(A) så er de uavhengige. Men P(B) = 0.2 men P(B|A) = 0.5 så de er ikke uavhengige.
+Dersom P(B\|A) = P(B) eller P(A\|B) = P(A) så er de uavhengige. Men P(B) = 0.2 men P(B\|A) = 0.5 så de er ikke uavhengige.
 
-Er de disjunkte? 
+#### Er de disjunkte?
 
-Nei, fordi P(A $\cap$ B) > 0.
+Nei, fordi P(A $\cap$ B) \> 0.
 
 ### b) Regn ut sannsynligheten for at en laks har begge parasittene P (A $\cap$ B).
 
@@ -236,43 +238,43 @@ p_b = 0.2
 p_og_b = b_gitt_a * p_a
 p_og_b
 ```
-Regn ut sannsynligheten for at en laks har minst en parasitt.
+
+#### Regn ut sannsynligheten for at en laks har minst en parasitt.
 
 ```{r}
 p_eller_b = p_a + p_b - p_og_b
 p_eller_b
 ```
 
-
 ### c) Gitt at en laks har minst en parasitt, hva er sannsynligheten for at den har parasitt A?
+
 ```{r}
 p_a_gitt_eller_b = p_a / p_eller_b
 p_a_gitt_eller_b
 ```
 
-Gitt at en laks ikke har parasitt A, hva er sannsynligheten for at den har parasitt B? 
-
+#### Gitt at en laks ikke har parasitt A, hva er sannsynligheten for at den har parasitt B?
 
 ```{r}
 p_b_gitt_kompli_a = (p_b - p_og_b) / (1 - p_a)
 p_b_gitt_kompli_a
 ```
 
-Vi tenker oss at n = 10 laks blir sjekka for parasitt A.
+#### Vi tenker oss at n = 10 laks blir sjekka for parasitt A.
 
 ### d) Hva er sannsynligheten for at minst ́en laks har parasitt A?
+
 ```{r}
 1 - (1 - 0.1)^10
 ```
 
-Hva er sannsynligheten for at akkurat ́en laks har parasitt A?
+#### Hva er sannsynligheten for at akkurat ́en laks har parasitt A?
 
 ```{r}
 choose(10, 1) * 0.1^1 * (1 - 0.1)^(10-1) #må dobbelsjekke når jeg har tid. eksemepl 5.3 s167
 ```
 
-
-## 5
+## Oppgave 5
 
 For en type backup-batterier er det kjent at levetida (tida, i år, det tar før de svikter) er gitt ved sannsynlighetstettheten
 
@@ -280,59 +282,95 @@ $$
 f(x) = \frac{2}{5} x e^{-\frac{1}{2}x^2}, \quad x > 0
 $$
 
-### a) Skisser tettheten i R.  
-Vis at dette er ei ekte fordeling. 
+### a) Skisser tettheten i R.
 
+#### Vis at dette er ei ekte fordeling.
+
+Jeg har brukt kode jeg har funnet i et pdf dokument gitt på canvas @Elvebakk2023
 
 ```{r}
 
-curve((2/5)*x*exp(-1/5*x^2), from = 0, to = 5)
+# dford1 = function(x) x*exp(-x) # "d" for "density".
+# #Litt meir korrekt er  ̊a sette andre verdier til 0, for eksempel:
+# dford1 = function(x)
+#   {tetthet = vector(length=length(x))
+# for (i in 1:length(x))
+#   {if (x[i]>0) tetthet[i] = x[i]*exp(-x[i])
+#   else tetthet[i] = 0}
+#   return(tetthet)}
+
+dford2 = function(x) (2/5)*x*exp(-1/5*x^2)
+
+dford2 = function(x) {tetthet = vector(length=length(x))
+for (i in 1:length(x))
+  {if (x[i]>0) tetthet[i] = (2/5)*x[i]*exp(-1/5*x[i]^2)
+  else tetthet[i] = 0}
+  return(tetthet)}
+
+
+#curve((2/5)*x*exp(-1/5*x^2), from = 0, to = 5)
+
+#curve(dford1,from=0,to=10,xlab="x",ylab="f(x)",main="Sannsynlighetstetthet",col="blue")
+
+curve(dford2,from=0,to=10,xlab="x",ylab="f(x)",main="Sannsynlighetstetthet",col="blue")
 
 ```
 
 ```{r}
 
-integrate(function(x) (2/5)*x*exp(-1/5*x^2), 0, Inf)
-
+#integrate(function(x) (2/5)*x*exp(-1/5*x^2), 0, Inf)
+integrate(dford2,lower=0,upper=Inf)$value
 ```
+
 Areal under kurven er 1, så det er en ekte fordeling.
 
-
-
-
-
-Finn den kumulative fordelingsfunksjonen, \( F(x) \), og skissér også denne.
-
+#### Finn den kumulative fordelingsfunksjonen, ( F(x) ), og skissér også denne.
 
 ```{r}
-curve(1 - exp(-1/5*x^2), from = 0, to = 5)
+#curve(1 - exp(-1/5*x^2), from = 0, to = 5)
+
+# pford1 = function(x) # "p" for "(cumulative) probablility".
+# {kum = vector(length=length(x))
+# for (i in 1:length(x))
+# {if (x[i]>0) kum[i] = 1 - (x[i]+1)*exp(-x[i])
+# else kum[i] = 0}
+# return(kum)}
+
+
+pford2 = function(x) # "p" for "(cumulative) probablility".
+  {kum = vector(length=length(x))
+  for (i in 1:length(x))
+  {if (x[i]>0) kum[i] = integrate(dford2, lower=0, upper = x[i])$value 
+  else kum[i] = 0}
+  return(kum)}
+
+# curve(pford1,from=0,to=10,xlab="x",ylab="F(x)",main="Kumulativ fordelingsfunksjon",col="blue")
+curve(pford2,from=0,to=5,xlab="x",ylab="F(x)",main="Kumulativ fordelingsfunksjon",col="blue")
 ```
-
-
-
 
 ### b) Når er det siste tidspunktet du fremdeles kan være 90% sikker på at et batteri virker?
 
 ```{r}
-uniroot(function(x) 1 - exp(-1/5*x^2) - 0.9, c(0, 5))
+#in pford2 when is y=0.9
+uniroot(function(x) pford2(c(x))[1] - 0.9, lower=0, upper=5)
 ```
-3.4år?
 
+3.4år
 
-
-### c) Finn sannsynligheten for at et tilfeldig valgt batteri skal virke etter ett år.  
-
+### c) Finn sannsynligheten for at et tilfeldig valgt batteri skal virke etter ett år.
 
 ```{r}
-exp(-1/5*1^2)
+#exp(-1/5*1^2)
+1- pford2(1)
 ```
-Om du inspiserer et batteri etter ett år og finner at det virker, hva er sannsynligheten for at det ikke vil virke om du inspiserer det ett år seinere?
+
+#### Om du inspiserer et batteri etter ett år og finner at det virker, hva er sannsynligheten for at det ikke vil virke om du inspiserer det ett år seinere?
 
 ```{r}
-1 - (exp(-1/5*2^2) / exp(-1/5*1^2))
+(pford2(2) - pford2(1))/(1 - pford2(1))
 ```
 
-## 6
+## Oppgave 6
 
 Vi antar følgende simultane sannsynlighetstetthet for de stokastiske variablene X og Y:
 
@@ -344,33 +382,70 @@ f(x,y) =
 \end{cases}
 $$
 
-### a) Finn de marginale fordelingene (sannsynlighetstetthetene) for X og Y?  
+### a) Finn de marginale fordelingene (sannsynlighetstetthetene) for X og Y?
 
-$$ f_X(x) = \int_0^\infty 2e^{-(2x+y)} dy = 2e^{-2x} \int_0^\infty e^{-y} dy = 2e^{-2x} $$
+$$f_X(x) = 2e^{-2x}$$
+$$f_X(x) = e^{-y}$$
 
 
-Hva blir den betinga fordelinga (sannsynlighetstettheten) for X?  
+Integrerer for x
 
-Er X og Y uavhengige?
+$$f_X(x) = \int_0^\infty 2e^{-(2x+y)} dy$$
 
-Nå er vi interessert i hva som blir summen av X og Y.
+$$f_X(x) = 2\left(-e^{-(2x+y)}\right)_{y=0}^{y=\infty}$$
+
+$$f_X(x) = 2\left(-e^{-(2x+\infty)} + e^{-(2x+0)}\right)$$ $$f_X(x) = 2\left(0 - (-e^{-(2x+0)})\right)$$ $$f_X(x) = 2e^{-2x}$$
+
+Gjør det samme for y $$f_Y(y) = \int_0^\infty 2e^{-(2x+y)} dx$$
+
+$$f_Y(y) = 2\left(\frac{-1}{2}e^{-(2x+y)}\right)_{x=0}^{x=\infty}$$ $$f_X(x) = 2\left(0 - (\frac{-1}{2}e^{-(0+y)})\right)$$ $$f_X(x) = 2\left( \frac{1}{2}e^{-y}\right)$$ $$f_X(x) = e^{-y}$$
+
+```{python}
+import sympy as sp
+x, y = sp.symbols('x y')
+
+f_xy = 2*sp.exp(-(2*x + y))
+
+f_X = sp.integrate(f_xy, (y, 0, sp.oo))
+
+
+f_Y = sp.integrate(f_xy, (x, 0, sp.oo))
+
+f_X, f_Y
+```
+
+#### Hva blir den betinga fordelinga (sannsynlighetstettheten) for X?
+
+Siden x>0, y>0 så henter jeg formelen fra s119 i pensum boken.
+
+$$f_{X|Y}(x|y) = \frac{2e^{-(2x+y)}}{e^{-y}}$$
+```{=tex}
+\begin{equation*}
+f_{X|Y}(x|y) = \frac{2\cancel{e}^{-(2x+\cancel{y})}}{\cancel{e^{-y}}}
+\end{equation*}
+```
+
+
+$$f_{X|Y}(x|y) = 2e^{-2x}$$
+
+
+#### Er X og Y uavhengige?
+
+Ja den betingede sannsynlighetstettheten er ikke avhengig av y
+
+#### Nå er vi interessert i hva som blir summen av X og Y.
 
 ```{r}
-# integrate(function(x) 2*exp(-2*x), 0, Inf)
-# integrate(function(y) 2*exp(-y), 0, Inf)
+#sum of x and y in 2e^{-(2x+y)}
+
 
 ```
 
 
 
 ### b) Finn ved integrasjon av den simultane sannsynlighetstettheten
-\( f(x,y) \) hva som blir sannsynligheten for at summen av X og Y er under 2. Det vil si finn \( P(X + Y < 2) \).
 
-
-
-
-
-
+( f(x,y) ) hva som blir sannsynligheten for at summen av X og Y er under 2. Det vil si finn ( P(X + Y \< 2) ).
 
 \clearpage
 
@@ -379,3 +454,10 @@ Nå er vi interessert i hva som blir summen av X og Y.
 ::: {#refs}
 :::
 
+\clearpage
+
+\appendix
+
+\section {Appendix Oppgave 5 KI bruk}
+
+Jeg har brukt ChatGPT til å spørre om referering til pdf dokument der kode er hentet fra. Den ga meg da koden jeg la i references.bib filen. <https://chat.openai.com/share/dc97e9f2-7002-4df9-a01d-28f2ad22ad56>
