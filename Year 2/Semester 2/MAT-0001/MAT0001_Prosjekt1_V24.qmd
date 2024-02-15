@@ -1,0 +1,195 @@
+---
+title: "Prosjekt 1, MAT-0001 Vår 2024"
+date: last-modified 
+date-format: "DD-MM-YYYY"
+editor: visual
+abstract: | 
+    | 
+    | I denne oppgaven er det brukt KI til å skrive inn oppgave tekst. Nøyaktig bruk er dokumentert på siste side.
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+format: 
+  pdf:
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+    toc-title: "Innholdsfortegnelse"
+    toc: true
+    toccolor: black
+warning: false
+echo: true
+nocite: |
+  @*
+---
+
+## Oppgave 1
+
+### Følgende ulikheter bestemmer et område i $(xy)$-planet
+
+$$3x - 2y \leq 6, \>\>\>\> y \leq x, \>\>\>\> |x| \leq 2$$
+
+### a) Skraver området, og bestem områdets hjørner.
+
+### b) Finn alle vinklene og sidelengdene til området.
+
+### c) Regn ut arealet til området.
+
+### d) Finn største og minste verdi til funksjonen
+
+$$ f(x, y) = 2x + 2y$$ i det skraverte området.
+
+## Oppgave 2
+
+Anta du manøvrerer ett Boeing 737 passasjerfly som 35 000 ft over bakken holder marsjfart på 453 (knop) i forhold til bakken. Videre kan du lese på dashboardet at makshastigheten oppgis som 583 mph.
+
+### a) Oppgi makshastigheten både i m/s, km/h, knop og ft/s. \\
+
+\textbf{Hint:} bruk Tabell 1. \\ Når man flyr er \`\`tre til en''-regelen for nedstigning nyttig. Denne forteller hvor brå nedstigningen din maksimalt kan være uten at det blir ubehagelig for passasjerene dine. Regelen sier at du skal avlegge 3 nautiske mil for hver 1000 feet med nedstigning.
+
+### b) Flygelederen ønsker at du skal synke til høyde på 1000 ft like før du når flyplassen.
+
+#### i) Anta du følger 3 : 1 regelen. Beregn hvor langt fra flyplassen du bør begynne nedstigningen.
+
+#### ii) Hvor lang tid tar det å nedstige til denne høyden?
+
+```{=tex}
+\begin{table}
+\begin{tabular}{@{}llllll@{}}
+\toprule
+       & m/s    & km/h   & mph    & knop   & ft/s   \\ \midrule
+1 m/s  & 1      & 3,6000 & 2,2369 & 1,9438 & 3,2898 \\
+1 km/h & 0,2778 & 1      & 0,6214 & 0,5400 & 0,9113 \\
+1 mph  & 0,4470 & 1,6093 & 1      & 0,8690 & 1,4667 \\
+1 knop & 0,5144 & 1,8520 & 1,1508 & 1      & 1,6878 \\
+1 ft/s & 0,3048 & 1,0973 & 0,6818 & 0,5924 & 1      \\ \bottomrule
+\end{tabular}
+\caption{Sammenheng mellom ofte brukte enheter for hastighet}
+\end{table}
+```
+La oss avslutningsvis ta ett ekte eksempel på hvorfor det er viktig å kunne regne mellom ulike enheter. Katastrofen inntraff i tidsrommet hvor Canada’s luftfart var i ferd med å bytte til det metriske systemet. Som en del av denne prosessen anskaffet av Air Canada nye (på det tidspunktet) Boeing 767. Som var de første flyene kalibrert for metriske enheter (liter og kilogram) og ikke empiriske enheter (gallons og pounds), mens resten av flåten til Air Canada fortsatt brukte empiriske enheter. Flyturen vi skal se nærmere på skjer mellom Montreal og Edmonton og for turen beregnet piloten at flyet ville trenge 22 300 kilogram (49 200 lbs) med drivstoff. En målepinne ble senket ned i drivstofftanken og målte at det var 7 682 liter allerede i tanken. For å beregne hvor mye drivstoff som må legges til måtte bakkepersonellet først konvertere volumet (i liter) i tankene til masse (kilogram), trekke dette fra den ønskede drivstoffmengden (22 300 kg) og konvertere resultatet tilbake til volum.
+
+Volumet til ﬂydrivstoffet Jet A1 varierer med temperaturen, men i dette tilfellet var massen til en liter ﬂybensin gitt som 0,803 kg.
+
+### c) (i) Bestem hvor mye Jet A1 bakkepersonellet burde fylle ﬂyet med.
+
+#### (ii) Vis at massen til en liter ﬂybensin i pound er gitt som 1, 77lbs.
+
+Katastrofalt nok var ikke bakkepersonellet klar over at dette ﬂyet brukte metriske og ikke emperiske enheter. Kort sagt antok de at ﬂyet ville trenge 22 300 pound drivstof to talt.
+
+#### (iii) Gjenta beregningen ovenfor i oppgave 2c)(i) når du tar i betraktning at bakkepersonellet antok ﬂyet brukte em piriske enheter. Hvor mye bensin ble fylt på ? Vis at ﬂyet nå totalt inneholder ca. 10 100 kg drivstof.
+
+Det oppgis at ﬂytypen Boeing 767 har en marsjhastighet på 858 km/h, og ett drivstoforbruk på ca. 2 690 kg/h per ﬂymotor 767 har to slike motorer.
+
+### d) (i) Bruk opplysningene ovenfor til å vise at ﬂyet klarer å ﬂy ca.1 613 km før ﬂyet går tom for drifstof og motorene stopper.
+
+#### (ii) Hvor i Canada går ﬂyet tom for drivstof?
+
+Hint: Lag en sirkel som starter i Montreal ﬂyplass, og har radius lik ﬂydistansen til motorene stoppet. Lag en sirkel med sentrum i Edmonton ﬂyplass, og øk radiusen til sirkelene skjærer hverandre (kan brukes https://www.mapdevelopers.com/draw-circle-tool.php.) Det viser seg at ﬂyet i virkeligheten går tom for drivstof over Red Lake, Ontario. Nærmeste ﬂyplass er Winnipeg ﬂyplass, men ”Gimli Motorsports Park” ligger og i nærheten en nedlagt militærﬂyplass omgjort til dragrace og go-kart bane.
+
+Pilotene befant seg 41 000 ft over bakken når motorene skrudde seg av, og deretter falt flyet i snitt 3 300 ft per 10 nautiske mil.
+
+### e) (i) Legg med en figur på innleveringen med sirkel i Montreal flyplass, og radius lik flydistansen. En sirkel med sentrum i Winnipeg flyplass og ”Gimli Motorsports Park” med radius lik distansen flyet klarte å gli. Zoom inn slik at du tydelig ser Winnipeg, og området der flyet gikk tom for drivstoff.
+
+#### (ii) Avgør hvor Boeing 767 rekker å gjøre en nødlanding.
+
+## Oppgave 3
+
+![](Flyfigur.png)
+
+Høyden til en flyvinge kalles for vingekorden, mens bredden defineres som vingespennet, se Figure 2. Ofte varierer vingekorden, og vi definerer derfor middelkorden (MAC, dvs. Mean Aerodinamic Chord) som den gjennomsnittlige høyden til vingekorden.
+
+### a) (i) Finn en formel som beskriver sammenhengen mellom arealet til vingen sett ovenfra, vingespennet og middelkorden.
+
+Sideforhold for fly er definert som forholdet mellom en vinges lengde (vingespenn) og bredde (middelkorde), og har et symbol
+
+$$AR = \frac{b}{MAC}$$
+
+#### (ii) Vis ved hjelp av forrige deloppgave at sideforholdet kan
+
+$$ AR = \frac{b^2}{A} $$
+
+hvor b betegner vingespennet og A er arealet til vingen sett ovenfra.
+
+### b) Finn vingespennet og arealet til flyvingen sett ovenfra (dette betegnes ofte som arealet til tversnittet av flyvingen) for en flytype du er kjent med. Bruk disse til å regne ut sideforholdet
+
+fornuftig avrundet.
+
+### c) Forklart kort (2-3 setninger) hvordan sideforholdet påvirker et fly.
+
+## Oppgave 4
+
+La $f(x)$ være en funksjon gitt ved
+
+$$ f(x) = \frac{3x^2 - 6x}{x^2 + 3x - 10} \div \frac{x - 3}{x^2 - 2x - 3} $$
+
+### a)\] Skriv uttrykket for $f(x)$ så enkelt som mulig.
+
+\textbf{Hint:} Bruk (abc)-formelen.
+
+### b) Bestem definisjonsmengden for \$ f(x) \$.
+
+### c) Finn eventuelle horisontale og vertikale asymptoter for $f(x)$.
+
+### d) Finn skrå asymptoter for $f(x)$.
+
+### e) Skisser grafen til $f(x)$ ut fra det du fant i a)-d).
+
+Pass på $D_f$!
+
+\appendix
+
+\section {Appendix Bilde utregning oppgave 1}
+
+![](Mat0001_Oppgv1.jpg)
+
+\section {Appendix Bilde utregning oppgave 2}
+
+\section {Appendix Bilde utregning oppgave 3}
+
+\section {Appendix Bilde utregning oppgave 4}
+
+\section {Appendix Bilde utregning oppgave 5}
+
+\section {Appendix Bilde utregning oppgave 6}
+
+\section {Appendix KI bruk}
+
+Jeg har tatt skjermbilde av oppgave teksten fra pdf'en og bedt ChatGPT skrive dette som LaTeX kode.
+
+Dette bildet er også lagt ut på github siden.
+
+![](ChatGPT_chat.png)
