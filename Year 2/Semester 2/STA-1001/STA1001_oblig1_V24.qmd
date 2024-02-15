@@ -454,10 +454,4 @@ Ja den betingede sannsynlighetstettheten er ikke avhengig av y
 ::: {#refs}
 :::
 
-\clearpage
 
-\appendix
-
-\section {Appendix Oppgave 5 KI bruk}
-
-Jeg har brukt ChatGPT til å spørre om referering til pdf dokument der kode er hentet fra. Den ga meg da koden jeg la i references.bib filen. <https://chat.openai.com/share/dc97e9f2-7002-4df9-a01d-28f2ad22ad56>
