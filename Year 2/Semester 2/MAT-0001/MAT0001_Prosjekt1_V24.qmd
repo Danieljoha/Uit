@@ -178,13 +178,15 @@ Pass på $D_f$!
 
 \section {Appendix Bilde utregning oppgave 2}
 
+![](mat0001_oppgave2ab.jpg)
+
+![](mat0001_oppgave2c.jpg)
+
+![](Mat0001_oppgv2d_e.jpg)
+
 \section {Appendix Bilde utregning oppgave 3}
 
 \section {Appendix Bilde utregning oppgave 4}
-
-\section {Appendix Bilde utregning oppgave 5}
-
-\section {Appendix Bilde utregning oppgave 6}
 
 \section {Appendix KI bruk}
 
