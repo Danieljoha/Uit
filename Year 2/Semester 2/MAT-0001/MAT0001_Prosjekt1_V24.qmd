@@ -64,9 +64,73 @@ $$3x - 2y \leq 6, \>\>\>\> y \leq x, \>\>\>\> |x| \leq 2$$
 
 ### a) Skraver området, og bestem områdets hjørner.
 
+
+$3x - 2y \leq 6$: Denne linjen deler planet i to, hvor området på og under linjen er inkludert.
+$y \leq x$: Dette betyr at det skraverte området må ligge på eller under linjen $y = x$.
+$|x| \leq 2$: Dette begrenser $x$-verdiene til å være mellom $-2$ og $2$, inkludert disse verdiene.
+
+
+Beregner så ut hva funksjonen er
+
+$2y=-3x-6$
+
+$\frac{2y}{2} = \frac{-3x - 6}{2}$ 
+
+$y = 1.5x -3$ 
+
+Så vi ser at ved x=0, så er y=-3, ved laveste verdi $x=-2$så finner vi $y=-6$, og ved høyeste verdi $x=2$ så finner vi $y=0$. så vi har da hjørner på $-2x-6$, dersom $x=-2$så får vi $y= -2\cdot1.5 -3 = -6$, dersom $x=2$ $y=2 \cdot 1.5-3=0$. 
+
+
+
+
+```{python}
+import numpy as np
+from matplotlib import pyplot as plt
+x = np.linspace(-2, 2, 100)
+#|x| \leq 2
+
+
+
+def funksjon(x):
+    return 1.5*x -3
+
+
+fig, ax = plt.subplots()
+#3x - 2y \leq 6
+ax.plot(x, funksjon(x), color='black')
+ax.fill_between(x, funksjon(x), color='grey', alpha=0.5)
+ax.plot(x, 0*x, color='black')
+ax.vlines(-2, funksjon(-2), 0, color='black')
+
+
+
+
+
+#, \>\>\>\> y \leq x, \>\>\>\> 
+#plotting in the next line
+
+ax.set_xlim(-4, 4)
+ax.set_ylim(-8, 8)
+
+#dashed line at y=0
+ax.hlines(0, -4, 4, color='black', linestyle='dashed')
+ax.vlines(0, -8, 8, color='black', linestyle='dashed')
+
+
+plt.show();
+```
+
+
+
 ### b) Finn alle vinklene og sidelengdene til området.
 
+Sidelengdene er 6 og 4. og som vi ser er ene vinkelen 90 grader som gir oss en rettvinklet trekant.
+
+$4^2  + 6^2 = c^2 = 52^2 => \sqrt52$ altså 7.2
+
 ### c) Regn ut arealet til området.
+
+$6\cdot 4 = \frac{24}{2}=12$
 
 ### d) Finn største og minste verdi til funksjonen
 
@@ -148,7 +212,15 @@ hvor b betegner vingespennet og A er arealet til vingen sett ovenfra.
 
 fornuftig avrundet.
 
+
+https://iopscience.iop.org/article/10.1088/1757-899X/764/1/012026/pdf
+
+side 6
+
+
 ### c) Forklart kort (2-3 setninger) hvordan sideforholdet påvirker et fly.
+
+
 
 ## Oppgave 4
 
@@ -186,7 +258,11 @@ Pass på $D_f$!
 
 \section {Appendix Bilde utregning oppgave 3}
 
+![](Mat0001_oppgave3.jpg)
+
 \section {Appendix Bilde utregning oppgave 4}
+
+![](Mat0001_oppgave4.jpg)
 
 \section {Appendix KI bruk}
 
