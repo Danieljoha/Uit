@@ -1,0 +1,174 @@
+---
+title: "OBLIGATORISK INNLEVERING 2, STA-1001 2024"
+date: last-modified 
+date-format: "DD-MM-YYYY"
+editor: visual
+abstract: | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+    | 
+format: 
+  pdf:
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+    toc-title: "Innholdsfortegnelse"
+    toc: true
+    toccolor: black
+warning: false
+echo: true
+keep-tex: true
+bibliography: references.bib
+csl: norsk-apa-manual.csl
+nocite: |
+  @*
+header-includes:
+  - \usepackage{cancel}
+---
+
+\newpage
+
+## OBLIGATORISK INNLEVERING 2, STA-1001 2024
+
+### INNLEVERINGSFRIST TIRSDAG 12/3 KL 23:59
+
+Oppgavene er fra kapittel 4 - 7. Øvinga leveres som pdf i Canvas.
+
+## 1
+
+De stokastiske variablene $X$ og $Y$ har simultan sannsynlighetstetthet $$
+f(x,y) = 
+\begin{cases}
+\frac{1}{2} \sqrt y e^{xy}, & 0 < x < \infty, \ 1 < y < 4. \\
+0, & \text{ellers}.
+\end{cases}
+$$
+
+### a) Vis at fordelinga for $Y$ (marginalfordeling) har sannsynlighetstetthet
+
+$$ h(y) = \frac{1}{2\sqrt{y}}, 1 < y < 4. $$
+
+### b) Finn forventningsverdi, varians og standardavvik for $Y$.
+
+### c) Bruk den simultane sannsynlighetstettheten til å finne $E(XY)$ og $E(X)$.
+
+Hva blir kovariansen mellom $X$ og $Y$?
+
+Vi er interessert i den stokastiske variabelen $1/Y$.
+
+### d) Finn forventningsverdi og varians for $1/Y$.
+
+## 2
+
+Ola samler på spillerkort av fotballspillere (fotballkort). Korta kjøper han ett og ett av gangen, men de er innpakka så han veit ikke på forhand om det er et kort han allerede har eller ikke. Vi går ut fra at alle korta han kjøper er fra en spesiell serie med 10 ulike spillerkort, at det i hvert kjøp er lik sannsynlighet for alle de 10 ulike spillerkorta, og at resultata av kortkjøpa er uavhengige. Ola ønsker seg framfor alt ett bestemt spillerkort (vi kaller han spiller A). La $X$ være antall kort han må kjøpe til han får dette kortet.
+
+### a) Forklar hvorfor antakelsene til geometrisk fordeling er oppfylt.
+
+### b) Hva er sannsynligheten for at han får spillerkortet på det fjerde kjøpet?
+
+### c) Dersom han ikke fikk spillerkortet på det første kjøpet, hva er sannsynligheten for at han skal få det på det femte?
+
+Vi vil se på det som en teoretisk egenskap ved geometrisk fordeling. Vi antar i b) at antall kjøpte kort følger geometrisk fordeling med generell sannsynlighet $p$.
+
+### b) Bruk punktsannsynligheten til geometrisk fordeling til å vise at
+
+$$ E(X) = \frac{1}{p} $$
+
+La oss nå tenke oss at det er to spillkort (spiller A og B) Ola spesielt ønsker seg, og at han kjøper kort til han har fått begge. La $X$ være antall kjøp til han får det første av disse spillerkorta, og la $Y$ være antall kjøp etter han fikk det første til han får det andre. La $T$ være hvor mange kort han må kjøpe totalt for å få disse to spillerkorta:
+
+$$ T = X + Y $$
+
+### c) Argumentér kort for hvorfor $X$ og $Y$ er uavhengige, og hva som blir fordeling for hver enkelt.
+
+Bruk formler for forventning/varians i geometrisk fordeling til å finne forventning og varians til $T$.
+
+### d) Argumenter for hva som er fordelinga for antallet kort i pakka som er med spiller A?
+
+Hva er sansynligheten for at Ola får minst ett kort med spiller A i pakka?
+
+### e) Hva er forventa antall ulike spillerkort i pakka? (Hint: Indikatorvariabler for hvert spillerkort.)
+
+## 3
+
+Vi definerer en enhet av en råvare (kan være gull, olje, korn, etc) som den mengden du får kjøpt for M NOK (det er ikke viktig hva M er). Du regner med at om du kjøper en enhet av vare A blir fortjenesta etter ett år normalfordelt med forventning $\mu$A = 50 NOK og standardavvik $\sigma$ A = 100 NOK. Vi kaller fortjenesta X:
+
+### a) Om du kjøper en slik enhet av vare A hva blir sannsynligheten for
+
+#### at du ikke går med tap (det vil si får positiv fortjeneste)?
+
+#### at du ikke går med tap og at fortjenesten er mindre enn 150?
+
+#### at du får fortjeneste mindre enn 150, gitt at du ikke går med tap?
+
+### b) Finn fortjenesten som er slik at du er 80% sikker på å få en fortjeneste over dette.
+
+(I oppgave c) er fortsatt standardavviket 100 NOK.)
+
+### c) Hva må forventningsverdien være for å ha en sannsynlighet på 90% for ikke å gå med tap
+
+## 4
+
+Vi definerer igjen en enhet av en vare som den mengden du får kjøpt for M NOK. Nå vil du kjøpe to varer, vare A og vare B, og du regner med at fortjenestene for en enhet etter ett år er respektive
+
+$$ 
+X ∼ N(\mu A, \sigma A) \> \> \> \> \> \text{og} \> \> \> \> \> Y ∼ N(\mu B , \sigma B )
+$$ Vi antar og at X og Y er uavhengige
+
+Vi vil se på total fortjeneste etter ett år om du til sammen har kjøpt for beløpet M , men bruker 30% på vare A og 70% på vare B, altså total fortjeneste gitt ved:
+
+$$
+T = 0.3 · X + 0.7 · Y
+$$
+
+I oppgave a) og b) går vi ut fra at $\mu$A = 50, $\mu$B = 50, $\sigma$A = 100 og $\sigma$B = 50.
+
+### a) Finn forventningsverdien og variansen til den totale fortjenesta.
+
+Hva blir fordelinga til den totale fortjenesta?
+
+### b) Bruk fordelinga fra a) til å finne et 95% prediksjonsintervall for den totale fortjenesta.
+
+Nå går vi ut fra at du vil kjøpe varer av type A og B slik at total forjeneste blir $$
+T = aX + bY,
+$$ der $a + b = 1$ og a og b er ikke-negative.
+
+Du ønsker å finne hva a (og b) må være for at variansen i fortjenesta skal bli minst mulig.
+
+### c) Hva blir uttrykket for variansen til T ?
+
+Hva er den verdien av a (uttrykt ved $\sigma$A og $\sigma$B ) som gjør variansen for fortjenesta minst mulig? Hva blir variansen til fortjenesta (uttrykt ved $\sigma$A og $\sigma$B ) med denne verdian for A?
+
+Frivillig: Anta igjen $\sigma$A = 100, $\sigma$B = 50, og lag en figur for variansen til T som funksjon av a.

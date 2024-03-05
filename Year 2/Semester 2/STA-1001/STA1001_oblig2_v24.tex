@@ -1,0 +1,418 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  12pt,
+  a4paper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[top=20mm,left=20mm,heightrounded]{geometry}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\KOMAoption{captions}{tableheading}
+\usepackage{cancel}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={OBLIGATORISK INNLEVERING 2, STA-1001 2024},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{OBLIGATORISK INNLEVERING 2, STA-1001 2024}
+\author{}
+\date{02-03-2024}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\hfill\break
+\end{abstract}
+
+\renewcommand*\contentsname{Innholdsfortegnelse}
+{
+\hypersetup{linkcolor=black}
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\newpage
+
+\subsection{OBLIGATORISK INNLEVERING 2, STA-1001
+2024}\label{obligatorisk-innlevering-2-sta-1001-2024}
+
+\subsubsection{INNLEVERINGSFRIST TIRSDAG 12/3 KL
+23:59}\label{innleveringsfrist-tirsdag-123-kl-2359}
+
+Oppgavene er fra kapittel 4 - 7. Øvinga leveres som pdf i Canvas.
+
+\subsection{1}\label{section}
+
+De stokastiske variablene \(X\) og \(Y\) har simultan
+sannsynlighetstetthet \[
+f(x,y) = 
+\begin{cases}
+\frac{1}{2} \sqrt y e^{xy}, & 0 < x < \infty, \ 1 < y < 4. \\
+0, & \text{ellers}.
+\end{cases}
+\]
+
+\subsubsection{\texorpdfstring{a) Vis at fordelinga for \(Y\)
+(marginalfordeling) har
+sannsynlighetstetthet}{a) Vis at fordelinga for Y (marginalfordeling) har sannsynlighetstetthet}}\label{a-vis-at-fordelinga-for-y-marginalfordeling-har-sannsynlighetstetthet}
+
+\[ h(y) = \frac{1}{2\sqrt{y}}, 1 < y < 4. \]
+
+\subsubsection{\texorpdfstring{b) Finn forventningsverdi, varians og
+standardavvik for
+\(Y\).}{b) Finn forventningsverdi, varians og standardavvik for Y.}}\label{b-finn-forventningsverdi-varians-og-standardavvik-for-y.}
+
+\subsubsection{\texorpdfstring{c) Bruk den simultane
+sannsynlighetstettheten til å finne \(E(XY)\) og
+\(E(X)\).}{c) Bruk den simultane sannsynlighetstettheten til å finne E(XY) og E(X).}}\label{c-bruk-den-simultane-sannsynlighetstettheten-til-uxe5-finne-exy-og-ex.}
+
+Hva blir kovariansen mellom \(X\) og \(Y\)?
+
+Vi er interessert i den stokastiske variabelen \(1/Y\).
+
+\subsubsection{\texorpdfstring{d) Finn forventningsverdi og varians for
+\(1/Y\).}{d) Finn forventningsverdi og varians for 1/Y.}}\label{d-finn-forventningsverdi-og-varians-for-1y.}
+
+\subsection{2}\label{section-1}
+
+Ola samler på spillerkort av fotballspillere (fotballkort). Korta kjøper
+han ett og ett av gangen, men de er innpakka så han veit ikke på forhand
+om det er et kort han allerede har eller ikke. Vi går ut fra at alle
+korta han kjøper er fra en spesiell serie med 10 ulike spillerkort, at
+det i hvert kjøp er lik sannsynlighet for alle de 10 ulike spillerkorta,
+og at resultata av kortkjøpa er uavhengige. Ola ønsker seg framfor alt
+ett bestemt spillerkort (vi kaller han spiller A). La \(X\) være antall
+kort han må kjøpe til han får dette kortet.
+
+\subsubsection{a) Forklar hvorfor antakelsene til geometrisk fordeling
+er
+oppfylt.}\label{a-forklar-hvorfor-antakelsene-til-geometrisk-fordeling-er-oppfylt.}
+
+\subsubsection{b) Hva er sannsynligheten for at han får spillerkortet på
+det fjerde
+kjøpet?}\label{b-hva-er-sannsynligheten-for-at-han-fuxe5r-spillerkortet-puxe5-det-fjerde-kjuxf8pet}
+
+\subsubsection{c) Dersom han ikke fikk spillerkortet på det første
+kjøpet, hva er sannsynligheten for at han skal få det på det
+femte?}\label{c-dersom-han-ikke-fikk-spillerkortet-puxe5-det-fuxf8rste-kjuxf8pet-hva-er-sannsynligheten-for-at-han-skal-fuxe5-det-puxe5-det-femte}
+
+Vi vil se på det som en teoretisk egenskap ved geometrisk fordeling. Vi
+antar i b) at antall kjøpte kort følger geometrisk fordeling med
+generell sannsynlighet \(p\).
+
+\subsubsection{b) Bruk punktsannsynligheten til geometrisk fordeling til
+å vise
+at}\label{b-bruk-punktsannsynligheten-til-geometrisk-fordeling-til-uxe5-vise-at}
+
+\[ E(X) = \frac{1}{p} \]
+
+La oss nå tenke oss at det er to spillkort (spiller A og B) Ola spesielt
+ønsker seg, og at han kjøper kort til han har fått begge. La \(X\) være
+antall kjøp til han får det første av disse spillerkorta, og la \(Y\)
+være antall kjøp etter han fikk det første til han får det andre. La
+\(T\) være hvor mange kort han må kjøpe totalt for å få disse to
+spillerkorta:
+
+\[ T = X + Y \]
+
+\subsubsection{\texorpdfstring{c) Argumentér kort for hvorfor \(X\) og
+\(Y\) er uavhengige, og hva som blir fordeling for hver
+enkelt.}{c) Argumentér kort for hvorfor X og Y er uavhengige, og hva som blir fordeling for hver enkelt.}}\label{c-argumentuxe9r-kort-for-hvorfor-x-og-y-er-uavhengige-og-hva-som-blir-fordeling-for-hver-enkelt.}
+
+Bruk formler for forventning/varians i geometrisk fordeling til å finne
+forventning og varians til \(T\).
+
+\subsubsection{d) Argumenter for hva som er fordelinga for antallet kort
+i pakka som er med spiller
+A?}\label{d-argumenter-for-hva-som-er-fordelinga-for-antallet-kort-i-pakka-som-er-med-spiller-a}
+
+Hva er sansynligheten for at Ola får minst ett kort med spiller A i
+pakka?
+
+\subsubsection{e) Hva er forventa antall ulike spillerkort i pakka?
+(Hint: Indikatorvariabler for hvert
+spillerkort.)}\label{e-hva-er-forventa-antall-ulike-spillerkort-i-pakka-hint-indikatorvariabler-for-hvert-spillerkort.}
+
+\subsection{3}\label{section-2}
+
+Vi definerer en enhet av en råvare (kan være gull, olje, korn, etc) som
+den mengden du får kjøpt for M NOK (det er ikke viktig hva M er). Du
+regner med at om du kjøper en enhet av vare A blir fortjenesta etter ett
+år normalfordelt med forventning \(\mu\)A = 50 NOK og standardavvik
+\(\sigma\) A = 100 NOK. Vi kaller fortjenesta X:
+
+\subsubsection{a) Om du kjøper en slik enhet av vare A hva blir
+sannsynligheten
+for}\label{a-om-du-kjuxf8per-en-slik-enhet-av-vare-a-hva-blir-sannsynligheten-for}
+
+\paragraph{at du ikke går med tap (det vil si får positiv
+fortjeneste)?}\label{at-du-ikke-guxe5r-med-tap-det-vil-si-fuxe5r-positiv-fortjeneste}
+
+\paragraph{at du ikke går med tap og at fortjenesten er mindre enn
+150?}\label{at-du-ikke-guxe5r-med-tap-og-at-fortjenesten-er-mindre-enn-150}
+
+\paragraph{at du får fortjeneste mindre enn 150, gitt at du ikke går med
+tap?}\label{at-du-fuxe5r-fortjeneste-mindre-enn-150-gitt-at-du-ikke-guxe5r-med-tap}
+
+\subsubsection{b) Finn fortjenesten som er slik at du er 80\% sikker på
+å få en fortjeneste over
+dette.}\label{b-finn-fortjenesten-som-er-slik-at-du-er-80-sikker-puxe5-uxe5-fuxe5-en-fortjeneste-over-dette.}
+
+(I oppgave c) er fortsatt standardavviket 100 NOK.)
+
+\subsubsection{c) Hva må forventningsverdien være for å ha en
+sannsynlighet på 90\% for ikke å gå med
+tap}\label{c-hva-muxe5-forventningsverdien-vuxe6re-for-uxe5-ha-en-sannsynlighet-puxe5-90-for-ikke-uxe5-guxe5-med-tap}
+
+\subsection{4}\label{section-3}
+
+Vi definerer igjen en enhet av en vare som den mengden du får kjøpt for
+M NOK. Nå vil du kjøpe to varer, vare A og vare B, og du regner med at
+fortjenestene for en enhet etter ett år er respektive
+
+\[ 
+X ∼ N(\mu A, \sigma A) \> \> \> \> \> \text{og} \> \> \> \> \> Y ∼ N(\mu B , \sigma B )
+\] Vi antar og at X og Y er uavhengige
+
+Vi vil se på total fortjeneste etter ett år om du til sammen har kjøpt
+for beløpet M , men bruker 30\% på vare A og 70\% på vare B, altså total
+fortjeneste gitt ved:
+
+\[
+T = 0.3 · X + 0.7 · Y
+\]
+
+I oppgave a) og b) går vi ut fra at \(\mu\)A = 50, \(\mu\)B = 50,
+\(\sigma\)A = 100 og \(\sigma\)B = 50.
+
+\subsubsection{a) Finn forventningsverdien og variansen til den totale
+fortjenesta.}\label{a-finn-forventningsverdien-og-variansen-til-den-totale-fortjenesta.}
+
+Hva blir fordelinga til den totale fortjenesta?
+
+\subsubsection{b) Bruk fordelinga fra a) til å finne et 95\%
+prediksjonsintervall for den totale
+fortjenesta.}\label{b-bruk-fordelinga-fra-a-til-uxe5-finne-et-95-prediksjonsintervall-for-den-totale-fortjenesta.}
+
+Nå går vi ut fra at du vil kjøpe varer av type A og B slik at total
+forjeneste blir \[
+T = aX + bY,
+\] der \(a + b = 1\) og a og b er ikke-negative.
+
+Du ønsker å finne hva a (og b) må være for at variansen i fortjenesta
+skal bli minst mulig.
+
+\subsubsection{c) Hva blir uttrykket for variansen til T
+?}\label{c-hva-blir-uttrykket-for-variansen-til-t}
+
+Hva er den verdien av a (uttrykt ved \(\sigma\)A og \(\sigma\)B ) som
+gjør variansen for fortjenesta minst mulig? Hva blir variansen til
+fortjenesta (uttrykt ved \(\sigma\)A og \(\sigma\)B ) med denne verdian
+for A?
+
+Frivillig: Anta igjen \(\sigma\)A = 100, \(\sigma\)B = 50, og lag en
+figur for variansen til T som funksjon av a.
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-Elvebakk2023}
+Elvebakk, G. (2023). \emph{Introduksjon til r i STA-1001: Del 2:
+Funksjoner og fordelingsfunksjoner}.
+\url{https://uit.instructure.com/courses/33518/files/2871351?wrap=1}
+
+\bibitem[\citeproctext]{ref-kristensen_2019_sannsynlighetsregning}
+Kristensen, Ø. \& Wikan, A. (2019). \emph{Sannsynlighetsregning og
+statistikk - for høyere utdanning} (2nd ed., p. 29). Fagbokforlaget.
+
+\end{CSLReferences}
+
+
+
+\end{document}
