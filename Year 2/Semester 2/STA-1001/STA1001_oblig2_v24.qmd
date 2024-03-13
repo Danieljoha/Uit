@@ -53,8 +53,6 @@ echo: true
 keep-tex: true
 bibliography: references.bib
 csl: norsk-apa-manual.csl
-nocite: |
-  @*
 header-includes:
   - \usepackage{cancel}
 ---
@@ -72,7 +70,7 @@ Oppgavene er fra kapittel 4 - 7. Øvinga leveres som pdf i Canvas.
 De stokastiske variablene $X$ og $Y$ har simultan sannsynlighetstetthet $$
 f(x,y) = 
 \begin{cases}
-\frac{1}{2} \sqrt y e^{xy}, & 0 < x < \infty, \ 1 < y < 4. \\
+\frac{1}{2} \sqrt y e^{-xy}, & 0 < x < \infty, \ 1 < y < 4. \\
 0, & \text{ellers}.
 \end{cases}
 $$
@@ -81,31 +79,85 @@ $$
 
 $$ h(y) = \frac{1}{2\sqrt{y}}, 1 < y < 4. $$
 
+```{python}
+from IPython.display import display
+import sympy as sp
+x, y = sp.symbols('x y')
+oppgave1a = sp.integrate((1/2)*sp.sqrt(y)*sp.exp(-x*y), (x, 0, sp.oo))
+display(oppgave1a)
+```
+
+Utregning
+
+![](oblig2_utregning/oppgave1_a.jpg)
+
 ### b) Finn forventningsverdi, varians og standardavvik for $Y$.
+
+```{python}
+# Beregner E(Y)
+E_Y = sp.integrate(y * oppgave1a, (y, 1, 4))
+
+# Beregner E(Y^2)
+E_Y2 = sp.integrate(y**2 * oppgave1a, (y, 1, 4))
+
+# Beregner variansen for Y
+var = E_Y2 - E_Y**2
+
+# Beregner standardavviket for Y
+std = sp.sqrt(var)
+
+print(f"Forventningsverdien er {round(E_Y, 2)}\nVariansen er {round(var, 2)} \nStandardavviket er {round(std, 2)}.")
+
+```
+
+![](oblig2_utregning/oppgave1_b.jpg)
 
 ### c) Bruk den simultane sannsynlighetstettheten til å finne $E(XY)$ og $E(X)$.
 
 Hva blir kovariansen mellom $X$ og $Y$?
 
+![](oblig2_utregning/oppgave1_c_feil.jpg)
+
 Vi er interessert i den stokastiske variabelen $1/Y$.
 
 ### d) Finn forventningsverdi og varians for $1/Y$.
+
+![](oblig2_utregning/oppgave1_d.jpg)
 
 ## 2
 
 Ola samler på spillerkort av fotballspillere (fotballkort). Korta kjøper han ett og ett av gangen, men de er innpakka så han veit ikke på forhand om det er et kort han allerede har eller ikke. Vi går ut fra at alle korta han kjøper er fra en spesiell serie med 10 ulike spillerkort, at det i hvert kjøp er lik sannsynlighet for alle de 10 ulike spillerkorta, og at resultata av kortkjøpa er uavhengige. Ola ønsker seg framfor alt ett bestemt spillerkort (vi kaller han spiller A). La $X$ være antall kort han må kjøpe til han får dette kortet.
 
-### a) Forklar hvorfor antakelsene til geometrisk fordeling er oppfylt.
+#### a1) Forklar hvorfor antakelsene til geometrisk fordeling er oppfylt.
 
-### b) Hva er sannsynligheten for at han får spillerkortet på det fjerde kjøpet?
+Det er en konstant sannsynlighet for suksess på hvert forsøk.
 
-### c) Dersom han ikke fikk spillerkortet på det første kjøpet, hva er sannsynligheten for at han skal få det på det femte?
+Forsøkene er uavhengige av hverandre. utfallet av et kjøp ikke påvirker utfallet av de neste.
+
+Forsøket blir gjentatt til første suksess
+
+Det er to mulige utfall på hvert forsøk, enten får han kortet eller ikke.
+
+#### a2) Hva er sannsynligheten for at han får spillerkortet på det fjerde kjøpet?
+
+```{python}
+sjangse = 1/10
+x_num = 4
+q_num = 1-sjangse
+
+oppgave_2_b = sjangse*q_num**(x_num-1)
+oppgave_2_b
+```
+
+#### a3) Dersom han ikke fikk spillerkortet på det første kjøpet, hva er sannsynligheten for at han skal få det på det femte?
+
+det samme som i a3)
 
 Vi vil se på det som en teoretisk egenskap ved geometrisk fordeling. Vi antar i b) at antall kjøpte kort følger geometrisk fordeling med generell sannsynlighet $p$.
 
 ### b) Bruk punktsannsynligheten til geometrisk fordeling til å vise at
 
-$$ E(X) = \frac{1}{p} $$
+$$ E(X) = \frac{1}{p} $$ Punktssannsynligheten til geometrisk fordeling er gitt ved $P(X = k) = (1-p)^{k-1}p$ så forventningsverdien blir $E(X) = \sum_{k=1}^{\infty} k(1-p)^{k-1}p$. summen av denne rekken er $E(X) = \frac{1}{p}$
 
 La oss nå tenke oss at det er to spillkort (spiller A og B) Ola spesielt ønsker seg, og at han kjøper kort til han har fått begge. La $X$ være antall kjøp til han får det første av disse spillerkorta, og la $Y$ være antall kjøp etter han fikk det første til han får det andre. La $T$ være hvor mange kort han må kjøpe totalt for å få disse to spillerkorta:
 
@@ -113,13 +165,41 @@ $$ T = X + Y $$
 
 ### c) Argumentér kort for hvorfor $X$ og $Y$ er uavhengige, og hva som blir fordeling for hver enkelt.
 
+$X$ og $Y$ er uavhengige fordi utfallet av kjøpene som leder til det første ønskede kortet ikke påvirker utfallet av kjøpene etter det første ønskede kortet er oppnådd. Når Ola starter jakten på det andre kortet, resettes situasjonen til en ny geometrisk fordeling. Fordelingen av X starter med p=$2/10$ fordi det er to kort han ønsker seg, og for Y starter fordelingen med p=$1/9$ fordi det nå kun er ett kort han ønsker seg.
+
 Bruk formler for forventning/varians i geometrisk fordeling til å finne forventning og varians til $T$.
+
+$$E(X) = \frac{1}{p}$$ $E(T) = E(X) + E(Y)$ fordi $T = X + Y$ og $X$ og $Y$ er uavhengige. så $E(T) = \frac{1}{p} + \frac{1}{p} = \frac{2}{p}$ setter inn for tall: $E(T) = \frac{1}{\frac{2}{2/10}} + \frac{1}{\frac{1}{9}} = 14$
+
+$$Var(X) = \frac{1-p}{p^2}$$
+
+så $Var(T) = Var(X) + Var(Y)$ fordi $X$ og $Y$ er uavhengige. så $Var(T) = \frac{1-p}{p^2} + \frac{1-p}{p^2} = \frac{2(1-p)}{p^2}$. setter inn for tall: $Var(T) = \frac{(1-2/10)}{(2/10)^2} + \frac{1-\frac{1}{9}}{(\frac{1}{9})^2} = 92$
 
 ### d) Argumenter for hva som er fordelinga for antallet kort i pakka som er med spiller A?
 
+Fordelingen for antall kort i pakka er en binomisk fordeling med n=10 og p=1/10. Dette er fordi det er 10 kort i pakka og sannsynligheten for at et kort er spiller A er 1/10.
+
 Hva er sansynligheten for at Ola får minst ett kort med spiller A i pakka?
 
+```{python}
+from scipy.stats import binom
+n = 10
+p = 1/10
+k = 1
+oppgave_2_d = 1 - binom.cdf(k-1, n, p)
+oppgave_2_d
+
+```
+
 ### e) Hva er forventa antall ulike spillerkort i pakka? (Hint: Indikatorvariabler for hvert spillerkort.)
+
+Hvis vi går ut ifra at det er 10 kort i pakka så kan vi beregne forventet antall ulike spillerkort i pakka ved å summere sannsynligheten for at hvert kort blir valgt minst en gang $E(X) = 10 \cdot (1 - (9/10)^{10}) = 10 \cdot (1 - 0.3487) = 6.513$
+
+\clearpage
+
+
+![](oblig2_utregning/oppgave2.jpg)
+\clearpage
 
 ## 3
 
@@ -127,19 +207,58 @@ Vi definerer en enhet av en råvare (kan være gull, olje, korn, etc) som den me
 
 ### a) Om du kjøper en slik enhet av vare A hva blir sannsynligheten for
 
-#### at du ikke går med tap (det vil si får positiv fortjeneste)?
+#### - at du ikke går med tap (det vil si får positiv fortjeneste)?
 
-#### at du ikke går med tap og at fortjenesten er mindre enn 150?
+```{python}
+from scipy.stats import norm
 
-#### at du får fortjeneste mindre enn 150, gitt at du ikke går med tap?
+
+mu = 50  
+sigma = 100  
+
+
+
+
+1 - norm.cdf(0, mu, sigma)
+```
+
+69.15%
+
+#### - at du ikke går med tap og at fortjenesten er mindre enn 150?
+
+```{python}
+norm.cdf(150, mu, sigma) - norm.cdf(0, mu, sigma)
+```
+
+#### - at du får fortjeneste mindre enn 150, gitt at du ikke går med tap?
+
+```{python}
+(norm.cdf(150, mu, sigma) - norm.cdf(0, mu, sigma))/(1 - norm.cdf(0, mu, sigma))
+```
 
 ### b) Finn fortjenesten som er slik at du er 80% sikker på å få en fortjeneste over dette.
+
+```{python}
+norm.ppf(0.80)*100+50
+```
 
 (I oppgave c) er fortsatt standardavviket 100 NOK.)
 
 ### c) Hva må forventningsverdien være for å ha en sannsynlighet på 90% for ikke å gå med tap
 
+```{python}
+norm.ppf(0.9)*100
+```
+\clearpage
+![](oblig2_utregning/oppgave3.jpg)
+
+\clearpage
 ## 4
+
+
+Har brukt tiden min dårlig så når ikke å gjøre denne oppgaven før fristen
+
+
 
 Vi definerer igjen en enhet av en vare som den mengden du får kjøpt for M NOK. Nå vil du kjøpe to varer, vare A og vare B, og du regner med at fortjenestene for en enhet etter ett år er respektive
 

@@ -54,6 +54,46 @@
   \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
 
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{241,243,245}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
 
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
@@ -79,39 +119,6 @@
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-% definitions for citeproc citations
-\NewDocumentCommand\citeproctext{}{}
-\NewDocumentCommand\citeproc{mm}{%
-  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
-\makeatletter
- % allow citations to break across lines
- \let\@cite@ofmt\@firstofone
- % avoid brackets around text for \cite:
- \def\@biblabel#1{}
- \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
-\makeatother
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
- {\begin{list}{}{%
-  \setlength{\itemindent}{0pt}
-  \setlength{\leftmargin}{0pt}
-  \setlength{\parsep}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1
-   \setlength{\leftmargin}{\cslhangindent}
-   \setlength{\itemindent}{-1\cslhangindent}
-  \fi
-  % set entry spacing
-  \setlength{\itemsep}{#2\baselineskip}}}
- {\end{list}}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \KOMAoption{captions}{tableheading}
 \usepackage{cancel}
@@ -174,7 +181,7 @@
 
 \title{OBLIGATORISK INNLEVERING 2, STA-1001 2024}
 \author{}
-\date{02-03-2024}
+\date{12-03-2024}
 
 \begin{document}
 \maketitle
@@ -234,7 +241,7 @@ De stokastiske variablene \(X\) og \(Y\) har simultan
 sannsynlighetstetthet \[
 f(x,y) = 
 \begin{cases}
-\frac{1}{2} \sqrt y e^{xy}, & 0 < x < \infty, \ 1 < y < 4. \\
+\frac{1}{2} \sqrt y e^{-xy}, & 0 < x < \infty, \ 1 < y < 4. \\
 0, & \text{ellers}.
 \end{cases}
 \]
@@ -245,9 +252,51 @@ sannsynlighetstetthet}{a) Vis at fordelinga for Y (marginalfordeling) har sannsy
 
 \[ h(y) = \frac{1}{2\sqrt{y}}, 1 < y < 4. \]
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ IPython.display }\ImportTok{import}\NormalTok{ display}
+\ImportTok{import}\NormalTok{ sympy }\ImportTok{as}\NormalTok{ sp}
+\NormalTok{x, y }\OperatorTok{=}\NormalTok{ sp.symbols(}\StringTok{\textquotesingle{}x y\textquotesingle{}}\NormalTok{)}
+\NormalTok{oppgave1a }\OperatorTok{=}\NormalTok{ sp.integrate((}\DecValTok{1}\OperatorTok{/}\DecValTok{2}\NormalTok{)}\OperatorTok{*}\NormalTok{sp.sqrt(y)}\OperatorTok{*}\NormalTok{sp.exp(}\OperatorTok{{-}}\NormalTok{x}\OperatorTok{*}\NormalTok{y), (x, }\DecValTok{0}\NormalTok{, sp.oo))}
+\NormalTok{display(oppgave1a)}
+\end{Highlighting}
+\end{Shaded}
+
+$\displaystyle \begin{cases} \frac{0.5}{\sqrt{y}} & \text{for}\: \left|{\arg{\left(y \right)}}\right| < \frac{\pi}{2} \\\int\limits_{0}^{\infty} 0.5 \sqrt{y} e^{- x y}\, dx & \text{otherwise} \end{cases}$
+
+Utregning
+
+\includegraphics{oblig2_utregning/oppgave1_a.jpg}
+
 \subsubsection{\texorpdfstring{b) Finn forventningsverdi, varians og
 standardavvik for
 \(Y\).}{b) Finn forventningsverdi, varians og standardavvik for Y.}}\label{b-finn-forventningsverdi-varians-og-standardavvik-for-y.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Beregner E(Y)}
+\NormalTok{E\_Y }\OperatorTok{=}\NormalTok{ sp.integrate(y }\OperatorTok{*}\NormalTok{ oppgave1a, (y, }\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{))}
+
+\CommentTok{\# Beregner E(Y\^{}2)}
+\NormalTok{E\_Y2 }\OperatorTok{=}\NormalTok{ sp.integrate(y}\OperatorTok{**}\DecValTok{2} \OperatorTok{*}\NormalTok{ oppgave1a, (y, }\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{))}
+
+\CommentTok{\# Beregner variansen for Y}
+\NormalTok{var }\OperatorTok{=}\NormalTok{ E\_Y2 }\OperatorTok{{-}}\NormalTok{ E\_Y}\OperatorTok{**}\DecValTok{2}
+
+\CommentTok{\# Beregner standardavviket for Y}
+\NormalTok{std }\OperatorTok{=}\NormalTok{ sp.sqrt(var)}
+
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"Forventningsverdien er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(E\_Y, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\CharTok{\textbackslash{}n}\SpecialStringTok{Variansen er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(var, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ }\CharTok{\textbackslash{}n}\SpecialStringTok{Standardavviket er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(std, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{."}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Forventningsverdien er 2.33
+Variansen er 0.76 
+Standardavviket er 0.87.
+\end{verbatim}
+
+\includegraphics{oblig2_utregning/oppgave1_b.jpg}
 
 \subsubsection{\texorpdfstring{c) Bruk den simultane
 sannsynlighetstettheten til å finne \(E(XY)\) og
@@ -255,10 +304,14 @@ sannsynlighetstettheten til å finne \(E(XY)\) og
 
 Hva blir kovariansen mellom \(X\) og \(Y\)?
 
+\includegraphics{oblig2_utregning/oppgave1_c_feil.jpg}
+
 Vi er interessert i den stokastiske variabelen \(1/Y\).
 
 \subsubsection{\texorpdfstring{d) Finn forventningsverdi og varians for
 \(1/Y\).}{d) Finn forventningsverdi og varians for 1/Y.}}\label{d-finn-forventningsverdi-og-varians-for-1y.}
+
+\includegraphics{oblig2_utregning/oppgave1_d.jpg}
 
 \subsection{2}\label{section-1}
 
@@ -271,17 +324,43 @@ og at resultata av kortkjøpa er uavhengige. Ola ønsker seg framfor alt
 ett bestemt spillerkort (vi kaller han spiller A). La \(X\) være antall
 kort han må kjøpe til han får dette kortet.
 
-\subsubsection{a) Forklar hvorfor antakelsene til geometrisk fordeling
-er
-oppfylt.}\label{a-forklar-hvorfor-antakelsene-til-geometrisk-fordeling-er-oppfylt.}
+\paragraph{a1) Forklar hvorfor antakelsene til geometrisk fordeling er
+oppfylt.}\label{a1-forklar-hvorfor-antakelsene-til-geometrisk-fordeling-er-oppfylt.}
 
-\subsubsection{b) Hva er sannsynligheten for at han får spillerkortet på
+Det er en konstant sannsynlighet for suksess på hvert forsøk.
+
+Forsøkene er uavhengige av hverandre. utfallet av et kjøp ikke påvirker
+utfallet av de neste.
+
+Forsøket blir gjentatt til første suksess
+
+Det er to mulige utfall på hvert forsøk, enten får han kortet eller
+ikke.
+
+\paragraph{a2) Hva er sannsynligheten for at han får spillerkortet på
 det fjerde
-kjøpet?}\label{b-hva-er-sannsynligheten-for-at-han-fuxe5r-spillerkortet-puxe5-det-fjerde-kjuxf8pet}
+kjøpet?}\label{a2-hva-er-sannsynligheten-for-at-han-fuxe5r-spillerkortet-puxe5-det-fjerde-kjuxf8pet}
 
-\subsubsection{c) Dersom han ikke fikk spillerkortet på det første
-kjøpet, hva er sannsynligheten for at han skal få det på det
-femte?}\label{c-dersom-han-ikke-fikk-spillerkortet-puxe5-det-fuxf8rste-kjuxf8pet-hva-er-sannsynligheten-for-at-han-skal-fuxe5-det-puxe5-det-femte}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sjangse }\OperatorTok{=} \DecValTok{1}\OperatorTok{/}\DecValTok{10}
+\NormalTok{x\_num }\OperatorTok{=} \DecValTok{4}
+\NormalTok{q\_num }\OperatorTok{=} \DecValTok{1}\OperatorTok{{-}}\NormalTok{sjangse}
+
+\NormalTok{oppgave\_2\_b }\OperatorTok{=}\NormalTok{ sjangse}\OperatorTok{*}\NormalTok{q\_num}\OperatorTok{**}\NormalTok{(x\_num}\OperatorTok{{-}}\DecValTok{1}\NormalTok{)}
+\NormalTok{oppgave\_2\_b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.0729
+\end{verbatim}
+
+\paragraph{a3) Dersom han ikke fikk spillerkortet på det første kjøpet,
+hva er sannsynligheten for at han skal få det på det
+femte?}\label{a3-dersom-han-ikke-fikk-spillerkortet-puxe5-det-fuxf8rste-kjuxf8pet-hva-er-sannsynligheten-for-at-han-skal-fuxe5-det-puxe5-det-femte}
+
+det samme som i a3)
 
 Vi vil se på det som en teoretisk egenskap ved geometrisk fordeling. Vi
 antar i b) at antall kjøpte kort følger geometrisk fordeling med
@@ -291,7 +370,10 @@ generell sannsynlighet \(p\).
 å vise
 at}\label{b-bruk-punktsannsynligheten-til-geometrisk-fordeling-til-uxe5-vise-at}
 
-\[ E(X) = \frac{1}{p} \]
+\[ E(X) = \frac{1}{p} \] Punktssannsynligheten til geometrisk fordeling
+er gitt ved \(P(X = k) = (1-p)^{k-1}p\) så forventningsverdien blir
+\(E(X) = \sum_{k=1}^{\infty} k(1-p)^{k-1}p\). summen av denne rekken er
+\(E(X) = \frac{1}{p}\)
 
 La oss nå tenke oss at det er to spillkort (spiller A og B) Ola spesielt
 ønsker seg, og at han kjøper kort til han har fått begge. La \(X\) være
@@ -306,19 +388,67 @@ spillerkorta:
 \(Y\) er uavhengige, og hva som blir fordeling for hver
 enkelt.}{c) Argumentér kort for hvorfor X og Y er uavhengige, og hva som blir fordeling for hver enkelt.}}\label{c-argumentuxe9r-kort-for-hvorfor-x-og-y-er-uavhengige-og-hva-som-blir-fordeling-for-hver-enkelt.}
 
+\(X\) og \(Y\) er uavhengige fordi utfallet av kjøpene som leder til det
+første ønskede kortet ikke påvirker utfallet av kjøpene etter det første
+ønskede kortet er oppnådd. Når Ola starter jakten på det andre kortet,
+resettes situasjonen til en ny geometrisk fordeling. Fordelingen av X
+starter med p=\(2/10\) fordi det er to kort han ønsker seg, og for Y
+starter fordelingen med p=\(1/9\) fordi det nå kun er ett kort han
+ønsker seg.
+
 Bruk formler for forventning/varians i geometrisk fordeling til å finne
 forventning og varians til \(T\).
+
+\[E(X) = \frac{1}{p}\] \(E(T) = E(X) + E(Y)\) fordi \(T = X + Y\) og
+\(X\) og \(Y\) er uavhengige. så
+\(E(T) = \frac{1}{p} + \frac{1}{p} = \frac{2}{p}\) setter inn for tall:
+\(E(T) = \frac{1}{\frac{2}{2/10}} + \frac{1}{\frac{1}{9}} = 14\)
+
+\[Var(X) = \frac{1-p}{p^2}\]
+
+så \(Var(T) = Var(X) + Var(Y)\) fordi \(X\) og \(Y\) er uavhengige. så
+\(Var(T) = \frac{1-p}{p^2} + \frac{1-p}{p^2} = \frac{2(1-p)}{p^2}\).
+setter inn for tall:
+\(Var(T) = \frac{(1-2/10)}{(2/10)^2} + \frac{1-\frac{1}{9}}{(\frac{1}{9})^2} = 92\)
 
 \subsubsection{d) Argumenter for hva som er fordelinga for antallet kort
 i pakka som er med spiller
 A?}\label{d-argumenter-for-hva-som-er-fordelinga-for-antallet-kort-i-pakka-som-er-med-spiller-a}
 
+Fordelingen for antall kort i pakka er en binomisk fordeling med n=10 og
+p=1/10. Dette er fordi det er 10 kort i pakka og sannsynligheten for at
+et kort er spiller A er 1/10.
+
 Hva er sansynligheten for at Ola får minst ett kort med spiller A i
 pakka?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ scipy.stats }\ImportTok{import}\NormalTok{ binom}
+\NormalTok{n }\OperatorTok{=} \DecValTok{10}
+\NormalTok{p }\OperatorTok{=} \DecValTok{1}\OperatorTok{/}\DecValTok{10}
+\NormalTok{k }\OperatorTok{=} \DecValTok{1}
+\NormalTok{oppgave\_2\_d }\OperatorTok{=} \DecValTok{1} \OperatorTok{{-}}\NormalTok{ binom.cdf(k}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, n, p)}
+\NormalTok{oppgave\_2\_d}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.6513215599000001
+\end{verbatim}
 
 \subsubsection{e) Hva er forventa antall ulike spillerkort i pakka?
 (Hint: Indikatorvariabler for hvert
 spillerkort.)}\label{e-hva-er-forventa-antall-ulike-spillerkort-i-pakka-hint-indikatorvariabler-for-hvert-spillerkort.}
+
+Hvis vi går ut ifra at det er 10 kort i pakka så kan vi beregne
+forventet antall ulike spillerkort i pakka ved å summere sannsynligheten
+for at hvert kort blir valgt minst en gang
+\(E(X) = 10 \cdot (1 - (9/10)^{10}) = 10 \cdot (1 - 0.3487) = 6.513\)
+
+\clearpage
+
+\includegraphics{oblig2_utregning/oppgave2.jpg} \clearpage
 
 \subsection{3}\label{section-2}
 
@@ -332,18 +462,70 @@ regner med at om du kjøper en enhet av vare A blir fortjenesta etter ett
 sannsynligheten
 for}\label{a-om-du-kjuxf8per-en-slik-enhet-av-vare-a-hva-blir-sannsynligheten-for}
 
-\paragraph{at du ikke går med tap (det vil si får positiv
+\paragraph{- at du ikke går med tap (det vil si får positiv
 fortjeneste)?}\label{at-du-ikke-guxe5r-med-tap-det-vil-si-fuxe5r-positiv-fortjeneste}
 
-\paragraph{at du ikke går med tap og at fortjenesten er mindre enn
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ scipy.stats }\ImportTok{import}\NormalTok{ norm}
+
+
+\NormalTok{mu }\OperatorTok{=} \DecValTok{50}  
+\NormalTok{sigma }\OperatorTok{=} \DecValTok{100}  
+
+
+
+
+\DecValTok{1} \OperatorTok{{-}}\NormalTok{ norm.cdf(}\DecValTok{0}\NormalTok{, mu, sigma)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.6914624612740131
+\end{verbatim}
+
+69.15\%
+
+\paragraph{- at du ikke går med tap og at fortjenesten er mindre enn
 150?}\label{at-du-ikke-guxe5r-med-tap-og-at-fortjenesten-er-mindre-enn-150}
 
-\paragraph{at du får fortjeneste mindre enn 150, gitt at du ikke går med
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{norm.cdf(}\DecValTok{150}\NormalTok{, mu, sigma) }\OperatorTok{{-}}\NormalTok{ norm.cdf(}\DecValTok{0}\NormalTok{, mu, sigma)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.532807207342556
+\end{verbatim}
+
+\paragraph{- at du får fortjeneste mindre enn 150, gitt at du ikke går
+med
 tap?}\label{at-du-fuxe5r-fortjeneste-mindre-enn-150-gitt-at-du-ikke-guxe5r-med-tap}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(norm.cdf(}\DecValTok{150}\NormalTok{, mu, sigma) }\OperatorTok{{-}}\NormalTok{ norm.cdf(}\DecValTok{0}\NormalTok{, mu, sigma))}\OperatorTok{/}\NormalTok{(}\DecValTok{1} \OperatorTok{{-}}\NormalTok{ norm.cdf(}\DecValTok{0}\NormalTok{, mu, sigma))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.7705511682598991
+\end{verbatim}
 
 \subsubsection{b) Finn fortjenesten som er slik at du er 80\% sikker på
 å få en fortjeneste over
 dette.}\label{b-finn-fortjenesten-som-er-slik-at-du-er-80-sikker-puxe5-uxe5-fuxe5-en-fortjeneste-over-dette.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{norm.ppf(}\FloatTok{0.80}\NormalTok{)}\OperatorTok{*}\DecValTok{100}\OperatorTok{+}\DecValTok{50}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+134.16212335729142
+\end{verbatim}
 
 (I oppgave c) er fortsatt standardavviket 100 NOK.)
 
@@ -351,7 +533,26 @@ dette.}\label{b-finn-fortjenesten-som-er-slik-at-du-er-80-sikker-puxe5-uxe5-fuxe
 sannsynlighet på 90\% for ikke å gå med
 tap}\label{c-hva-muxe5-forventningsverdien-vuxe6re-for-uxe5-ha-en-sannsynlighet-puxe5-90-for-ikke-uxe5-guxe5-med-tap}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{norm.ppf(}\FloatTok{0.9}\NormalTok{)}\OperatorTok{*}\DecValTok{100}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+128.15515655446004
+\end{verbatim}
+
+\clearpage
+
+\includegraphics{oblig2_utregning/oppgave3.jpg}
+
+\clearpage
+
 \subsection{4}\label{section-3}
+
+Har brukt tiden min dårlig så når ikke å gjøre denne oppgaven før
+fristen
 
 Vi definerer igjen en enhet av en vare som den mengden du får kjøpt for
 M NOK. Nå vil du kjøpe to varer, vare A og vare B, og du regner med at
@@ -399,19 +600,6 @@ for A?
 
 Frivillig: Anta igjen \(\sigma\)A = 100, \(\sigma\)B = 50, og lag en
 figur for variansen til T som funksjon av a.
-
-\phantomsection\label{refs}
-\begin{CSLReferences}{1}{0}
-\bibitem[\citeproctext]{ref-Elvebakk2023}
-Elvebakk, G. (2023). \emph{Introduksjon til r i STA-1001: Del 2:
-Funksjoner og fordelingsfunksjoner}.
-\url{https://uit.instructure.com/courses/33518/files/2871351?wrap=1}
-
-\bibitem[\citeproctext]{ref-kristensen_2019_sannsynlighetsregning}
-Kristensen, Ø. \& Wikan, A. (2019). \emph{Sannsynlighetsregning og
-statistikk - for høyere utdanning} (2nd ed., p. 29). Fagbokforlaget.
-
-\end{CSLReferences}
 
 
 
