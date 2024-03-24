@@ -113,8 +113,7 @@ df_bnp %>%
 
 Økonomien i 1920 årene var ustabil. I figurene ser vi økning i gini koeffisient i store årlige endringer i BNP per person, men også vekst i BNP per person. Det er på grunn av økningen i kroneverdien. Figuren med BNP viser en relativt stabil økning fra 1920 der verdien i log faste 2005 kroner ligger på 10.7, hvor den har steget til 10.9 i 1930. Inntektsulikheten øker fra 0.56 til 0.575 i samme periode. Vi tror dette er fordi arbeidsledigheten i perioden var stor. I tillegg vil de som har penger i banken dra god nytte av at kronen øker i verdi, som igjen vil bety mest for de øvrige desilene.
 
-I 1931 gikk Norge vekk i fra "parikursen" på kronen og det vises i figurene med positiv årlig økning i BNP, gini koeffisienten jevner seg også noenlunde ut. Inntektsulikheten fortsetter å øke frem til krigen
-bryter ut i 1939. Etter 1945 ser vi at inntektsulikheten reduseres med at gini koeffisienten minker jevnt fra omntrent 0.50 til det laveste på 0.40 i 1980.
+I 1931 gikk Norge vekk i fra "parikursen" på kronen og det vises i figurene med positiv årlig økning i BNP, gini koeffisienten jevner seg også noenlunde ut. Inntektsulikheten fortsetter å øke frem til krigen bryter ut i 1939. Etter 1945 ser vi at inntektsulikheten reduseres med at gini koeffisienten minker jevnt fra omntrent 0.50 til det laveste på 0.40 i 1980.
 
 # Oppgave II - 20%
 
@@ -234,12 +233,7 @@ Her følger fire eksempler på tema dere kan, men ikke nødvendigvis må velge. 
 
 I besvarelsen skal dere forklare hvorfor dataene er relevante og gi en grundig beskrivelse av deres utvikling. Lengden på besvarelsen skal være på 750 - 1500 ord.
 
-De harde tjueårene kjennetegnes fort med høy rente samtidig
-som det var deflasjon. Vi hadde Nikolai Rygg som ønsket av kronen skulle komme
-til før krigs tiden og være bunnet til gull. Pengepolitikken han drev på blir
-kalt «paripolitikkk». Målet til paripolitkk i Norge var å få markedsverdien til
-kronen tilbake til «gullpariteten». Det vil si verdien av pengene skulle være
-verdt det samme som før første verdenskrig målt i gull. I denne teksten igjennom går vi igjennom effekten pengepolitikken hadde på økonomien i Norge.
+De harde tjueårene kjennetegnes fort med høy rente samtidig som det var deflasjon. Vi hadde Nikolai Rygg som ønsket av kronen skulle komme til før krigs tiden og være bunnet til gull. Pengepolitikken han drev på blir kalt «paripolitikkk». Målet til paripolitkk i Norge var å få markedsverdien til kronen tilbake til «gullpariteten». Det vil si verdien av pengene skulle være verdt det samme som før første verdenskrig målt i gull. I denne teksten igjennom går vi igjennom effekten pengepolitikken hadde på økonomien i Norge.
 
 ```{r}
 suppressPackageStartupMessages(library(jsonlite))
