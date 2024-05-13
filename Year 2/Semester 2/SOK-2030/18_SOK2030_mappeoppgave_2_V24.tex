@@ -54,6 +54,46 @@
   \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
 
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{241,243,245}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
 
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
@@ -79,6 +119,39 @@
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \KOMAoption{captions}{tableheading}
 \usepackage{wrapfig}
@@ -89,6 +162,12 @@
 \usepackage{tikz}
 \usepackage{tabularx}
 \renewcommand{\maketitle}{}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\rightmark}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{\thepage}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -201,7 +280,12 @@
 \hypersetup{linkcolor=blue}
 \newpage
 
-\section{1. Oppgave 1 (30\%)}\label{oppgave-1-30}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Oppgave 1 (30\%)
+\end{enumerate}
 
 Olivita AS ble etablert i 2002 av to professorer fra Universitetet i
 Tromsø (UiT). Selskapet tilbyr kosttilskuddet Olivita, som inneholder
@@ -221,64 +305,86 @@ Omega-3 produktene. I produksjon av Omega-3 produktene vil begge
 bedriftene ha konstante marginalkostnader på kr 50 per produsert flaske.
 Faste kostnader for begge bedriftene er på 3 millioner kroner.
 
-\subsection{a) Hva blir optimal tilpasning i dette markedet når Olivita kan gjøre sine strategiske valg før konkurrenten, Dr Choice AS, gjør sitt valg?}\label{a-hva-blir-optimal-tilpasning-i-dette-markedet-nuxe5r-olivita-kan-gjuxf8re-sine-strategiske-valg-fuxf8r}
+\subsection{Optimal tilpasning}\label{optimal-tilpasning}
+
+\subsubsection{a) Hva blir optimal tilpasning i dette markedet når Olivita kan gjøre sine strategiske valg før konkurrenten, Dr Choice AS, gjør sitt valg?}\label{a-hva-blir-optimal-tilpasning-i-dette-markedet-nuxe5r-olivita-kan-gjuxf8re-sine-strategiske-valg-fuxf8r}
 
 Da det er sekvensielle valg og de har samme kostnader så bruker jeg
 stackelberg modellen som modellerer hvordan aktørene tar valg i en
 sekvensiell rekkefølge. Stackelberg modellen er en modell som brukes for
 å analysere hvilket kvantum som produseres av hver aktør i et marked når
 en aktør tar sitt valg først og den andre aktøren tar sitt valg etterpå.
+Stackelberg er en Oligopolmodell som er en modell for markeder med få
+aktører.
+
+Denne modellen løses i to trinn der lederbedriften Olivita velger sitt
+kvantum i trinn 1, men modellen løses baklengs ved at vi først løser
+trinn 2. Grunnen til dette er at Olivita vil finne ut Dr Choice AS sin
+beste reaksjonsfunksjon til enhver mengde Olivita produserer. Dette gjør
+at Olivita kan maksimere sin egen profitt ved å velge kvantum som gir
+høyest profitt gitt Dr Choice AS sin reaksjon. (Pepall et al., 2014, s.
+265-268)
 
 Vi har da profittfunksjonene for begge bedriftene ved å ta markedspris
 per enhet minus marginalkostnad, multiplisert med kvantum solgt, minus
-faste kostnader. \[
+faste kostnader.
+
+\begin{align*}
 \pi_O=(P-50) \cdot q_O-3000000 \\
 \pi_C=(P-50) \cdot q_C-3000000
+\end{align*}
+
+Begge bedriftene har samme marginalkostnader og faste kostnader så jeg
+skriver disse som en felles profitt funksjon. Jeg gjør det også på
+generell form da utskriftene fra utregning blir rotete.
+
+\[
+\pi = Q_O \cdot (a - b \cdot (Q_O + Q_C) - c) 
+\] Som sagt skal trinn 2 løses først så ved å derivere profitten til Dr
+Choice AS med hensyn på \(Q_C\) får jeg:
+
+\[
+\frac{\partial \pi}{\partial Q_C} = a- bQ_C - b(Q_O + Q_C) 
+\] Når denne nå settes lik null får jeg reaksjons funksjonen til Dr
+Choice AS. \[
+RF2 = Q_C= \frac{a-bQ_O - c}{2b}
+\] Denne settes så inn i profittfunksjonen til Olivita og derivert med
+hensyn på \(Q_O\) for å finne reaksjonsfunksjonen til Olivita.
+
+\begin{align*}
+\frac{\pi}{\partial Q_O} &= a - bQ_O - b(Q_O + \frac{a-bQ_O - c}{2b}) - c \\
+&= \frac{a}{2} - bQ_O - \frac{c}{2}
+\end{align*}
+
+Denne settes lik null og løses for \(Q_O\) for å finne optimalt kvantum
+for Olivita som velger sitt kvantum først. \[
+RF1 = Q_O = \frac{a-c}{2b}
 \]
 
-Og setter inn for \(P\) fra den inverse etterspørselsfunksjonen:
-
-$\displaystyle π_{O} = q_{C} \left(- 0.0166666666666667 q_{C} - 0.0166666666666667 q_{O} + 940\right) - 3000000$
-
-$\displaystyle π_{C} = q_{O} \left(- 0.0166666666666667 q_{C} - 0.0166666666666667 q_{O} + 940\right) - 3000000$
-
-I stackelberg modellen så starter man med trinn 2, som er å finne
+Vi setter den så inn i reaksjonsfunksjonen til Dr Choice AS for å finne
 optimalt kvantum for Dr Choice AS.
 
-Så jeg starter med å derivere profitten til Dr Choice AS med hensyn på
-\(q_C\) og setter lik 0 for å finne optimalt kvantum for Dr Choice AS.
+\[
+Q_C = \frac{\frac{a}{2}-\frac{c}{2}}{2b} = \frac{a-c}{4b}
+\] Da Q = \(Q_O + Q_C\) så kan vi finne optimalt kvantum for begge
+bedriftene og prisen i markedet.
 
-$\displaystyle - 0.0166666666666667 q_{C} - 0.0333333333333333 q_{O} + 940$
-
-For å nå finne reaksjonsfunksjonen til Dr Choice AS så løser vi
-ligningen for \(q_C\).
-
-$\displaystyle 28200.0 - 0.5 q_{C}$
-
-Vi setter så inn reaksjonsfunksjonen til Dr Choice AS i profitten til
-Olivita.
-
-$\displaystyle π_{O} = q_{C} \left(470.0 - 0.00833333333333333 q_{C}\right) - 3000000$
-
-Vi finner så optimalt kvantum for Olivita ved å derivere profitten til
-Olivita med hensyn på \(q_C\) og setter lik 0.
-
-$\displaystyle 470.0 - 0.0166666666666667 q_{C}$
-
-Da kan vi finne kvantum for Olivita ved å løse ligningen for \(q_C\).
-
-$\displaystyle 28200.0$
-
-reaksjon\_olivitas
-
-Så setter vi inn kvantum for Olivita i
-
-$\displaystyle 14100.0$
+\begin{align*}
+P &= a - b(Q_O + Q_C) \\
+&= a- b(\frac{a-c}{2b} + \frac{a- c}{4b}) \\
+&= \frac{a}{4} + \frac{c}{4}
+\end{align*}
 
 Vi kan nå finne markedsprisen ved å sette inn kvantum for begge
 bedriftene i den inverse etterspørselen.
 
 $\displaystyle 285.0$
+
+Og kvantumet til begge blir
+
+\begin{verbatim}
+Kvantum for Olivitas: 28200 og Kvantum for Dr Choice AS: 14100. Det totale kvantumet i markedet er 42300 til en pris på 285.
+\end{verbatim}
 
 Og profitten til begge bedriftene
 
@@ -286,18 +392,68 @@ $\displaystyle π_{O} = 3627000.0$
 
 $\displaystyle π_{C} = 313500.0$
 
-\subsection{b) Vil det være en fordel for Olivita å ha mulighet til å
+\newpage
+
+\subsubsection{b) Vil det være en fordel for Olivita å ha mulighet til å
 gjøre sine valg før konkurrenten gjør sitt
 valg?}\label{b-vil-det-vuxe6re-en-fordel-for-olivita-uxe5-ha-mulighet-til-uxe5-gjuxf8re-sine-valg-fuxf8r-konkurrenten-gjuxf8r-sitt-valg}
 
-Det virker sånn men for å finne ut dette så vil jeg også teste dersom
-Olivitas ikke får gjøre sitt valg først.
+Ja det vil være en fordel for Olivita men for å bekrefte dette så vil
+jeg beregne hvilket kvantum de ville valgt i en vanlig cournot modell
+uten sekvensiell valg.
 
-her masse stuff f f f f
+Jeg gjøre dette igjen på generell form for å så sette inn tall. \[
+P = a - b(Q_O + Q_C)
+\] Marginalkostnaden til begge bedriftene er konstant og lik og for å
+finne etterspørselsfunksjonen for hver bedrift betraktes produsert
+mengde for den andre bedrift som konstant.
+
+Etterspørselen til Dr Choice AS er gitt ved: \[
+P_C = (a  + bQ_O)-bQ_C
+\] For å finne optimalt kvantum for Dr Choice AS så derivertes profitten
+til Dr Choice AS med hensyn på \(Q_C\) for å finne marginalinnekten.
+
+\begin{align*}
+\pi_C = (P_C - c)Q_C = (a  + bQ_O - bQ_C - c)Q_C \\
+\frac{\pi_C}{\partial Q_C} = (a - bQ_O) - 2bQ_C
+\end{align*}
+
+Dette gir oss optimalt kvantum for Dr Choice AS ved å sette lik marginal
+kostnad. \[
+Q_C = \frac{a - c}{2b} - \frac{Q_O}{2}
+\]
+
+Vi kan så finne reaksjonsfunksjonen til Olivita ved å sette dette
+kvantumet inn i etterspørselen til Olivita. \[
+Q_O = \frac{a - c}{2b} - \frac{Q_C}{2}
+\] Vi løser denne ved å sette inn for \(Q_C\) \[
+Q_O = \frac{a - c}{2b} - \left(\frac{\frac{a - c}{2b} - \frac{Q_O}{2}}{2}\right)
+\] Som endelig gir oss \[
+Q_O = \frac{a - c}{3b} = Q_C
+\]
+
+Vi kan nå finne markedsprisen ved å sette inn kvantum for begge
+bedriftene i den inverse etterspørselen.
+
+\begin{verbatim}
+Optimalt kvantum for Q_O er 18800 og for Q_C er 18800. 
+Så det totale kvantumet blir 37600 og markedsprisen blir 363.33
+\end{verbatim}
+
+Så vi kan se at dersom Olivita ikke får gjøre sitt valg først så vil det
+totale kvantumet i markedet være 37600 som er lavere enn det totale
+kvantumet under stackelberg på 42300. Det er derimot en høyere pris på
+363 istedet for 285.
 
 \clearpage
 
-\section{Oppgave 2 (70\%)}\label{oppgave-2-70}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Oppgave 2 (70\%)
+\end{enumerate}
 
 Markedet for produksjon av mikroøl består av tre lokale bryggerier:
 Graff Brygghus, Bryggeri 13 og Mack Mikrobryggeri. Etterspørselen i
@@ -363,24 +519,138 @@ Brygghus?}\label{c-hva-blir-de-samfunnsuxf8konomiske-konsekvensene-av-en-fusjon-
 
 \section{Referanser}\label{referanser}
 
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-pepall2014}
+Pepall, L., Richards, D. J. \& Norman, G. (2014). \emph{Industrial
+organization: Contemporary theory and empirical applications} (Fifth
+edition). Wiley.
+
+\end{CSLReferences}
+
+\clearpage
+
 \appendix
 
 \section {Appendix Generell KI bruk}
 
 I løpet av koden så kan det ses mange \# kommentarer der det er skrevet
-for eks ``\#fillbetween q1 and q2''. Når vi skriver kode i Visual Studio
-Code så har vi en plugin som heter Github Copilot. Når vi skriver slike
-kommentarer så kan den foresøke å fullføre kodelinjene mens vi skriver
-de. Noen ganger klarer den det, men andre ikke. Det er vanskelig å
-dokumentere hvert bruk der den er brukt siden det ``går veldig fort''
-men siden vi ikke har fått på plass en slik dokumentasjon så kan all
-python kode der det er brukt kommentarer antas som at det er brukt
-Github Copilot. Nærmere info om dette KI verktøyet kan ses på
+for eks ``\#fillbetween q1 and q2''. Når jeg skriver kode i Visual
+Studio Code så har jeg en plugin som heter Github Copilot. Når jeg
+skriver slike kommentarer så kan den foresøke å fullføre kodelinjene
+mens jeg skriver de. Noen ganger klarer den det, men andre ikke. Det er
+vanskelig å dokumentere hvert bruk der den er brukt siden det ``går
+veldig fort'' men siden jeg ikke har fått på plass en slik dokumentasjon
+så kan all python kode der det er brukt kommentarer antas som at det er
+brukt Github Copilot. Nærmere info om dette KI verktøyet kan ses på
 \url{https://github.com/features/copilot}
 
 \clearpage
 
-\section {Appendix Python kode Oppgave 1}
+\section {Appendix Python kode Oppgave 1a}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{q\_O, q\_C, p, c, f, pi\_C, pi\_O}\OperatorTok{=}\NormalTok{ sp.symbols(}\StringTok{\textquotesingle{}q\_O q\_C p c f }\CharTok{\textbackslash{}u03C0}\StringTok{\_C }\CharTok{\textbackslash{}u03C0}\StringTok{\_O\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{Invers\_etterspors }\OperatorTok{=}\NormalTok{ sp.Eq(p, (}\DecValTok{990}\OperatorTok{{-}}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{)}\OperatorTok{*}\NormalTok{(q\_C}\OperatorTok{+}\NormalTok{q\_O)))}
+
+
+\NormalTok{profitt\_1\_eq }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_O, (Invers\_etterspors.rhs}\OperatorTok{{-}}\DecValTok{50}\NormalTok{)}\OperatorTok{*}\NormalTok{q\_C}\OperatorTok{{-}}\DecValTok{3000000}\NormalTok{)}
+\NormalTok{profitt\_2\_eq }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_C, (Invers\_etterspors.rhs}\OperatorTok{{-}}\DecValTok{50}\NormalTok{)}\OperatorTok{*}\NormalTok{q\_O}\OperatorTok{{-}}\DecValTok{3000000}\NormalTok{)}
+
+
+\NormalTok{derivert\_profitt\_2 }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_2\_eq.rhs, q\_O)}
+
+\NormalTok{reaksjon\_olivitas }\OperatorTok{=}\NormalTok{ sp.solve(derivert\_profitt\_2, q\_O)[}\DecValTok{0}\NormalTok{]}
+
+\NormalTok{profitt\_1\_eq }\OperatorTok{=}\NormalTok{ profitt\_1\_eq.subs(q\_O, reaksjon\_olivitas)}
+
+\NormalTok{derivert\_profitt1 }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_1\_eq.rhs, q\_C) }\CommentTok{\#kvantum for olivitas}
+
+\NormalTok{kvantum\_olivitas }\OperatorTok{=}\NormalTok{ sp.solve(derivert\_profitt1, q\_C)[}\DecValTok{0}\NormalTok{]}
+
+\CommentTok{\#setter inn kvantum i reaksjonsfunksjonen til Dr Choice AS}
+\NormalTok{kvantum\_choice }\OperatorTok{=}\NormalTok{ reaksjon\_olivitas.subs(q\_C, kvantum\_olivitas)}\CommentTok{\#Kvantum for choice}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{markedspris }\OperatorTok{=}\NormalTok{ Invers\_etterspors.rhs.subs(\{q\_C:kvantum\_olivitas, q\_O:kvantum\_choice\})}
+\NormalTok{markedspris}
+\end{Highlighting}
+\end{Shaded}
+
+$\displaystyle 285.0$
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f\textquotesingle{}\textquotesingle{}\textquotesingle{}Kvantum for Olivitas: }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_olivitas)}\SpecialCharTok{\}}\SpecialStringTok{ og Kvantum for Dr Choice AS: }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_choice)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Kvantum for Olivitas: 28200 og Kvantum for Dr Choice AS: 14100
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{profitt\_olivitas }\OperatorTok{=}\NormalTok{ profitt\_1\_eq.rhs.subs(q\_C, kvantum\_olivitas).subs(q\_O, kvantum\_choice)}
+\NormalTok{profitt\_olivitas }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_O, profitt\_olivitas)}
+\NormalTok{profitt\_olivitas}
+\end{Highlighting}
+\end{Shaded}
+
+$\displaystyle π_{O} = 3627000.0$
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{profitt\_choice }\OperatorTok{=}\NormalTok{ profitt\_2\_eq.rhs.subs(q\_O, kvantum\_choice).subs(q\_C, kvantum\_olivitas)}
+\NormalTok{profitt\_choice }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_C, profitt\_choice)}
+\NormalTok{profitt\_choice}
+\end{Highlighting}
+\end{Shaded}
+
+$\displaystyle π_{C} = 313500.0$
+
+\clearpage
+
+\section {Appendix Python kode Oppgave 1 b}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a, b, Q\_O, Q\_C, c, f }\OperatorTok{=}\NormalTok{ sp.symbols(}\StringTok{\textquotesingle{}a b Q\_O Q\_C, c, f\textquotesingle{}}\NormalTok{)}
+
+\KeywordTok{def}\NormalTok{ P\_demand(Q):}
+    \ControlFlowTok{return}\NormalTok{ a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{Q}
+
+
+\KeywordTok{def}\NormalTok{ profit\_1(Q\_O,Q\_C):}
+    \ControlFlowTok{return}\NormalTok{ (P\_demand(Q\_O}\OperatorTok{+}\NormalTok{Q\_C)}\OperatorTok{{-}}\NormalTok{c)}\OperatorTok{*}\NormalTok{Q\_O}\OperatorTok{{-}}\NormalTok{f}
+
+\KeywordTok{def}\NormalTok{ profit\_2(Q\_O,Q\_C):}
+    \ControlFlowTok{return}\NormalTok{ (P\_demand(Q\_O}\OperatorTok{+}\NormalTok{Q\_C)}\OperatorTok{{-}}\NormalTok{c)}\OperatorTok{*}\NormalTok{Q\_C}\OperatorTok{{-}}\NormalTok{f}
+
+\NormalTok{derivert\_1 }\OperatorTok{=}\NormalTok{ sp.diff(profit\_1(Q\_O,Q\_C), Q\_O)}
+\NormalTok{derivert\_2 }\OperatorTok{=}\NormalTok{ sp.diff(profit\_2(Q\_O,Q\_C), Q\_C)}
+
+\NormalTok{eq1 }\OperatorTok{=}\NormalTok{ sp.Eq(derivert\_1, }\DecValTok{0}\NormalTok{).subs(\{a:}\DecValTok{990}\NormalTok{, b:}\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{, c:}\DecValTok{50}\NormalTok{, f:}\DecValTok{3000000}\NormalTok{\})}
+\NormalTok{eq2 }\OperatorTok{=}\NormalTok{ sp.Eq(derivert\_2, }\DecValTok{0}\NormalTok{).subs(\{a:}\DecValTok{990}\NormalTok{, b:}\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{, c:}\DecValTok{50}\NormalTok{, f:}\DecValTok{3000000}\NormalTok{\})}
+
+\NormalTok{kvantum }\OperatorTok{=}\NormalTok{ sp.solve((eq1, eq2), (Q\_O, Q\_C))}
+
+\NormalTok{markedspris }\OperatorTok{=}\NormalTok{ P\_demand(kvantum[Q\_O]}\OperatorTok{+}\NormalTok{kvantum[Q\_C])}
+
+
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f\textquotesingle{}\textquotesingle{}\textquotesingle{}Optimalt kvantum for Q\_O er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum[Q\_O])}\SpecialCharTok{\}}\SpecialStringTok{ og for Q\_C er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum[Q\_C])}\SpecialCharTok{\}}\SpecialStringTok{. }\CharTok{\textbackslash{}n}\SpecialStringTok{Så det totale kvantumet blir }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum[Q\_O]}\OperatorTok{+}\NormalTok{kvantum[Q\_C])}\SpecialCharTok{\}}\SpecialStringTok{ og markedsprisen blir }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(markedspris.subs(\{a:}\DecValTok{990}\NormalTok{, b:}\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{\}), }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Optimalt kvantum for Q_O er 18800 og for Q_C er 18800. 
+Så det totale kvantumet blir 37600 og markedsprisen blir 363.33
+\end{verbatim}
 
 \clearpage
 
