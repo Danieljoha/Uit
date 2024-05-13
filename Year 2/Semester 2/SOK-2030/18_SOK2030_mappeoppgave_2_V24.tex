@@ -1,0 +1,399 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  12pt,
+  a4paper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[top=20mm,left=20mm,heightrounded]{geometry}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+\KOMAoption{captions}{tableheading}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{cancel}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{tabularx}
+\renewcommand{\maketitle}{}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{Figurliste}
+\else
+  \newcommand\listfigurename{Figurliste}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{Tabelliste}
+\else
+  \newcommand\listtablename{Tabelliste}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figur}
+\else
+  \newcommand\figurename{Figur}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Tabell}
+\else
+  \newcommand\tablename{Tabell}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+
+\newgeometry{left=0cm, right=0cm, top=0cm, bottom=0cm}
+\vspace*{0.5cm} 
+\hspace*{1.5cm}\includegraphics[width=10cm]{dokumentobjekter/texstuff/UiT_Logo_Bok_Bla_RGB.png} 
+
+
+\begin{flushleft}
+    \vspace*{0.5cm}
+    \hspace*{2.5cm}{\color{black}\fontsize{11}{13.2}\selectfont Handelshøgskolen ved UiT \\[0.2em]
+    \hspace*{2.5cm}\color{black}\fontsize{8}{13.2}\selectfont Fakultet for biovitenskap, fiskeri og økonomi \\[0.2em]
+    \hspace*{2.5cm}\large{\color{black}\textbf{Mappeoppgave 2}}  \\[0.5em]
+    \hspace*{2.5cm}\color{black}\fontsize{12}{14.4}\selectfont Mappeoppgave 2 i: SOK-2030 Næringsøkonomi og konkurransestrategi \\[0.5em]
+\hspace*{2.5cm}\color{black}\fontsize{11}{13.2}\selectfont Kandidatnummer: 18 \\[0.5em]
+    \hspace*{2.5cm}\color{black}\fontsize{11}{13.2}\selectfont Sok-2030, Vår 2024 \\[0.5em]
+    \hspace*{2.0cm}
+    \par}
+\end{flushleft} 
+
+
+
+\begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=south west, inner sep=0] at (current page.south west) {\includegraphics[width=\paperwidth]{dokumentobjekter/texstuff/forside_bilde.png}};
+\end{tikzpicture}
+
+
+\newgeometry{left=20mm, right=20mm, top=20mm, bottom=20mm}
+
+
+
+
+
+\thispagestyle{plain}
+\begin{center}
+    \Large
+    \textbf{Sammendrag}
+\end{center}
+
+
+
+\newpage
+\hypersetup{linkcolor=black}
+\renewcommand{\contentsname}{Innholdsfortegnelse}
+\renewcommand*{\figureautorefname}{Figur}
+\renewcommand*{\tableautorefname}{Tabell}
+\tableofcontents
+\newpage
+\listoffigures
+\listoftables
+\hypersetup{linkcolor=blue}
+\newpage
+
+\section{1. Oppgave 1 (30\%)}\label{oppgave-1-30}
+
+Olivita AS ble etablert i 2002 av to professorer fra Universitetet i
+Tromsø (UiT). Selskapet tilbyr kosttilskuddet Olivita, som inneholder
+omega-3 og er utviklet for å støtte hjerte, ledd og immunforsvar.
+Produktet har vært patentbeskyttet frem til 2023, og Olivita har hatt
+eksklusiv rett til produksjon av dette omega-3 produktet. Etter
+patentets utløp har det nye selskapet Dr Choice AS kommet på markedet og
+tilbyr Easy Choice Omega-3. I markedet for omega-3 produkter vil Olivita
+AS fortsette å være en ledende aktør, mens Dr Choice AS vil utfordre som
+en nykommer.
+
+I dette marked er det følgende invers etterspørsel \[
+P = 990 - \frac{1}{60}(q_O + q_C)
+\] hvor \(q_O\) er antall solgte flasker med Olivita, \(q_C\) er antall
+solgte flasker Easy Choice Omega-3 og \(P\) er pris per flaske av
+Omega-3 produktene. I produksjon av Omega-3 produktene vil begge
+bedriftene ha konstante marginalkostnader på kr 50 per produsert flaske.
+Faste kostnader for begge bedriftene er på 3 millioner kroner.
+
+\subsection{a) Hva blir optimal tilpasning i dette markedet når Olivita kan gjøre sine strategiske valg før konkurrenten, Dr Choice AS, gjør sitt valg?}\label{a-hva-blir-optimal-tilpasning-i-dette-markedet-nuxe5r-olivita-kan-gjuxf8re-sine-strategiske-valg-fuxf8r}
+
+Da det er sekvensielle valg og de har samme kostnader så bruker jeg
+stackelberg modellen som modellerer hvordan aktørene tar valg i en
+sekvensiell rekkefølge. Stackelberg modellen er en modell som brukes for
+å analysere hvilket kvantum som produseres av hver aktør i et marked når
+en aktør tar sitt valg først og den andre aktøren tar sitt valg etterpå.
+
+Vi har da profittfunksjonene for begge bedriftene ved å ta markedspris
+per enhet minus marginalkostnad, multiplisert med kvantum solgt, minus
+faste kostnader. \[
+\pi_O=(P-50) \cdot q_O-3000000 \\
+\pi_C=(P-50) \cdot q_C-3000000
+\]
+
+Og setter inn for \(P\) fra den inverse etterspørselsfunksjonen:
+
+$\displaystyle π_{O} = q_{C} \left(- 0.0166666666666667 q_{C} - 0.0166666666666667 q_{O} + 940\right) - 3000000$
+
+$\displaystyle π_{C} = q_{O} \left(- 0.0166666666666667 q_{C} - 0.0166666666666667 q_{O} + 940\right) - 3000000$
+
+I stackelberg modellen så starter man med trinn 2, som er å finne
+optimalt kvantum for Dr Choice AS.
+
+Så jeg starter med å derivere profitten til Dr Choice AS med hensyn på
+\(q_C\) og setter lik 0 for å finne optimalt kvantum for Dr Choice AS.
+
+$\displaystyle - 0.0166666666666667 q_{C} - 0.0333333333333333 q_{O} + 940$
+
+For å nå finne reaksjonsfunksjonen til Dr Choice AS så løser vi
+ligningen for \(q_C\).
+
+$\displaystyle 28200.0 - 0.5 q_{C}$
+
+Vi setter så inn reaksjonsfunksjonen til Dr Choice AS i profitten til
+Olivita.
+
+$\displaystyle π_{O} = q_{C} \left(470.0 - 0.00833333333333333 q_{C}\right) - 3000000$
+
+Vi finner så optimalt kvantum for Olivita ved å derivere profitten til
+Olivita med hensyn på \(q_C\) og setter lik 0.
+
+$\displaystyle 470.0 - 0.0166666666666667 q_{C}$
+
+Da kan vi finne kvantum for Olivita ved å løse ligningen for \(q_C\).
+
+$\displaystyle 28200.0$
+
+reaksjon\_olivitas
+
+Så setter vi inn kvantum for Olivita i
+
+$\displaystyle 14100.0$
+
+Vi kan nå finne markedsprisen ved å sette inn kvantum for begge
+bedriftene i den inverse etterspørselen.
+
+$\displaystyle 285.0$
+
+Og profitten til begge bedriftene
+
+$\displaystyle π_{O} = 3627000.0$
+
+$\displaystyle π_{C} = 313500.0$
+
+\subsection{b) Vil det være en fordel for Olivita å ha mulighet til å
+gjøre sine valg før konkurrenten gjør sitt
+valg?}\label{b-vil-det-vuxe6re-en-fordel-for-olivita-uxe5-ha-mulighet-til-uxe5-gjuxf8re-sine-valg-fuxf8r-konkurrenten-gjuxf8r-sitt-valg}
+
+Det virker sånn men for å finne ut dette så vil jeg også teste dersom
+Olivitas ikke får gjøre sitt valg først.
+
+her masse stuff f f f f
+
+\clearpage
+
+\section{Oppgave 2 (70\%)}\label{oppgave-2-70}
+
+Markedet for produksjon av mikroøl består av tre lokale bryggerier:
+Graff Brygghus, Bryggeri 13 og Mack Mikrobryggeri. Etterspørselen i
+dette markedet er gitt ved: \[
+P = 175-4Q
+\] hvor \(P\) er markedspris per flaske mikroøl, \(Q\) er totalt kvantum
+(antall tusen flasker), som er summen av produksjonen til de tre
+bryggeriene: \(Q = q_G + q_B + q_M\), der \(q_G\) er produsert kvantum
+for Graff Brygghus, \(q_B\) er produsert kvantum for Bryggeri 13 og
+\(q_M\) er produsert kvantum for Mack Mikrobryggeri.
+
+Mack Mikrobryggeri, som er en del av Mack Ølbryggeri, har en mer
+effektiv produksjonslinje enn de to andre, med konstante
+marginalkostnader på 7 kr per flaske, mens Graff Brygghus og Bryggeri 13
+har marginalkostnader på 10 kr per flaske. Alle tre mikrobryggeriene har
+faste årlige kostnader på 300 000 kr. Styrene i selskapene Mack
+Mikrobryggeri og Bryggeri 13 har startet samtaler knyttet til mulig
+fusjon av disse to selskapene. Ved en fusjon vil all produksjon flyttes
+til Mack Mikrobryggeri. De faste kostnadene vil også reduseres ved
+sammenslåing av selskapene, og totalt utgjøre kr 500 000 per år for det
+fusjonerte selskapet.
+
+\subsection{a) Vil en slik fusjon være lønnsom for de fusjonerte
+partene?}\label{a-vil-en-slik-fusjon-vuxe6re-luxf8nnsom-for-de-fusjonerte-partene}
+
+Videre i oppgaven skal vi anta at fusjon mellom Mack Mikrobryggeri og
+Bryggeri 13 blir gjennomført, og det nye selskapet vil operere under
+navnet Mack Mikrobrygg 13. Markedet for produksjon av mikroøl vil da
+bestå av to lokale produsenter: Mack Mikrobrygg 13 og Graff Brygghus.
+For å styrke sin posisjon i markedet, investerer Graff Brygghus i nytt
+og mer effektivt produksjonsutstyr, noe som reduserer deres variable
+kostnader til kr 7 per flaske. Denne investeringen vil gi selskapet økte
+faste kostnader på kr 200.000. Totale faste kostnader for begge
+bryggeriene er da på kr 500.000 for hvert av selskapene.
+
+I restaurantbransjen i Tromsø er Restaurant Gruppen Holdig (RGH) en
+sentral aktør, som har monopol i sitt segment. RGH kjøper sitt mikroøl
+fra de to lokale produsentene Mack Mikrobrygg 13 og Graff Brygghus. For
+å drifte sine restauranter har RGH faste kostnader på kr 600.000.
+
+Etterspørselen etter mikroøl i restaurantbransjen er lik: \[
+P = 175 - 2Q
+\] hvor \(Q\) er antall solgte flasker mikroøl (antall tusen flasker)
+for RGH og \(P\) er prisen for en flaske mikroøl til sluttbruker. For å
+ytterligere styrke sin posisjon i oppstrømsmarkedet, vurderer ledelsen i
+Mack Mikrobrygg 13 en fusjon med konkurrenten Graff Brygghus. Det antas
+at denne fusjonen ikke vil resultere i kostnadsbesparelser for
+bryggeriene. Som konsulent for styret i Mack Mikrobrygg 13, er du bedt
+om å analysere markedskonsekvensene av en potensiell fusjon mellom Mack
+Mikrobrygg 13 og Graff Brygghus. Analysen skal omfatte en vurdering av
+dagens markedstilpasning og en sammenligning med tilpasningen etter en
+eventuell fusjon i oppstrømsmarkedet.
+
+\subsection{b) Basert på din analyse, vil du anbefale styret i Mack
+Mikrobrygg 13 å gjennomføre fusjon med Graff
+Brygghus?}\label{b-basert-puxe5-din-analyse-vil-du-anbefale-styret-i-mack-mikrobrygg-13-uxe5-gjennomfuxf8re-fusjon-med-graff-brygghus}
+
+\subsection{c) Hva blir de samfunnsøkonomiske konsekvensene av en fusjon
+mellom Mack Mikrobrygg 13 og Graff
+Brygghus?}\label{c-hva-blir-de-samfunnsuxf8konomiske-konsekvensene-av-en-fusjon-mellom-mack-mikrobrygg-13-og-graff-brygghus}
+
+\clearpage
+
+\section{Referanser}\label{referanser}
+
+\appendix
+
+\section {Appendix Generell KI bruk}
+
+I løpet av koden så kan det ses mange \# kommentarer der det er skrevet
+for eks ``\#fillbetween q1 and q2''. Når vi skriver kode i Visual Studio
+Code så har vi en plugin som heter Github Copilot. Når vi skriver slike
+kommentarer så kan den foresøke å fullføre kodelinjene mens vi skriver
+de. Noen ganger klarer den det, men andre ikke. Det er vanskelig å
+dokumentere hvert bruk der den er brukt siden det ``går veldig fort''
+men siden vi ikke har fått på plass en slik dokumentasjon så kan all
+python kode der det er brukt kommentarer antas som at det er brukt
+Github Copilot. Nærmere info om dette KI verktøyet kan ses på
+\url{https://github.com/features/copilot}
+
+\clearpage
+
+\section {Appendix Python kode Oppgave 1}
+
+\clearpage
+
+\section {Appendix Python kode Oppgave 2 a}
+
+\clearpage
+
+\section {Appendix Python kode Oppgave 2 b}
+
+\clearpage
+
+\section {Appendix Python kode Oppgave 2 c}
+
+
+
+\end{document}
