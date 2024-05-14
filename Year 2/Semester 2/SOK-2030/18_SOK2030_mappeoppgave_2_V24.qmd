@@ -227,37 +227,56 @@ Vi kan nå finne markedsprisen ved å sette inn kvantum for begge bedriftene i d
 
 
 ```{python}  
-a, b, Q_O, Q_C, c, f = sp.symbols('a b Q_O Q_C, c, f')
+import sympy as sp
+a, b, Q_O, Q_C, c, f, p, Q = sp.symbols('a b Q_O Q_C c f p Q')
 
-def P_demand(Q):
+def P_demand_oppgave(Q):
     return a-b*Q
 
 
-def profit_1(Q_O,Q_C):
-    return (P_demand(Q_O+Q_C)-c)*Q_O-f
+demand = sp.Eq(p, a-b*(Q_O+Q_C))
 
-def profit_2(Q_O,Q_C):
-    return (P_demand(Q_O+Q_C)-c)*Q_C-f
+income = sp.Eq(p*Q, Q*(a-b*Q))
+costs = Q*c-f
 
-derivert_1 = sp.diff(profit_1(Q_O,Q_C), Q_O)
-derivert_2 = sp.diff(profit_2(Q_O,Q_C), Q_C)
+MR = sp.solve(sp.diff(income.rhs-costs, Q), c)[0]
 
-eq1 = sp.Eq(derivert_1, 0).subs({a:990, b:1/60, c:50, f:3000000})
-eq2 = sp.Eq(derivert_2, 0).subs({a:990, b:1/60, c:50, f:3000000})
+MR1 = sp.Eq(sp.diff((a-b*(Q_O+Q_C))*Q_O-f, Q_O), c)
+RF1  = sp.solve(MR1, Q_O)[0]
 
-kvantum = sp.solve((eq1, eq2), (Q_O, Q_C))
-
-markedspris = P_demand(kvantum[Q_O]+kvantum[Q_C])
+MR2 = sp.Eq(sp.diff((a-b*(Q_C+Q_O))*Q_C-f, Q_C), c)
+RF2 = sp.solve(MR2, Q_C)[0]
 
 
-print(f'''Optimalt kvantum for Q_O er {round(kvantum[Q_O])} og for Q_C er {round(kvantum[Q_C])}. \nSå det totale kvantumet blir {round(kvantum[Q_O]+kvantum[Q_C])} og markedsprisen blir {round(markedspris.subs({a:990, b:1/60}), 2)}''')
+optimalt_kvantum1 = sp.solve(sp.Eq(RF1.subs(Q_C, RF2), Q_O))[0][Q_O]
+
+optimalt_kvantum2 = sp.solve(sp.Eq(RF2.subs(Q_O, RF1), Q_C))[0][Q_C]
+
+profitt_1 = (demand.rhs-costs).subs(Q, optimalt_kvantum1)
+
+
+markedspris = round(float(sp.solve(demand.subs({a:990, b:1/60, Q_O:optimalt_kvantum1, Q_C:optimalt_kvantum2, c: 50}), p)[0]),3)
+
+profitt_1 = (demand.rhs-costs).subs({Q_O: optimalt_kvantum1, Q_C: optimalt_kvantum2, Q: optimalt_kvantum1, f: 3000000, a: 990, b: 1/60, c: 50}) 
+profitt_2 = (demand.rhs-costs).subs({Q_O: optimalt_kvantum1, Q_C: optimalt_kvantum2, Q: optimalt_kvantum2, f: 3000000, a: 990, b: 1/60, c: 50})
+
+
+
+kvantum_QO = int(optimalt_kvantum1.subs({a:990, b:1/60, c:50, f:3000000}))
+kvantum_QC = int(optimalt_kvantum2.subs({a:990, b:1/60, c:50, f:3000000}))
+
+print(f'''Optimalt kvantum for Q_O er {kvantum_QO} og for Q_C er {kvantum_QC}. Så det totale kvantumet blir {(kvantum_QO+kvantum_QC)} og markedsprisen blir {markedspris}''')
+
+print('''Profit for Q_O: ''', round(float(profitt_1),2), '''Profit for Q_C: ''', round(float(profitt_2),2), '''\nTotal profit: ''', round(float(profitt_1),2)+round(float(profitt_2),2))
+
+
 
 
 ```
 
 Så vi kan se at dersom Olivita ikke får gjøre sitt valg først så vil det totale kvantumet i markedet være 37600 som er lavere enn det totale kvantumet under stackelberg på 42300. Det er derimot en høyere pris på 363 istedet for 285.
 
-
+kanskje nevne nash likevekt
 
 
 \clearpage
@@ -360,30 +379,49 @@ profitt_choice
 
 ```{python oppsett_oppgave1_b}
 #| echo: true
-a, b, Q_O, Q_C, c, f = sp.symbols('a b Q_O Q_C, c, f')
+import sympy as sp
+a, b, Q_O, Q_C, c, f, p, Q = sp.symbols('a b Q_O Q_C c f p Q')
 
-def P_demand(Q):
+def P_demand_oppgave(Q):
     return a-b*Q
 
 
-def profit_1(Q_O,Q_C):
-    return (P_demand(Q_O+Q_C)-c)*Q_O-f
+demand = sp.Eq(p, a-b*(Q_O+Q_C))
 
-def profit_2(Q_O,Q_C):
-    return (P_demand(Q_O+Q_C)-c)*Q_C-f
+income = sp.Eq(p*Q, Q*(a-b*Q))
+costs = Q*c-f
 
-derivert_1 = sp.diff(profit_1(Q_O,Q_C), Q_O)
-derivert_2 = sp.diff(profit_2(Q_O,Q_C), Q_C)
+MR = sp.solve(sp.diff(income.rhs-costs, Q), c)[0]
 
-eq1 = sp.Eq(derivert_1, 0).subs({a:990, b:1/60, c:50, f:3000000})
-eq2 = sp.Eq(derivert_2, 0).subs({a:990, b:1/60, c:50, f:3000000})
+MR1 = sp.Eq(sp.diff((a-b*(Q_O+Q_C))*Q_O-f, Q_O), c)
+RF1  = sp.solve(MR1, Q_O)[0]
 
-kvantum = sp.solve((eq1, eq2), (Q_O, Q_C))
-
-markedspris = P_demand(kvantum[Q_O]+kvantum[Q_C])
+MR2 = sp.Eq(sp.diff((a-b*(Q_C+Q_O))*Q_C-f, Q_C), c)
+RF2 = sp.solve(MR2, Q_C)[0]
 
 
-print(f'''Optimalt kvantum for Q_O er {round(kvantum[Q_O])} og for Q_C er {round(kvantum[Q_C])}. \nSå det totale kvantumet blir {round(kvantum[Q_O]+kvantum[Q_C])} og markedsprisen blir {round(markedspris.subs({a:990, b:1/60}), 2)}''')
+optimalt_kvantum1 = sp.solve(sp.Eq(RF1.subs(Q_C, RF2), Q_O))[0][Q_O]
+
+optimalt_kvantum2 = sp.solve(sp.Eq(RF2.subs(Q_O, RF1), Q_C))[0][Q_C]
+
+profitt_1 = (demand.rhs-costs).subs(Q, optimalt_kvantum1)
+
+
+markedspris = round(float(sp.solve(demand.subs({a:990, b:1/60, Q_O:optimalt_kvantum1, Q_C:optimalt_kvantum2, c: 50}), p)[0]),3)
+
+profitt_1 = (demand.rhs-costs).subs({Q_O: optimalt_kvantum1, Q_C: optimalt_kvantum2, Q: optimalt_kvantum1, f: 3000000, a: 990, b: 1/60, c: 50}) 
+profitt_2 = (demand.rhs-costs).subs({Q_O: optimalt_kvantum1, Q_C: optimalt_kvantum2, Q: optimalt_kvantum2, f: 3000000, a: 990, b: 1/60, c: 50})
+
+
+
+kvantum_QO = int(optimalt_kvantum1.subs({a:990, b:1/60, c:50, f:3000000}))
+kvantum_QC = int(optimalt_kvantum2.subs({a:990, b:1/60, c:50, f:3000000}))
+
+print(f'''Optimalt kvantum for Q_O er {kvantum_QO} og for Q_C er {kvantum_QC}. Så det totale kvantumet blir {(kvantum_QO+kvantum_QC)} og markedsprisen blir {markedspris}''')
+
+print('''Profit for Q_O: ''', round(float(profitt_1),2), '''Profit for Q_C: ''', round(float(profitt_2),2), '''\nTotal profit: ''', round(float(profitt_1),2)+round(float(profitt_2),2))
+
+
 
 
 ```
