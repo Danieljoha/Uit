@@ -436,14 +436,17 @@ Vi kan nå finne markedsprisen ved å sette inn kvantum for begge
 bedriftene i den inverse etterspørselen.
 
 \begin{verbatim}
-Optimalt kvantum for Q_O er 18800 og for Q_C er 18800. 
-Så det totale kvantumet blir 37600 og markedsprisen blir 363.33
+Optimalt kvantum for Q_O er 18800 og for Q_C er 18800. Så det totale kvantumet blir 37600 og markedsprisen blir 363.333
+Profit for Q_O:  2060363.33 Profit for Q_C:  2060363.33 
+Total profit:  4120726.66
 \end{verbatim}
 
 Så vi kan se at dersom Olivita ikke får gjøre sitt valg først så vil det
 totale kvantumet i markedet være 37600 som er lavere enn det totale
 kvantumet under stackelberg på 42300. Det er derimot en høyere pris på
 363 istedet for 285.
+
+kanskje nevne nash likevekt
 
 \clearpage
 
@@ -478,6 +481,13 @@ fusjonerte selskapet.
 
 \subsection{a) Vil en slik fusjon være lønnsom for de fusjonerte
 partene?}\label{a-vil-en-slik-fusjon-vuxe6re-luxf8nnsom-for-de-fusjonerte-partene}
+
+I en slik situasjon så starter jeg med å beregne hvordan markedet er før
+en fusjon ved bruk av Cournot modellen som er en modell for
+oligopolistisk konkurranse der bedriftene tar hensyn til hverandres
+produksjon når de tar beslutninger om produksjon. Jeg bruker da cournot
+modellen for bedrifter med asymmetriske kostnader har forskjellige
+kostnader.
 
 Videre i oppgaven skal vi anta at fusjon mellom Mack Mikrobryggeri og
 Bryggeri 13 blir gjennomført, og det nye selskapet vil operere under
@@ -620,36 +630,51 @@ $\displaystyle π_{C} = 313500.0$
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{a, b, Q\_O, Q\_C, c, f }\OperatorTok{=}\NormalTok{ sp.symbols(}\StringTok{\textquotesingle{}a b Q\_O Q\_C, c, f\textquotesingle{}}\NormalTok{)}
-
-\KeywordTok{def}\NormalTok{ P\_demand(Q):}
-    \ControlFlowTok{return}\NormalTok{ a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{Q}
+\ImportTok{import}\NormalTok{ sympy }\ImportTok{as}\NormalTok{ sp}
+\NormalTok{a, b, Q\_O, Q\_C, c, f, p, Q }\OperatorTok{=}\NormalTok{ sp.symbols(}\StringTok{\textquotesingle{}a b Q\_O Q\_C c f p Q\textquotesingle{}}\NormalTok{)}
 
 
-\KeywordTok{def}\NormalTok{ profit\_1(Q\_O,Q\_C):}
-    \ControlFlowTok{return}\NormalTok{ (P\_demand(Q\_O}\OperatorTok{+}\NormalTok{Q\_C)}\OperatorTok{{-}}\NormalTok{c)}\OperatorTok{*}\NormalTok{Q\_O}\OperatorTok{{-}}\NormalTok{f}
+\NormalTok{demand }\OperatorTok{=}\NormalTok{ sp.Eq(p, a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{(Q\_O}\OperatorTok{+}\NormalTok{Q\_C))}
 
-\KeywordTok{def}\NormalTok{ profit\_2(Q\_O,Q\_C):}
-    \ControlFlowTok{return}\NormalTok{ (P\_demand(Q\_O}\OperatorTok{+}\NormalTok{Q\_C)}\OperatorTok{{-}}\NormalTok{c)}\OperatorTok{*}\NormalTok{Q\_C}\OperatorTok{{-}}\NormalTok{f}
+\NormalTok{income }\OperatorTok{=}\NormalTok{ sp.Eq(p}\OperatorTok{*}\NormalTok{Q, Q}\OperatorTok{*}\NormalTok{(a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{Q))}
+\NormalTok{costs }\OperatorTok{=}\NormalTok{ Q}\OperatorTok{*}\NormalTok{c}\OperatorTok{{-}}\NormalTok{f}
 
-\NormalTok{derivert\_1 }\OperatorTok{=}\NormalTok{ sp.diff(profit\_1(Q\_O,Q\_C), Q\_O)}
-\NormalTok{derivert\_2 }\OperatorTok{=}\NormalTok{ sp.diff(profit\_2(Q\_O,Q\_C), Q\_C)}
+\NormalTok{MR }\OperatorTok{=}\NormalTok{ sp.solve(sp.diff(income.rhs}\OperatorTok{{-}}\NormalTok{costs, Q), c)[}\DecValTok{0}\NormalTok{]}
 
-\NormalTok{eq1 }\OperatorTok{=}\NormalTok{ sp.Eq(derivert\_1, }\DecValTok{0}\NormalTok{).subs(\{a:}\DecValTok{990}\NormalTok{, b:}\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{, c:}\DecValTok{50}\NormalTok{, f:}\DecValTok{3000000}\NormalTok{\})}
-\NormalTok{eq2 }\OperatorTok{=}\NormalTok{ sp.Eq(derivert\_2, }\DecValTok{0}\NormalTok{).subs(\{a:}\DecValTok{990}\NormalTok{, b:}\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{, c:}\DecValTok{50}\NormalTok{, f:}\DecValTok{3000000}\NormalTok{\})}
+\NormalTok{MR1 }\OperatorTok{=}\NormalTok{ sp.Eq(sp.diff((a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{(Q\_O}\OperatorTok{+}\NormalTok{Q\_C))}\OperatorTok{*}\NormalTok{Q\_O}\OperatorTok{{-}}\NormalTok{f, Q\_O), c)}
+\NormalTok{RF1  }\OperatorTok{=}\NormalTok{ sp.solve(MR1, Q\_O)[}\DecValTok{0}\NormalTok{]}
 
-\NormalTok{kvantum }\OperatorTok{=}\NormalTok{ sp.solve((eq1, eq2), (Q\_O, Q\_C))}
-
-\NormalTok{markedspris }\OperatorTok{=}\NormalTok{ P\_demand(kvantum[Q\_O]}\OperatorTok{+}\NormalTok{kvantum[Q\_C])}
+\NormalTok{MR2 }\OperatorTok{=}\NormalTok{ sp.Eq(sp.diff((a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{(Q\_C}\OperatorTok{+}\NormalTok{Q\_O))}\OperatorTok{*}\NormalTok{Q\_C}\OperatorTok{{-}}\NormalTok{f, Q\_C), c)}
+\NormalTok{RF2 }\OperatorTok{=}\NormalTok{ sp.solve(MR2, Q\_C)[}\DecValTok{0}\NormalTok{]}
 
 
-\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f\textquotesingle{}\textquotesingle{}\textquotesingle{}Optimalt kvantum for Q\_O er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum[Q\_O])}\SpecialCharTok{\}}\SpecialStringTok{ og for Q\_C er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum[Q\_C])}\SpecialCharTok{\}}\SpecialStringTok{. }\CharTok{\textbackslash{}n}\SpecialStringTok{Så det totale kvantumet blir }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum[Q\_O]}\OperatorTok{+}\NormalTok{kvantum[Q\_C])}\SpecialCharTok{\}}\SpecialStringTok{ og markedsprisen blir }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(markedspris.subs(\{a:}\DecValTok{990}\NormalTok{, b:}\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{\}), }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\NormalTok{optimalt\_kvantum1 }\OperatorTok{=}\NormalTok{ sp.solve(sp.Eq(RF1.subs(Q\_C, RF2), Q\_O))[}\DecValTok{0}\NormalTok{][Q\_O]}
+
+\NormalTok{optimalt\_kvantum2 }\OperatorTok{=}\NormalTok{ sp.solve(sp.Eq(RF2.subs(Q\_O, RF1), Q\_C))[}\DecValTok{0}\NormalTok{][Q\_C]}
+
+\NormalTok{profitt\_1 }\OperatorTok{=}\NormalTok{ (demand.rhs}\OperatorTok{{-}}\NormalTok{costs).subs(Q, optimalt\_kvantum1)}
+
+
+\NormalTok{markedspris }\OperatorTok{=} \BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(sp.solve(demand.subs(\{a:}\DecValTok{990}\NormalTok{, b:}\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{, Q\_O:optimalt\_kvantum1, Q\_C:optimalt\_kvantum2, c: }\DecValTok{50}\NormalTok{\}), p)[}\DecValTok{0}\NormalTok{]),}\DecValTok{3}\NormalTok{)}
+
+\NormalTok{profitt\_1 }\OperatorTok{=}\NormalTok{ (demand.rhs}\OperatorTok{{-}}\NormalTok{costs).subs(\{Q\_O: optimalt\_kvantum1, Q\_C: optimalt\_kvantum2, Q: optimalt\_kvantum1, f: }\DecValTok{3000000}\NormalTok{, a: }\DecValTok{990}\NormalTok{, b: }\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{, c: }\DecValTok{50}\NormalTok{\}) }
+\NormalTok{profitt\_2 }\OperatorTok{=}\NormalTok{ (demand.rhs}\OperatorTok{{-}}\NormalTok{costs).subs(\{Q\_O: optimalt\_kvantum1, Q\_C: optimalt\_kvantum2, Q: optimalt\_kvantum2, f: }\DecValTok{3000000}\NormalTok{, a: }\DecValTok{990}\NormalTok{, b: }\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{, c: }\DecValTok{50}\NormalTok{\})}
+
+
+
+\NormalTok{kvantum\_QO }\OperatorTok{=} \BuiltInTok{int}\NormalTok{(optimalt\_kvantum1.subs(\{a:}\DecValTok{990}\NormalTok{, b:}\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{, c:}\DecValTok{50}\NormalTok{, f:}\DecValTok{3000000}\NormalTok{\}))}
+\NormalTok{kvantum\_QC }\OperatorTok{=} \BuiltInTok{int}\NormalTok{(optimalt\_kvantum2.subs(\{a:}\DecValTok{990}\NormalTok{, b:}\DecValTok{1}\OperatorTok{/}\DecValTok{60}\NormalTok{, c:}\DecValTok{50}\NormalTok{, f:}\DecValTok{3000000}\NormalTok{\}))}
+
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f\textquotesingle{}\textquotesingle{}\textquotesingle{}Optimalt kvantum for Q\_O er }\SpecialCharTok{\{}\NormalTok{kvantum\_QO}\SpecialCharTok{\}}\SpecialStringTok{ og for Q\_C er }\SpecialCharTok{\{}\NormalTok{kvantum\_QC}\SpecialCharTok{\}}\SpecialStringTok{. Så det totale kvantumet blir }\SpecialCharTok{\{}\NormalTok{(kvantum\_QO}\OperatorTok{+}\NormalTok{kvantum\_QC)}\SpecialCharTok{\}}\SpecialStringTok{ og markedsprisen blir }\SpecialCharTok{\{}\NormalTok{markedspris}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+
+\BuiltInTok{print}\NormalTok{(}\StringTok{\textquotesingle{}\textquotesingle{}\textquotesingle{}Profit for Q\_O: \textquotesingle{}\textquotesingle{}\textquotesingle{}}\NormalTok{, }\BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(profitt\_1),}\DecValTok{2}\NormalTok{), }\StringTok{\textquotesingle{}\textquotesingle{}\textquotesingle{}Profit for Q\_C: \textquotesingle{}\textquotesingle{}\textquotesingle{}}\NormalTok{, }\BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(profitt\_2),}\DecValTok{2}\NormalTok{), }\StringTok{\textquotesingle{}\textquotesingle{}\textquotesingle{}}\CharTok{\textbackslash{}n}\StringTok{Total profit: \textquotesingle{}\textquotesingle{}\textquotesingle{}}\NormalTok{, }\BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(profitt\_1),}\DecValTok{2}\NormalTok{)}\OperatorTok{+}\BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(profitt\_2),}\DecValTok{2}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-Optimalt kvantum for Q_O er 18800 og for Q_C er 18800. 
-Så det totale kvantumet blir 37600 og markedsprisen blir 363.33
+Optimalt kvantum for Q_O er 18800 og for Q_C er 18800. Så det totale kvantumet blir 37600 og markedsprisen blir 363.333
+Profit for Q_O:  2060363.33 Profit for Q_C:  2060363.33 
+Total profit:  4120726.66
 \end{verbatim}
 
 \clearpage

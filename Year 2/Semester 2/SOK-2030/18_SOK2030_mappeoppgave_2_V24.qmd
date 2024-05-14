@@ -230,10 +230,6 @@ Vi kan nå finne markedsprisen ved å sette inn kvantum for begge bedriftene i d
 import sympy as sp
 a, b, Q_O, Q_C, c, f, p, Q = sp.symbols('a b Q_O Q_C c f p Q')
 
-def P_demand_oppgave(Q):
-    return a-b*Q
-
-
 demand = sp.Eq(p, a-b*(Q_O+Q_C))
 
 income = sp.Eq(p*Q, Q*(a-b*Q))
@@ -290,6 +286,24 @@ $$ hvor $P$ er markedspris per flaske mikroøl, $Q$ er totalt kvantum (antall tu
 Mack Mikrobryggeri, som er en del av Mack Ølbryggeri, har en mer effektiv produksjonslinje enn de to andre, med konstante marginalkostnader på 7 kr per flaske, mens Graff Brygghus og Bryggeri 13 har marginalkostnader på 10 kr per flaske. Alle tre mikrobryggeriene har faste årlige kostnader på 300 000 kr. Styrene i selskapene Mack Mikrobryggeri og Bryggeri 13 har startet samtaler knyttet til mulig fusjon av disse to selskapene. Ved en fusjon vil all produksjon flyttes til Mack Mikrobryggeri. De faste kostnadene vil også reduseres ved sammenslåing av selskapene, og totalt utgjøre kr 500 000 per år for det fusjonerte selskapet.
 
 ## a) Vil en slik fusjon være lønnsom for de fusjonerte partene?
+
+
+I en slik situasjon så starter jeg med å beregne hvordan markedet er før en fusjon ved bruk av Cournot modellen som er en modell for oligopolistisk konkurranse der bedriftene tar hensyn til hverandres produksjon når de tar beslutninger om produksjon. Jeg bruker da cournot modellen for bedrifter med asymmetriske kostnader har forskjellige kostnader. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Videre i oppgaven skal vi anta at fusjon mellom Mack Mikrobryggeri og Bryggeri 13 blir gjennomført, og det nye selskapet vil operere under navnet Mack Mikrobrygg 13. Markedet for produksjon av mikroøl vil da bestå av to lokale produsenter: Mack Mikrobrygg 13 og Graff Brygghus. For å styrke sin posisjon i markedet, investerer Graff Brygghus i nytt og mer effektivt produksjonsutstyr, noe som reduserer deres variable kostnader til kr 7 per flaske. Denne investeringen vil gi selskapet økte faste kostnader på kr 200.000. Totale faste kostnader for begge bryggeriene er da på kr 500.000 for hvert av selskapene.
 
@@ -381,9 +395,6 @@ profitt_choice
 #| echo: true
 import sympy as sp
 a, b, Q_O, Q_C, c, f, p, Q = sp.symbols('a b Q_O Q_C c f p Q')
-
-def P_demand_oppgave(Q):
-    return a-b*Q
 
 
 demand = sp.Eq(p, a-b*(Q_O+Q_C))
