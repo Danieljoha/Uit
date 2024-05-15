@@ -160,6 +160,7 @@
 \usepackage{cancel}
 \usepackage{hyperref}
 \usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, arrows.meta, positioning, calc}
 \usepackage{tabularx}
 \renewcommand{\maketitle}{}
 \usepackage{fancyhdr}
@@ -269,6 +270,11 @@
 I oppgaven så er det ikke fjernet oppgave tekst. Denne teksten er hentet fra oppgavesettet og vil være \textit{markert med kursiv skrift} eller ligge som overskrifter.
 
 Valg av farger i figurer er tatt fra forelesingsslides til forelesing 10 fra figurene under Fusjoner og oppkjøp i dagligvarebransjen  \url{https://uit-sok-2030-v24.github.io/Forelesning%2010%20-%20Horisontale%20fusjoner.pdf}
+
+
+Vi er blitt fortalt at vi ikke trenger å referere til pensum som forelesingsslides eller boken, så dette er gjort veldig lite. Det er satt inn referanser til boken når jeg har følt at jeg har hentet lite fra forelesingene og heller særdeles mye fra boken. 
+
+
 
 
 \begin{center}
@@ -757,6 +763,37 @@ til en høyere pris. Samtidig har det fusjonerte selskapet oppnådd
 kostnadssynergier som gir dem en økning i effektiviteten og en økt
 samlet profitt enn før fusjonen på grunn av økt markedspris.
 
+\paragraph{Stackelberg-modellen}\label{stackelberg-modellen}
+
+Det kan derimot være slik at fusjonen mellom Mack Mikrobryggeri og
+Bryggeri 13 med den dobble kapasiteten og lavere totale kostnader vil
+innta en leder posisjon i markedet og at det derfor er
+Stackelberg-modellen som skal brukes. Dette vil endre på dynamikken
+betydelig og vi vil se at det fusjonerte selskapet vil ha en fordel i
+markedet.
+
+For å beregne denne så følger jeg samme fremgangsmåte som tidligere men
+med asymmetriske bedrifter. Jeg blir ikke å vise all utregning men dette
+gjøres i python.
+
+\begin{verbatim}
+Kvantum for fusjonert Mack: 21.38 og Kvantum for Graff Brygghus: 9.94. 
+Det totale kvantumet i markedet er 31.31 til en Markedsprisen på 49.75.
+
+Profitten for selskapene er 413.78 for fusjonert Mack og 95.02 for Graff Brygghus.
+\end{verbatim}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.4\textwidth]{dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stackel.png}
+\caption{Markedsandelen til mikrobryggeriene etter fusjonen under Stackelberg med ledende Mack}
+\label{fig:markedsandel_etter_stackel}
+\end{figure}
+
+Vi ser at Mack ihvertfall vil ønsker å innta en ledende posisjon i
+markedet og at dette vil gi en økt profitt for de fusjonerte selskapene
+men dette ville gitt en lavere markedspris og totalt lavere kvantum.
+
 \clearpage
 
 \textit{Videre i oppgaven skal vi anta at fusjon mellom Mack Mikrobryggeri og Bryggeri 13 blir gjennomført, og det nye selskapet vil operere under navnet Mack Mikrobrygg 13. Markedet for produksjon av mikroøl vil da bestå av to lokale produsenter: Mack Mikrobrygg 13 og Graff Brygghus. For å styrke sin posisjon i markedet, investerer Graff Brygghus i nytt og mer effektivt produksjonsutstyr, noe som reduserer deres variable kostnader til kr 7 per flaske. Denne investeringen vil gi selskapet økte faste kostnader på kr 200.000. Totale faste kostnader for begge bryggeriene er da på kr 500.000 for hvert av selskapene.}
@@ -769,17 +806,62 @@ P = 175 - 2Q
 $$ 
 \textit{hvor }$Q$\textit{ er antall solgte flasker mikroøl (antall tusen flasker) for RGH og }$P$\textit{ er prisen for en flaske mikroøl til sluttbruker. For å ytterligere styrke sin posisjon i oppstrømsmarkedet, vurderer ledelsen i Mack Mikrobrygg 13 en fusjon med konkurrenten Graff Brygghus. Det antas at denne fusjonen ikke vil resultere i kostnadsbesparelser for bryggeriene. Som konsulent for styret i Mack Mikrobrygg 13, er du bedt om å analysere markedskonsekvensene av en potensiell fusjon mellom Mack Mikrobrygg 13 og Graff Brygghus. Analysen skal omfatte en vurdering av dagens markedstilpasning og en sammenligning med tilpasningen etter en eventuell fusjon i oppstrømsmarkedet.}
 
-\subsection{Tilpasning fra duopol til
-monopol}\label{tilpasning-fra-duopol-til-monopol}
+\subsection{Vertikale relasjoner}\label{vertikale-relasjoner}
+
+\begin{tikzpicture}[node distance=2cm]
+\node (del1) {};
+
+\node (startpunkt)[rectangle, fill=orange!50, draw=black, text centered, right of = del1, xshift=3cm, yshift=5cm] {Mack Mikrobrygg 13};
+
+\node (G)[rectangle, fill=orange!50, draw=black, right of = startpunkt, text centered, xshift=5cm] {Graff Brygghus};
+\node (RHG)[rectangle, fill=orange!50, draw=black, below of = startpunkt, text centered, xshift=3cm, yshift=-1.5cm] {Restaurant Gruppen Holdig (RGH)};
+
+\node (Kundene)[below of = RHG, text centered, yshift=0.7cm] {Kundene};
+
+
+
+\draw[-{Latex[length=4mm]}] (startpunkt) -- (RHG);
+\draw[-{Latex[length=4mm]}] (G) -- (RHG);
+\draw[-{Latex[length=4mm]}] (RHG) -- (Kundene);
+
+
+\fill[fill=none, xshift=5.5cm, yshift=5cm, draw=black] (2.5,0) ellipse (6 and 1.2);
+
+\end{tikzpicture}
+
+I figuren over så kan vi se hvordan markedet ser ut før det gjøres noe
+endringer. Mack og Graff er såkalte ``Oppstrømsbedrifter'' som betyr at
+de er lengere unna kunden og selger dette til nedstrømsbedriften RGH som
+vil selge dette videre til kundene. I dette tilfellet er da Mack og
+Graff produsenter i forsyningskjeden til RGH som selger dette videre til
+kundene.
+
+Sirkelen rundt Mack og Graff viser hvilke selskap som vil fusjonere.
+
+\clearpage
 
 \subsubsection{b) Basert på din analyse, vil du anbefale styret i Mack
 Mikrobrygg 13 å gjennomføre fusjon med Graff
 Brygghus?}\label{b-basert-puxe5-din-analyse-vil-du-anbefale-styret-i-mack-mikrobrygg-13-uxe5-gjennomfuxf8re-fusjon-med-graff-brygghus}
 
 Det er igjen snakk om horisontal fusjon men denne gangen vil vi gå fra å
-ha 2 aktører til å ha en monopolist. Med etterspørselsfunksjonen gitt
-som \(P=175-2Q\) kan vi først beregne markedstilpasningen da de nå har
-like marginalkostnader og faste kostnader.
+ha 2 aktører til å ha en monopolist. Vi har også nå et tilfelle der vi
+også har en nedstrømsbedrift RGH. Jeg må da beregne hva de selger for
+til nedstrømsbedriften.
+
+Med etterspørselsfunksjonen gitt som \(P=175-2Q\) kan vi først beregne
+markedstilpasningen da de nå har like marginalkostnader og faste
+kostnader. Fra tidligere utregninger så vet vi at bedriftene vil forsøke
+å oppnå en pris som er lik marginalkostnaden. Jeg kan da starte med å
+sette opp ligningene som \(P=175-4Q\) da vi tidligere har vist at
+helningen på marginalinntekt er lik dobbel helning til
+etterspørselskurven.
+
+RGH står som monopol så de vil også selge til en pris lik
+marginalkostnaden så denne vil være lik \(p=175-8Q\).
+
+vil RGH kunne tjene inn for sine faste kostnader eller vil de gå
+konkurs? er dette lurt osv.
 
 \begin{align*}
 \pi_G &= -c_G\cdot q_G - f_G + (a-b\cdot(q_G+q_BM))\cdot q_G \\
@@ -940,7 +1022,7 @@ Profitten for selskapene er 3627000 for Olivitas og 313500 for Dr Choice AS.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{18_SOK2030_mappeoppgave_2_V24_files/figure-pdf/cell-25-output-1.pdf}
+\includegraphics{18_SOK2030_mappeoppgave_2_V24_files/figure-pdf/cell-27-output-1.pdf}
 
 \clearpage
 
@@ -1072,7 +1154,7 @@ $\displaystyle 28200.0 - 0.5 Q_{O}$
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{18_SOK2030_mappeoppgave_2_V24_files/figure-pdf/cell-31-output-1.pdf}
+\includegraphics{18_SOK2030_mappeoppgave_2_V24_files/figure-pdf/cell-33-output-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1121,7 +1203,61 @@ $\displaystyle 28200.0 - 0.5 Q_{O}$
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{18_SOK2030_mappeoppgave_2_V24_files/figure-pdf/cell-36-output-1.pdf}
+\includegraphics{18_SOK2030_mappeoppgave_2_V24_files/figure-pdf/cell-38-output-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{q\_BM, q\_G, p, c, f, pi\_G, pi\_BM}\OperatorTok{=}\NormalTok{ sp.symbols(}\StringTok{\textquotesingle{}q\_BM q\_G p c f }\CharTok{\textbackslash{}u03C0}\StringTok{\_G }\CharTok{\textbackslash{}u03C0}\StringTok{\_BM\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{Invers\_etterspors }\OperatorTok{=}\NormalTok{ sp.Eq(p, (}\DecValTok{175}\OperatorTok{{-}}\NormalTok{(}\DecValTok{4}\NormalTok{)}\OperatorTok{*}\NormalTok{(q\_G}\OperatorTok{+}\NormalTok{q\_BM)))}
+
+
+\NormalTok{profitt\_1\_eq }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_BM, (Invers\_etterspors.rhs}\OperatorTok{{-}}\DecValTok{7}\NormalTok{)}\OperatorTok{*}\NormalTok{q\_G}\OperatorTok{{-}}\DecValTok{500}\NormalTok{)}
+\NormalTok{profitt\_2\_eq }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_G, (Invers\_etterspors.rhs}\OperatorTok{{-}}\DecValTok{10}\NormalTok{)}\OperatorTok{*}\NormalTok{q\_BM}\OperatorTok{{-}}\DecValTok{300}\NormalTok{)}
+
+
+\NormalTok{derivert\_profitt\_2 }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_2\_eq.rhs, q\_BM)}
+
+\NormalTok{reaksjon\_BM }\OperatorTok{=}\NormalTok{ sp.solve(derivert\_profitt\_2, q\_BM)[}\DecValTok{0}\NormalTok{]}
+
+\NormalTok{profitt\_1\_eq }\OperatorTok{=}\NormalTok{ profitt\_1\_eq.subs(q\_BM, reaksjon\_BM)}
+
+\NormalTok{derivert\_profitt1 }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_1\_eq.rhs, q\_G) }\CommentTok{\#kvantum for kvantum og bryggeri}
+
+\NormalTok{kvantum\_BM }\OperatorTok{=}\NormalTok{ sp.solve(derivert\_profitt1, q\_G)[}\DecValTok{0}\NormalTok{]}
+
+\CommentTok{\#setter inn kvantum i reaksjonsfunksjonen til Dr Choice AS}
+\NormalTok{kvantum\_G }\OperatorTok{=}\NormalTok{ reaksjon\_BM.subs(q\_G, kvantum\_BM)}\CommentTok{\#Kvantum for mack og bryggeri 13}
+\NormalTok{markedspris }\OperatorTok{=}\NormalTok{ Invers\_etterspors.rhs.subs(\{q\_G:kvantum\_BM, q\_BM:kvantum\_G\})}
+\NormalTok{profitt\_BM }\OperatorTok{=} \BuiltInTok{float}\NormalTok{(profitt\_1\_eq.rhs.subs(q\_G, kvantum\_BM).subs(q\_BM, kvantum\_G))}
+
+\NormalTok{profitt\_G }\OperatorTok{=} \BuiltInTok{float}\NormalTok{(profitt\_2\_eq.rhs.subs(q\_BM, kvantum\_G).subs(q\_G, kvantum\_BM))}
+
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f\textquotesingle{}\textquotesingle{}\textquotesingle{}Kvantum for fusjonert Mack: }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_BM,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ og Kvantum for Graff Brygghus: }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_G, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{. }\CharTok{\textbackslash{}n}\SpecialStringTok{Det totale kvantumet i markedet er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_BM}\OperatorTok{+}\NormalTok{kvantum\_G, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ til en Markedsprisen på }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(markedspris, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{.}\CharTok{\textbackslash{}n\textbackslash{}n}\SpecialStringTok{Profitten for selskapene er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(profitt\_BM, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ for fusjonert Mack og }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(profitt\_G, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ for Graff Brygghus.\textquotesingle{}\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Kvantum for fusjonert Mack: 21.38 og Kvantum for Graff Brygghus: 9.94. 
+Det totale kvantumet i markedet er 31.31 til en Markedsprisen på 49.75.
+
+Profitten for selskapene er 413.78 for fusjonert Mack og 95.02 for Graff Brygghus.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fig, ax }\OperatorTok{=}\NormalTok{ plt.subplots()}
+
+\NormalTok{labels }\OperatorTok{=}\NormalTok{ [}\StringTok{\textquotesingle{}Graff Brygghus\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Mack Mikrobryggeri\textquotesingle{}}\NormalTok{]}
+\NormalTok{sizes }\OperatorTok{=}\NormalTok{ [kvantum\_G, kvantum\_BM]}
+
+\NormalTok{ax.pie(sizes, labels}\OperatorTok{=}\NormalTok{labels, autopct}\OperatorTok{=}\StringTok{\textquotesingle{}}\SpecialCharTok{\%1.1f\%\%}\StringTok{\textquotesingle{}}\NormalTok{, colors}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}\#def2f4\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#24666d\textquotesingle{}}\NormalTok{])}
+\CommentTok{\#plt.savefig(\textquotesingle{}dokumentobjekter/figurer/markedsandel\_mikrobryggerier\_fusjon\_stackel.png\textquotesingle{}, dpi=300, bbox\_inches=\textquotesingle{}tight\textquotesingle{})}
+\NormalTok{plt.show()}\OperatorTok{;}\CommentTok{\# Bare for appendix}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{18_SOK2030_mappeoppgave_2_V24_files/figure-pdf/cell-40-output-1.pdf}
 
 \clearpage
 

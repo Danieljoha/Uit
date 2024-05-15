@@ -27,6 +27,7 @@ header-includes:
   - \usepackage{cancel}
   - \usepackage{hyperref}
   - \usepackage{tikz}
+  - \usetikzlibrary{shapes.geometric, arrows, arrows.meta, positioning, calc}
   - \usepackage{tabularx}
   - \renewcommand{\maketitle}{}
   - \usepackage{fancyhdr}
@@ -51,6 +52,11 @@ nocite: |
 I oppgaven så er det ikke fjernet oppgave tekst. Denne teksten er hentet fra oppgavesettet og vil være \textit{markert med kursiv skrift} eller ligge som overskrifter.
 
 Valg av farger i figurer er tatt fra forelesingsslides til forelesing 10 fra figurene under Fusjoner og oppkjøp i dagligvarebransjen  \url{https://uit-sok-2030-v24.github.io/Forelesning%2010%20-%20Horisontale%20fusjoner.pdf}
+
+
+Vi er blitt fortalt at vi ikke trenger å referere til pensum som forelesingsslides eller boken, så dette er gjort veldig lite. Det er satt inn referanser til boken når jeg har følt at jeg har hentet lite fra forelesingene og heller særdeles mye fra boken. 
+
+
 
 
 \begin{center}
@@ -582,7 +588,7 @@ Graff Brygghus vil øke sitt produksjonskvantum fra 10125 flasker til 13500 flas
 
 Men selv om Graff Brygghus har hatt en stor økning i profitt, vil også det fusjonerte selskapet Mack Mikrobryggeri og Bryggeri 13 få en høyere profitt. Før fusjonen var deres samlede profitt 173 062.5kr for Mack og 110 062.5kr for Bryggeri 13, noe som tilsammen utgjør 283 125kr. Etter fusjonen vil de ha en profitt på 312 250kr. De produserer nå mindre enn de ville gjort samlet fra samlet 21000 flasker til 14250 flasker etter.
 
-Så fusjonen vil gi økt profitt for begge bedriftene Selv om det har vært bedre for Graff Brygghus, vil Mack og Bryggeri 13 også tjene mer på fusjonen gjennom økte priser. Av den grunn vil fusjonen være en god ide for begge bedriftene.
+Så fusjonen vil gi økt profitt for begge bedriftene. Selv om det har vært bedre for Graff Brygghus, vil Mack og Bryggeri 13 også tjene mer på fusjonen gjennom økte priser. Av den grunn vil fusjonen være en god ide for begge bedriftene.
 
 \clearpage
 
@@ -593,6 +599,66 @@ Fusjonsparadokset er det uintuitive som skjer i horisontale fusjoner i Cournot-m
 #### Kostnadssynergier i asymmetriske bedrifter i casen
 
 I dette tilfellet ser vi at Graff Brygghus drar nytte av fusjonen mellom Mack Mikrobryggeri og Bryggeri 13 ved å kunne selge sitt økte kvantum til en høyere pris. Samtidig har det fusjonerte selskapet oppnådd kostnadssynergier som gir dem en økning i effektiviteten og en økt samlet profitt enn før fusjonen på grunn av økt markedspris.
+
+#### Stackelberg-modellen
+
+Det kan derimot være slik at fusjonen mellom Mack Mikrobryggeri og Bryggeri 13 med den dobble kapasiteten og lavere totale kostnader vil innta en leder posisjon i markedet og at det derfor er Stackelberg-modellen som skal brukes. Dette vil endre på dynamikken betydelig og vi vil se at det fusjonerte selskapet vil ha en fordel i markedet. 
+
+For å beregne denne så følger jeg samme fremgangsmåte som tidligere men med asymmetriske bedrifter. Jeg blir ikke å vise all utregning men dette gjøres i python.  
+
+
+```{python}
+q_BM, q_G, p, c, f, pi_G, pi_BM= sp.symbols('q_BM q_G p c f \u03C0_G \u03C0_BM')
+
+Invers_etterspors = sp.Eq(p, (175-(4)*(q_G+q_BM)))
+
+
+profitt_1_eq = sp.Eq(pi_BM, (Invers_etterspors.rhs-7)*q_G-500)
+profitt_2_eq = sp.Eq(pi_G, (Invers_etterspors.rhs-10)*q_BM-300)
+
+
+derivert_profitt_2 = sp.diff(profitt_2_eq.rhs, q_BM)
+
+reaksjon_BM = sp.solve(derivert_profitt_2, q_BM)[0]
+
+profitt_1_eq = profitt_1_eq.subs(q_BM, reaksjon_BM)
+
+derivert_profitt1 = sp.diff(profitt_1_eq.rhs, q_G) #kvantum for kvantum og bryggeri
+
+kvantum_BM = sp.solve(derivert_profitt1, q_G)[0]
+
+#setter inn kvantum i reaksjonsfunksjonen til Dr Choice AS
+kvantum_G = reaksjon_BM.subs(q_G, kvantum_BM)#Kvantum for mack og bryggeri 13
+markedspris = Invers_etterspors.rhs.subs({q_G:kvantum_BM, q_BM:kvantum_G})
+profitt_BM = float(profitt_1_eq.rhs.subs(q_G, kvantum_BM).subs(q_BM, kvantum_G))
+
+profitt_G = float(profitt_2_eq.rhs.subs(q_BM, kvantum_G).subs(q_G, kvantum_BM))
+
+print(f'''Kvantum for fusjonert Mack: {round(kvantum_BM,2)} og Kvantum for Graff Brygghus: {round(kvantum_G, 2)}. \nDet totale kvantumet i markedet er {round(kvantum_BM+kvantum_G, 2)} til en Markedsprisen på {round(markedspris, 2)}.\n\nProfitten for selskapene er {round(profitt_BM, 2)} for fusjonert Mack og {round(profitt_G, 2)} for Graff Brygghus.''')
+``` 
+```{python}
+%%capture
+fig, ax = plt.subplots()
+
+labels = ['Graff Brygghus', 'Mack Mikrobryggeri']
+sizes = [kvantum_G, kvantum_BM]
+
+ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#24666d'])
+plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stackel.png', dpi=300, bbox_inches='tight')
+```
+
+```{=tex}
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.4\textwidth]{dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stackel.png}
+\caption{Markedsandelen til mikrobryggeriene etter fusjonen under Stackelberg med ledende Mack}
+\label{fig:markedsandel_etter_stackel}
+\end{figure}
+```
+Vi ser at Mack ihvertfall vil ønsker å innta en ledende posisjon i markedet og at dette vil gi en økt profitt for de fusjonerte selskapene men dette ville gitt en lavere markedspris og totalt lavere kvantum.
+
+
+
 
 \clearpage
 
@@ -607,11 +673,52 @@ P = 175 - 2Q
 $$ 
 \textit{hvor }$Q$\textit{ er antall solgte flasker mikroøl (antall tusen flasker) for RGH og }$P$\textit{ er prisen for en flaske mikroøl til sluttbruker. For å ytterligere styrke sin posisjon i oppstrømsmarkedet, vurderer ledelsen i Mack Mikrobrygg 13 en fusjon med konkurrenten Graff Brygghus. Det antas at denne fusjonen ikke vil resultere i kostnadsbesparelser for bryggeriene. Som konsulent for styret i Mack Mikrobrygg 13, er du bedt om å analysere markedskonsekvensene av en potensiell fusjon mellom Mack Mikrobrygg 13 og Graff Brygghus. Analysen skal omfatte en vurdering av dagens markedstilpasning og en sammenligning med tilpasningen etter en eventuell fusjon i oppstrømsmarkedet.}
 ```
-## Tilpasning fra duopol til monopol
+## Vertikale relasjoner
+
+```{=tex}
+
+\begin{tikzpicture}[node distance=2cm]
+\node (del1) {};
+
+\node (startpunkt)[rectangle, fill=orange!50, draw=black, text centered, right of = del1, xshift=3cm, yshift=5cm] {Mack Mikrobrygg 13};
+
+\node (G)[rectangle, fill=orange!50, draw=black, right of = startpunkt, text centered, xshift=5cm] {Graff Brygghus};
+\node (RHG)[rectangle, fill=orange!50, draw=black, below of = startpunkt, text centered, xshift=3cm, yshift=-1.5cm] {Restaurant Gruppen Holdig (RGH)};
+
+\node (Kundene)[below of = RHG, text centered, yshift=0.7cm] {Kundene};
+
+
+
+\draw[-{Latex[length=4mm]}] (startpunkt) -- (RHG);
+\draw[-{Latex[length=4mm]}] (G) -- (RHG);
+\draw[-{Latex[length=4mm]}] (RHG) -- (Kundene);
+
+
+\fill[fill=none, xshift=5.5cm, yshift=5cm, draw=black] (2.5,0) ellipse (6 and 1.2);
+
+\end{tikzpicture}
+
+```
+I figuren over så kan vi se hvordan markedet ser ut før det gjøres noe endringer. Mack og Graff er såkalte "Oppstrømsbedrifter" som betyr at de er lengere unna kunden og selger dette til nedstrømsbedriften RGH som vil selge dette videre til kundene. I dette tilfellet er da Mack og Graff produsenter i forsyningskjeden til RGH som selger dette videre til kundene.
+
+Sirkelen rundt Mack og Graff viser hvilke selskap som vil fusjonere.
+
+
+
+
+
+\clearpage
 
 ### b) Basert på din analyse, vil du anbefale styret i Mack Mikrobrygg 13 å gjennomføre fusjon med Graff Brygghus?
 
-Det er igjen snakk om horisontal fusjon men denne gangen vil vi gå fra å ha 2 aktører til å ha en monopolist. Med etterspørselsfunksjonen gitt som $P=175-2Q$ kan vi først beregne markedstilpasningen da de nå har like marginalkostnader og faste kostnader.
+Det er igjen snakk om horisontal fusjon men denne gangen vil vi gå fra å ha 2 aktører til å ha en monopolist. Vi har også nå et tilfelle der vi også har en nedstrømsbedrift RGH. Jeg må da beregne hva de selger for til nedstrømsbedriften. 
+
+Med etterspørselsfunksjonen gitt som $P=175-2Q$ kan vi først beregne markedstilpasningen da de nå har like marginalkostnader og faste kostnader. Fra tidligere utregninger så vet vi at bedriftene vil forsøke å oppnå en pris som er lik marginalkostnaden. Jeg kan da starte med å sette opp ligningene som $P=175-4Q$ da vi tidligere har vist at helningen på marginalinntekt er lik dobbel helning til etterspørselskurven. 
+
+RGH står som monopol så de vil også selge til en pris lik marginalkostnaden så denne vil være lik $p=175-8Q$. 
+
+vil RGH kunne tjene inn for sine faste kostnader eller vil de gå konkurs? er dette lurt osv. 
+
 
 ```{python}
 a, b, q_G, q_BM, q_BMG, c, c_G, c_BM, c_BMG, f, f_G, f_BM, f_BMG, Q, pi_BMG = sp.symbols('a b q_G q_{BM} q_{BMG} c c_G c_{BM} c_{BMG} f f_G f_{BM} f_{BMG} Q \u03C0_{BMG}')
@@ -976,9 +1083,52 @@ ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#24666d'])
 plt.show(); # Bare for appendix
 ```
 
+
+
 ```{python}
+#| echo: true
+
+q_BM, q_G, p, c, f, pi_G, pi_BM= sp.symbols('q_BM q_G p c f \u03C0_G \u03C0_BM')
+
+Invers_etterspors = sp.Eq(p, (175-(4)*(q_G+q_BM)))
+
+
+profitt_1_eq = sp.Eq(pi_BM, (Invers_etterspors.rhs-7)*q_G-500)
+profitt_2_eq = sp.Eq(pi_G, (Invers_etterspors.rhs-10)*q_BM-300)
+
+
+derivert_profitt_2 = sp.diff(profitt_2_eq.rhs, q_BM)
+
+reaksjon_BM = sp.solve(derivert_profitt_2, q_BM)[0]
+
+profitt_1_eq = profitt_1_eq.subs(q_BM, reaksjon_BM)
+
+derivert_profitt1 = sp.diff(profitt_1_eq.rhs, q_G) #kvantum for kvantum og bryggeri
+
+kvantum_BM = sp.solve(derivert_profitt1, q_G)[0]
+
+#setter inn kvantum i reaksjonsfunksjonen til Dr Choice AS
+kvantum_G = reaksjon_BM.subs(q_G, kvantum_BM)#Kvantum for mack og bryggeri 13
+markedspris = Invers_etterspors.rhs.subs({q_G:kvantum_BM, q_BM:kvantum_G})
+profitt_BM = float(profitt_1_eq.rhs.subs(q_G, kvantum_BM).subs(q_BM, kvantum_G))
+
+profitt_G = float(profitt_2_eq.rhs.subs(q_BM, kvantum_G).subs(q_G, kvantum_BM))
+
+print(f'''Kvantum for fusjonert Mack: {round(kvantum_BM,2)} og Kvantum for Graff Brygghus: {round(kvantum_G, 2)}. \nDet totale kvantumet i markedet er {round(kvantum_BM+kvantum_G, 2)} til en Markedsprisen på {round(markedspris, 2)}.\n\nProfitten for selskapene er {round(profitt_BM, 2)} for fusjonert Mack og {round(profitt_G, 2)} for Graff Brygghus.''')
+``` 
+```{python}
+#| echo: true
+fig, ax = plt.subplots()
+
+labels = ['Graff Brygghus', 'Mack Mikrobryggeri']
+sizes = [kvantum_G, kvantum_BM]
+
+ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#24666d'])
+#plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stackel.png', dpi=300, bbox_inches='tight')
+plt.show();# Bare for appendix
 
 ```
+
 
 \clearpage
 
