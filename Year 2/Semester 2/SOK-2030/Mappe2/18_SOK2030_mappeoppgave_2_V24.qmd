@@ -1,0 +1,843 @@
+---
+format: 
+  pdf:
+    include-before-body:
+      - dokumentobjekter/texstuff/forsidesok2030_m2.tex  
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+    toc-title: "Innholdsfortegnelse"
+    toccolor: black
+echo: false
+bibliography: dokumentobjekter/texstuff/references_m2.bib
+csl: dokumentobjekter/texstuff/norsk-apa-manual.csl
+crossref: 
+  lof-title: "Figurliste"
+  fig-title: "Figur"
+  lot-title: "Tabelliste"
+  tbl-title: "Tabell"
+header-includes:
+  - \usepackage{wrapfig}
+  - \usepackage{subcaption}
+  - \usepackage{amsmath}
+  - \usepackage{cancel}
+  - \usepackage{hyperref}
+  - \usepackage{tikz}
+  - \usepackage{tabularx}
+  - \renewcommand{\maketitle}{}
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancyhf{} 
+  - \fancyhead[L]{\rightmark}
+  - \fancyhead[R]{\thepage}
+  - \fancyfoot[C]{\thepage}
+keep-tex: true
+nocite: |
+  @*
+---
+
+```{=tex}
+
+\thispagestyle{plain}
+\begin{center}
+    \Large
+    \textbf{Sammendrag}
+\end{center}
+
+
+
+\newpage
+\hypersetup{linkcolor=black}
+\renewcommand{\contentsname}{Innholdsfortegnelse}
+\renewcommand*{\figureautorefname}{Figur}
+\renewcommand*{\tableautorefname}{Tabell}
+\tableofcontents
+\listoffigures
+\listoftables
+\hypersetup{linkcolor=blue}
+\newpage
+```
+```{python}
+from matplotlib import pyplot as plt
+import numpy as np
+import sympy as sp
+```
+
+1.  Oppgave 1 (30%)
+
+Olivita AS ble etablert i 2002 av to professorer fra Universitetet i Tromsø (UiT). Selskapet tilbyr kosttilskuddet Olivita, som inneholder omega-3 og er utviklet for å støtte hjerte, ledd og immunforsvar. Produktet har vært patentbeskyttet frem til 2023, og Olivita har hatt eksklusiv rett til produksjon av dette omega-3 produktet. Etter patentets utløp har det nye selskapet Dr Choice AS kommet på markedet og tilbyr Easy Choice Omega-3. I markedet for omega-3 produkter vil Olivita AS fortsette å være en ledende aktør, mens Dr Choice AS vil utfordre som en nykommer.
+
+I dette marked er det følgende invers etterspørsel $$
+P = 990 - \frac{1}{60}(q_O + q_C)
+$$ hvor $q_O$ er antall solgte flasker med Olivita, $q_C$ er antall solgte flasker Easy Choice Omega-3 og $P$ er pris per flaske av Omega-3 produktene. I produksjon av Omega-3 produktene vil begge bedriftene ha konstante marginalkostnader på kr 50 per produsert flaske. Faste kostnader for begge bedriftene er på 3 millioner kroner.
+
+## Optimal tilpasning
+
+\subsubsection{a) Hva blir optimal tilpasning i dette markedet når Olivita kan gjøre sine strategiske valg før konkurrenten, Dr Choice AS, gjør sitt valg?}\label{a-hva-blir-optimal-tilpasning-i-dette-markedet-nuxe5r-olivita-kan-gjuxf8re-sine-strategiske-valg-fuxf8r}
+
+For å beregne dette så må jeg først bestemme meg for hvilken modell som skal brukes ut av de tre modellene som er brukt i kurset: Cournot, Bertrand og Stackelberg. Ut av de tre modellene så er vil bedriftene i Cournot og Stackelberg konkurrere på kvantum, mens i Bertrand konkurrerer de på pris. Det som skiller mellom hva de konkurrerer på er om det de produserer er strategiske komplimenter eller substitutter. Disse modellene er da Oligopolmodeller som er en modeller for markeder med få aktører.
+
+Strategiske komplimenter betyr for eksempel varer som er komplimenter til hverandre, som for eksempel kaffe og melk. Hvis prisen på kaffe øker så vil etterspørselen etter melk også øke. Strategiske substitutter er varer som er substitutter til hverandre, altså varer som er svært like hverandre som for eksempel Pepsi og Coca Cola. Hvis prisen på Pepsi øker så vil etterspørselen etter Coca Cola øke.
+
+
+
+
+Da det er sekvensielle valg og de har samme kostnader så bruker jeg stackelberg modellen som modellerer hvordan aktørene tar valg i en sekvensiell rekkefølge. Stackelberg modellen er en modell som brukes for å analysere hvilket kvantum som produseres av hver aktør i et marked når en aktør tar sitt valg først og den andre aktøren tar sitt valg etterpå. 
+
+Grunnen til at jeg bruker en kvantumsmodell er at jeg antar at disse varene er strategiske substitutter. Dette betyr at hvis en bedrift øker sin produksjon vil det føre til at konkurransebedriften vil redusere sin produksjon. Dette vises under AUTOREF HER FOR EN AV DE NEDRE SIDENE av reaksjonsfunksjonen til bedriftene.
+
+
+Denne modellen løses i to trinn der lederbedriften Olivita velger sitt kvantum i trinn 1, men modellen løses baklengs ved at vi først løser trinn 2. Grunnen til dette er at Olivita vil finne ut Dr Choice AS sin beste reaksjonsfunksjon til enhver mengde Olivita produserer. Dette gjør at Olivita kan maksimere sin egen profitt ved å velge kvantum som gir høyest profitt gitt Dr Choice AS sin reaksjon. [@pepall2014, s. 265-268]
+
+Vi har da profittfunksjonene for begge bedriftene ved å ta markedspris per enhet minus marginalkostnad, multiplisert med kvantum solgt, minus faste kostnader.
+
+```{=tex}
+\begin{align*}
+\pi_O=(P-50) \cdot q_O-3000000 \\
+\pi_C=(P-50) \cdot q_C-3000000
+\end{align*}
+```
+Begge bedriftene har samme marginalkostnader og faste kostnader så jeg skriver disse som en felles profitt funksjon. Jeg gjør det også på generell form da utskriftene fra utregning blir rotete.
+
+$$
+\pi = Q_O \cdot (a - b \cdot (Q_O + Q_C) - c) 
+$$ Som sagt skal trinn 2 løses først så ved å derivere profitten til Dr Choice AS med hensyn på $Q_C$ får jeg:
+
+$$
+\frac{\partial \pi}{\partial Q_C} = a- 2bQ_C - bQ_O -c
+$$ Når denne nå settes lik null får jeg reaksjons funksjonen til Dr Choice AS. 
+
+$$
+RF2 = Q_C= \frac{a-bQ_O - c}{2b}
+$$ 
+
+
+```{python}
+#bare løst generelt først
+q_O, q_C, p, c, f, pi_C, pi_O, Q, a, b= sp.symbols('q_O q_C p c f \u03C0_C \u03C0_O Q a b')
+
+Invers_etterspors = sp.Eq(p, (a-b*Q))
+profitt_1_eq = sp.Eq(pi_O, (Invers_etterspors.subs(Q, q_O+q_C).rhs-c)*q_O-f)
+profitt_2_eq = sp.Eq(pi_C, (Invers_etterspors.subs(Q, q_O+q_C).rhs-c)*q_C-f)
+
+
+
+derivert_profitt_2 = sp.diff(profitt_2_eq.rhs, q_C)
+
+reaksjon_choice = sp.solve(derivert_profitt_2, q_C)[0]
+
+
+kvantum_olivitas = sp.solve(sp.diff(profitt_1_eq.rhs.subs({q_C: reaksjon_choice}), q_O), q_O)[0]
+
+kvantum_choice = reaksjon_choice.subs(q_O, kvantum_olivitas)
+```
+
+
+Denne settes så inn i den deriverte profittfunksjonen til Olivita og løses for $Q_O$.
+
+```{=tex}
+\begin{align*}
+Q_O = a-\frac{b Q_O}{2} - b \left(q_O + \frac{2-b q_O - c}{2b}\right)-c
+\end{align*}
+```
+Denne løses for $Q_O$ for å finne optimalt kvantum for Olivita som velger sitt kvantum først. $$
+RF1 = Q_O = \frac{a-c}{2b}
+$$
+
+Vi setter den så inn i reaksjonsfunksjonen til Dr Choice AS for å finne optimalt kvantum for Dr Choice AS.
+
+$$
+Q_C = \frac{\frac{a}{2}-\frac{c}{2}}{2b} = \frac{a-c}{4b}
+$$ Da Q = $Q_O + Q_C$ så kan vi finne optimalt kvantum for begge bedriftene og prisen i markedet.
+
+```{=tex}
+\begin{align*}
+P &= a - b(Q_O + Q_C) \\
+&= a- b(\frac{a-c}{2b} + \frac{a- c}{4b}) \\
+&= \frac{a}{4} + \frac{c}{4}
+\end{align*}
+```
+```{python oppsett_oppgave1_a}
+q_O, q_C, p, c, f, pi_C, pi_O= sp.symbols('q_O q_C p c f \u03C0_C \u03C0_O')
+
+Invers_etterspors = sp.Eq(p, (990-(1/60)*(q_C+q_O)))
+
+
+profitt_1_eq = sp.Eq(pi_O, (Invers_etterspors.rhs-50)*q_C-3000000)
+profitt_2_eq = sp.Eq(pi_C, (Invers_etterspors.rhs-50)*q_O-3000000)
+
+
+derivert_profitt_2 = sp.diff(profitt_2_eq.rhs, q_O)
+
+reaksjon_olivitas = sp.solve(derivert_profitt_2, q_O)[0]
+
+profitt_1_eq = profitt_1_eq.subs(q_O, reaksjon_olivitas)
+
+derivert_profitt1 = sp.diff(profitt_1_eq.rhs, q_C) #kvantum for olivitas
+
+kvantum_olivitas = sp.solve(derivert_profitt1, q_C)[0]
+
+#setter inn kvantum i reaksjonsfunksjonen til Dr Choice AS
+kvantum_choice = reaksjon_olivitas.subs(q_C, kvantum_olivitas)#Kvantum for choice
+
+```
+
+Vi kan nå finne markedsprisen ved å sette inn kvantum for begge bedriftene i den inverse etterspørselen.
+
+```{python}
+markedspris = Invers_etterspors.rhs.subs({q_C:kvantum_olivitas, q_O:kvantum_choice})
+markedspris
+```
+
+Og kvantumet til begge blir
+
+```{python}
+print(f'''Kvantum for Olivitas: {round(kvantum_olivitas)} og Kvantum for Dr Choice AS: {round(kvantum_choice)}. \nDet totale kvantumet i markedet er {round(kvantum_olivitas+kvantum_choice)} til en pris på {round(markedspris)}.''')
+```
+
+Og profitten til begge bedriftene
+
+```{python}
+profitt_olivitas = profitt_1_eq.rhs.subs(q_C, kvantum_olivitas).subs(q_O, kvantum_choice)
+profitt_olivitas = sp.Eq(pi_O, profitt_olivitas)
+profitt_olivitas
+```
+
+```{python}
+profitt_choice = profitt_2_eq.rhs.subs(q_O, kvantum_choice).subs(q_C, kvantum_olivitas)
+profitt_choice = sp.Eq(pi_C, profitt_choice)
+profitt_choice
+```
+
+
+\newpage
+
+### b) Vil det være en fordel for Olivita å ha mulighet til å gjøre sine valg før konkurrenten gjør sitt valg?
+
+Ja det vil være en fordel for Olivita men for å bekrefte dette så vil jeg beregne hvilket kvantum de ville valgt i en vanlig cournot modell uten sekvensiell valg.
+
+Jeg gjøre dette igjen på generell form for å så sette inn tall.
+$$
+P = a - b(Q_O + Q_C)
+$$
+Marginalkostnaden til begge bedriftene er konstant og lik og for å finne etterspørselsfunksjonen for hver bedrift betraktes produsert mengde for den andre bedrift som konstant. 
+
+
+Etterspørselen til Dr Choice AS er gitt ved: 
+$$
+P_C = (a  + bQ_O)-bQ_C
+$$
+For å finne optimalt kvantum for Dr Choice AS så derivertes profitten til Dr Choice AS med hensyn på $Q_C$ for å finne marginalinnekten.
+```{=tex}
+\begin{align*}
+\pi_C = (P_C - c)Q_C = (a  + bQ_O - bQ_C - c)Q_C \\
+\frac{\pi_C}{\partial Q_C} = (a - bQ_O) - 2bQ_C
+\end{align*}
+```
+
+Dette gir oss optimalt kvantum for Dr Choice AS ved å sette lik marginal kostnad. 
+$$
+Q_C = \frac{a - c}{2b} - \frac{Q_O}{2}
+$$
+
+Vi kan så finne reaksjonsfunksjonen til Olivita ved å sette dette kvantumet inn i etterspørselen til Olivita. 
+$$
+Q_O = \frac{a - c}{2b} - \frac{Q_C}{2}
+$$
+Vi løser denne ved å sette inn for $Q_C$
+$$
+Q_O = \frac{a - c}{2b} - \left(\frac{\frac{a - c}{2b} - \frac{Q_O}{2}}{2}\right)
+$$
+Som endelig gir oss
+$$
+Q_O = \frac{a - c}{3b} = Q_C
+$$
+
+Vi kan nå finne markedsprisen ved å sette inn kvantum for begge bedriftene i den inverse etterspørselen.
+
+
+```{python}  
+import sympy as sp
+a, b, Q_O, Q_C, c, f, p, Q = sp.symbols('a b Q_O Q_C c f p Q')
+
+demand = sp.Eq(p, a-b*(Q_O+Q_C))
+
+income = sp.Eq(p*Q, Q*(a-b*Q))
+costs = Q*c-f
+
+MR = sp.solve(sp.diff(income.rhs-costs, Q), c)[0]
+
+MR1 = sp.Eq(sp.diff((a-b*(Q_O+Q_C))*Q_O-f, Q_O), c)
+RF1  = sp.solve(MR1, Q_O)[0]
+
+MR2 = sp.Eq(sp.diff((a-b*(Q_C+Q_O))*Q_C-f, Q_C), c)
+RF2 = sp.solve(MR2, Q_C)[0]
+
+
+optimalt_kvantum1 = sp.solve(sp.Eq(RF1.subs(Q_C, RF2), Q_O))[0][Q_O]
+
+optimalt_kvantum2 = sp.solve(sp.Eq(RF2.subs(Q_O, RF1), Q_C))[0][Q_C]
+
+profitt_1 = (demand.rhs-costs).subs(Q, optimalt_kvantum1)
+
+
+markedspris = round(float(sp.solve(demand.subs({a:990, b:1/60, Q_O:optimalt_kvantum1, Q_C:optimalt_kvantum2, c: 50}), p)[0]),3)
+
+profitt_1 = (demand.rhs-costs).subs({Q_O: optimalt_kvantum1, Q_C: optimalt_kvantum2, Q: optimalt_kvantum1, f: 3000000, a: 990, b: 1/60, c: 50}) 
+profitt_2 = (demand.rhs-costs).subs({Q_O: optimalt_kvantum1, Q_C: optimalt_kvantum2, Q: optimalt_kvantum2, f: 3000000, a: 990, b: 1/60, c: 50})
+
+
+
+kvantum_QO = int(optimalt_kvantum1.subs({a:990, b:1/60, c:50, f:3000000}))
+kvantum_QC = int(optimalt_kvantum2.subs({a:990, b:1/60, c:50, f:3000000}))
+
+print(f'''Optimalt kvantum for Q_O er {kvantum_QO} og for Q_C er {kvantum_QC}. \nSå det totale kvantumet blir {(kvantum_QO+kvantum_QC)} og markedsprisen blir {markedspris}''')
+
+print('''Profit for Q_O: ''', round(float(profitt_1),2), '''Profit for Q_C: ''', round(float(profitt_2),2), '''\nTotal profit: ''', round(float(profitt_1),2)+round(float(profitt_2),2))
+
+
+
+
+```
+
+Så vi kan se at dersom Olivita ikke får gjøre sitt valg først så vil det totale kvantumet i markedet være 37600 som er lavere enn det totale kvantumet under stackelberg på 42300. Det er derimot en høyere pris på 363 istedet for 285.
+
+
+### Begrunnelse for valg av modell
+
+```{python}
+display(RF1.subs({a:990, b:1/60, c:50}))
+display(RF2.subs({a:990, b:1/60, c:50}))
+```
+Her har jeg tatt å satt inn for verdiene til $a$, $b$ og $c$ i reaksjonsfunksjonene til bedriftene. Det vi kan se er at begge reaksjonsfunksjonene har negativ helning så dersom Olivita øker sin produksjon så vil reaksjonsfunksjonen til Dr Choice AS reduseres og det samme vil skje dersom Dr Choice AS øker sin produksjon. Dette tyder på at det er strategiske substitutter.
+
+
+
+
+kanskje nevne nash likevekt
+
+
+\clearpage
+## Optimal tilpasning før fusjon
+2.  Oppgave 2 (70%)
+
+Markedet for produksjon av mikroøl består av tre lokale bryggerier: Graff Brygghus, Bryggeri 13 og Mack Mikrobryggeri. Etterspørselen i dette markedet er gitt ved: $$
+P = 175-4Q
+$$ hvor $P$ er markedspris per flaske mikroøl, $Q$ er totalt kvantum (antall tusen flasker), som er summen av produksjonen til de tre bryggeriene: $Q = q_G + q_B + q_M$, der $q_G$ er produsert kvantum for Graff Brygghus, $q_B$ er produsert kvantum for Bryggeri 13 og $q_M$ er produsert kvantum for Mack Mikrobryggeri.
+
+Mack Mikrobryggeri, som er en del av Mack Ølbryggeri, har en mer effektiv produksjonslinje enn de to andre, med konstante marginalkostnader på 7 kr per flaske, mens Graff Brygghus og Bryggeri 13 har marginalkostnader på 10 kr per flaske. Alle tre mikrobryggeriene har faste årlige kostnader på 300 000 kr. Styrene i selskapene Mack Mikrobryggeri og Bryggeri 13 har startet samtaler knyttet til mulig fusjon av disse to selskapene. Ved en fusjon vil all produksjon flyttes til Mack Mikrobryggeri. De faste kostnadene vil også reduseres ved sammenslåing av selskapene, og totalt utgjøre kr 500 000 per år for det fusjonerte selskapet.
+
+### a) Vil en slik fusjon være lønnsom for de fusjonerte partene?
+
+
+I en slik situasjon så starter jeg med å beregne hvordan markedet er før en fusjon ved bruk av Cournot modellen for bedrifter med asymmetriske bedrifter siden en av de tre bedriftene har forskjellige kostnader. Da varene er homogene eller veldig like så vil vi anta at det er samme kundebase for alle tre og at bedriftene konkurrerer med kvantitet. 
+
+
+#### Cournot modellen før fusjon
+
+For å finne likevekten i markedet før fusjon så starter vi med å finne reaksjonsfunksjonene til bedriftene og jeg gjør dette igjen på generell form for å gjøre det ryddigere og lettere å forstå. 
+
+```{python}
+import sympy as sp
+a, b, q_G, q_B, q_M, q_BM, c, f, f_G, f_B, f_M, f_BM, p, Q, c_G, c_B, c_M, c_BM, pi_G, pi_B, pi_M, pi_BM = sp.symbols('a b q_G q_B q_M q_{BM} c f f_G f_B f_M f_{BM} p Q c_G c_B c_M c_{BM} \u03C0_G \u03C0_B \u03C0_M \u03C0_BM')
+
+
+
+demand = sp.Eq(p, a-b*(Q))
+
+income = sp.Eq(p*Q, Q*(a-b*Q))
+costs = Q*c+f
+
+
+
+
+profitt_G = sp.Eq(pi_G, demand.rhs.subs(Q, q_G+q_B+q_M)*q_G-costs.subs({Q:q_G, c:c_G, f:f_G}))
+profitt_B = sp.Eq(pi_B, demand.rhs.subs(Q, q_G+q_B+q_M)*q_B-costs.subs({Q:q_B, c:c_B, f:f_B}))
+profitt_M = sp.Eq(pi_M, demand.rhs.subs(Q, q_G+q_B+q_M)*q_M-costs.subs({Q:q_M, c:c_M, f:f_M}))
+```
+
+Jeg skriver da igjen etterspørselsfunksjonen som:
+$$
+P = a - bQ
+$$
+$Q$ er igjen lik $\Sigma q_i$ og vi har at $Q = q_G + q_B + q_M$. der $q_G$ er for Graff Brygghus, $q_B$ er for Bryggeri 13 og $q_M$ er for Mack Mikrobryggeri.
+Inntektene til bedriftene er gitt ved $I$:
+$$
+I_i = P \cdot q_i\cdot(a-b\cdot q_i)
+$$
+og kostnader er gitt ved:
+$$
+c_i = q_i \cdot c_i + f_i
+$$
+
+Dette kan settes sammen for å gi oss profittfunksjonen til bedriftene:
+```{=tex}
+\begin{align*}
+\pi_G &= -c_G\cdot q_G - f_G + (a-b\cdot(q_G+q_B+q_M))\cdot q_G \\
+\pi_B &= -c_B\cdot q_B - f_B + (a-b\cdot(q_G+q_B+q_M))\cdot q_B \\
+\pi_M &= -c_M\cdot q_M - f_M + (a-b\cdot(q_G+q_B+q_M))\cdot q_M
+\end{align*}
+```
+
+
+
+
+Jeg deriverer så disse og løser for $q_i$ for å finne reaksjonsfunksjonene til bedriftene og setter inn verdier for $a$, $b$ og $c_i$ for å finne kvantumene som produseres av bedriftene. 
+```{python}
+derivert_profitt_G = sp.diff(profitt_G.rhs, q_G)
+derivert_profitt_B = sp.diff(profitt_B.rhs, q_B)
+derivert_profitt_M = sp.diff(profitt_M.rhs, q_M)
+
+solved = sp.solve([derivert_profitt_G, derivert_profitt_B, derivert_profitt_M], [q_G, q_B, q_M])
+```
+
+
+```{python}
+a_num = 175
+b_num = 4
+c_M_num = 7
+c_B_num = 10
+c_G_num = 10
+f_G_num = 300
+f_B_num = 300
+f_M_num = 300
+f_BM_num = 500
+c_BM_num = 7
+
+cournot = sp.lambdify(
+    (a, b, c_G, c_B, c_M), 
+    (solved[q_G], solved[q_B], solved[q_M]))
+kvantum_G, kvantum_B, kvantum_M = cournot(a_num, b_num, c_G_num, c_B_num, c_M_num)
+
+markedspris = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G+kvantum_B+kvantum_M})
+```
+
+```{=tex}
+\begin{align*}
+q_B &= \frac{a-3\cdot c_B + c_G + c_M}{4\cdot b}= \frac{175-3\cdot 10 + 10 + 7}{4\cdot 4} = 10.125 \\
+q_G &= \frac{a + c_B - 3\cdot c_G + c_M}{4\cdot b} =  \frac{175 + 10 - 3\cdot 10 + 7}{4\cdot 4} = 10.125 \\
+q_M &= \frac{a + c_B + c_G -3\cdot c_M}{4\cdot b} = \frac{175 + 10 + 10 -3\cdot 7}{4\cdot 4} = 10.875
+\end{align*}
+```
+
+
+Dette gir oss at Graff Brygghus og Bryggeri 13 produserer 10.125 tusen flasker mikroøl, mens Mack Mikrobryggeri produserer 10.875 tusen flasker mikroøl. 
+```{python}
+%%capture
+fig, ax = plt.subplots()
+
+labels = ['Graff Brygghus', 'Bryggeri 13', 'Mack Mikrobryggeri']
+sizes = [kvantum_G, kvantum_B, kvantum_M]
+
+ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#3599a4', '#24666d'])
+plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier.png', dpi=300, bbox_inches='tight')
+```
+
+```{=tex}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{dokumentobjekter/figurer/markedsandel_mikrobryggerier.png}
+\caption{Markedsandelen til mikrobryggeriene}
+\label{fig:markedsandel}
+\end{figure}
+```
+
+For å nå finne markedsprisen så setter jeg dette inn i etterspørselsfunksjonen og får:
+$$
+P = 175 - 4\cdot(10.125 + 10.125 + 10.875) = 175 - 4\cdot 31.125 = 175 - 124.5 = 50.5
+$$
+Dette gir oss at markedsprisen er 50.5 kr per flaske mikroøl. Så kan jeg bare sette inn tallene i de tidligere profittfunksjonene og får:
+```{python}
+profitt_G_before = profitt_G.subs({q_G:kvantum_G, q_B:kvantum_B, q_M:kvantum_M, c_G:c_G_num, a:a_num, b:b_num, p:markedspris, f_G:f_G_num})
+profitt_B_before = profitt_B.subs({q_G:kvantum_G, q_B:kvantum_B, q_M:kvantum_M, c_B:c_B_num, a:a_num, b:b_num, p:markedspris, f_B:f_B_num})
+profitt_M_before = profitt_M.subs({q_G:kvantum_G, q_B:kvantum_B, q_M:kvantum_M, c_M:c_M_num, a:a_num, b:b_num, p:markedspris, f_M:f_M_num})
+```
+
+```{=tex}
+\begin{align*}
+\pi_G = 110.0625 \\
+\pi_B = 110.0625 \\
+\pi_M = 173.0625
+\end{align*}
+```
+
+
+Da tallene er gitt i tusen så gir dette oss at Graff Brygghus og Bryggeri 13 hadde hver en profitt på 1100625 kr, mens Mack Mikrobryggeri har en profitt på 1730625 kr.
+
+Nå starter jeg ved å se på hva som skjer om Mack Mikrobryggeri og Bryggeri 13 fusjonerer.
+
+\clearpage
+
+## Optimal tilpasning etter fusjon
+
+
+Når Mack Mikrobryggeri og Bryggeri 13 fusjonerer vil vi ha et marked med 2 aktører med asymmetriske kostnader så da bruker jeg igjen modellen for Cournot-konkurranse med asymmetriske bedrifter men nå med 2 aktører. Jeg blir å betegne Mack og Bryggeri 13 $BM$. Jeg setter opp ligningene for profitten til hver av bedriftene etter fusjonen:
+
+```{python}
+profitt_G_etter = sp.Eq(pi_G, demand.rhs.subs(Q, q_G+q_BM)*q_G-costs.subs({Q:q_G, c:c_G, f:f_G}))
+profitt_MB_etter = sp.Eq(pi_BM, demand.rhs.subs(Q, q_G+q_BM)*q_BM-costs.subs({Q:q_BM, c:c_BM, f:f_BM}))
+```
+
+```{=tex}
+\begin{align*}
+\pi_G = -cG \cdot q_G + f_G + q_G \cdot (a - b \cdot (q_G + q_{BM}))\\
+\pi_BM = -c_{BM} \cdot q_{BM} - f_{BM} + q_{BM} \cdot (a - b \cdot (q_G + q_{BM}))
+\end{align*}
+```
+
+Jeg deriverer igjen og løser for $q_G$ og $q_{BM}$ for å finne reaksjonsfunksjonene og kvantum:
+
+```{python}
+derivert_profitt_G_etter = sp.diff(profitt_G_etter.rhs, q_G)
+derivert_profitt_MB_etter = sp.diff(profitt_MB_etter.rhs, q_BM)
+
+solved_etter = sp.solve([derivert_profitt_G_etter, derivert_profitt_MB_etter], [q_G, q_BM])
+```
+
+
+```{=tex}
+\begin{align*}
+q_G = \frac{a-2\cdot c_G + c_{BM}}{3\cdot b} = \frac{175-2\cdot 10 + 7}{3\cdot 4} =  13.5\\
+q_{BM} = \frac{a + c_G -2\cdot c_{BM}}{3\cdot b} = \frac{175 + 10 -2\cdot 7}{3\cdot 4} = 14.25
+\end{align*}
+```
+
+```{python}
+cournot_etter = sp.lambdify(
+    (a, b, c_G, c_BM), 
+    (solved_etter[q_G], solved_etter[q_BM]))
+    
+kvantum_G_etter, kvantum_BM = cournot_etter(a_num, b_num, c_G_num, c_BM_num)
+```
+
+
+Ved å substituere inn tallene får vi at Mack Mikrobryggeri vil produsere 13.5 tusen flasker mikroøl, mens Bryggeri 13 vil produsere 14.25 tusen flasker mikroøl. Jeg kan nå sette dette inn i etterspørselsfunksjonen å få inn markedspris
+$$
+p = 175 - 4 \cdot (13.5 + 14.25) = 64
+$$ 
+Og vi kan se denne er høyere enn den opprinnelige prisen før fusjon. Jeg kan nå sette dette inn i profittfunksjonene for å finne profitten til hver av bedriftene etter fusjonen.
+
+```{=tex}
+\begin{align*}
+\pi_G = 429 \\
+\pi_{BM} = 312.25
+\end{align*}
+```
+
+Vi kan se at Graff har tjent mer på fusjonen enn Mack og Bryggeri 13. Vi kan også se hvordan dette har skjedd i \autoref{fig:markedsandel_etter} på neste side
+
+\newpage
+
+```{python}
+%%capture
+fig, ax = plt.subplots()
+
+labels = ['Graff Brygghus', 'Mack Mikrobryggeri']
+sizes = [kvantum_G_etter, kvantum_BM]
+
+ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#24666d'])
+plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon.png', dpi=300, bbox_inches='tight')
+```
+
+```{=tex}
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.7\textwidth]{dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon.png}
+\caption{Markedsandelen til mikrobryggeriene etter fusjonen}
+\label{fig:markedsandel_etter}
+\end{figure}
+```
+
+Fusjonsparadokset er at fusjonen har gitt økt profitt for Graff Brygghus,
+
+
+
+blablabla
+
+
+
+I sum. Fusjonen har gitt økt profitt for begge selskapene og selv om det har vært bedre for Graff Brygghus så vil Mack og Bryggeri 13 også tjene mer på fusjonen igjennom økte priser. Av den grunn vil fusjonen være en god idé for begge selskapene.
+
+\clearpage
+
+Videre i oppgaven skal vi anta at fusjon mellom Mack Mikrobryggeri og Bryggeri 13 blir gjennomført, og det nye selskapet vil operere under navnet Mack Mikrobrygg 13. Markedet for produksjon av mikroøl vil da bestå av to lokale produsenter: Mack Mikrobrygg 13 og Graff Brygghus. For å styrke sin posisjon i markedet, investerer Graff Brygghus i nytt og mer effektivt produksjonsutstyr, noe som reduserer deres variable kostnader til kr 7 per flaske. Denne investeringen vil gi selskapet økte faste kostnader på kr 200.000. Totale faste kostnader for begge bryggeriene er da på kr 500.000 for hvert av selskapene.
+
+I restaurantbransjen i Tromsø er Restaurant Gruppen Holdig (RGH) en sentral aktør, som har monopol i sitt segment. RGH kjøper sitt mikroøl fra de to lokale produsentene Mack Mikrobrygg 13 og Graff Brygghus. For å drifte sine restauranter har RGH faste kostnader på kr 600.000.
+
+Etterspørselen etter mikroøl i restaurantbransjen er lik: $$
+P = 175 - 2Q
+$$ hvor $Q$ er antall solgte flasker mikroøl (antall tusen flasker) for RGH og $P$ er prisen for en flaske mikroøl til sluttbruker. For å ytterligere styrke sin posisjon i oppstrømsmarkedet, vurderer ledelsen i Mack Mikrobrygg 13 en fusjon med konkurrenten Graff Brygghus. Det antas at denne fusjonen ikke vil resultere i kostnadsbesparelser for bryggeriene. Som konsulent for styret i Mack Mikrobrygg 13, er du bedt om å analysere markedskonsekvensene av en potensiell fusjon mellom Mack Mikrobrygg 13 og Graff Brygghus. Analysen skal omfatte en vurdering av dagens markedstilpasning og en sammenligning med tilpasningen etter en eventuell fusjon i oppstrømsmarkedet.
+
+### b) Basert på din analyse, vil du anbefale styret i Mack Mikrobrygg 13 å gjennomføre fusjon med Graff Brygghus?
+
+
+Det er igjen snakk om horisontal fusjon men denne gangen vil vi gå fra å ha 2 aktører til å ha en monopolist. Med etterspørselsfunksjonen gitt som $P=175-2Q$ kan vi først beregne markedstilpasningen da de nå har like marginalkostnader og faste kostnader.
+
+```{python}
+import sympy as sp
+
+a, b, q_G, q_BM, q_BMG, c, c_G, c_BM, c_BMG, f, f_G, f_BM, f_BMG, Q, pi_BMG = sp.symbols('a b q_G q_{BM} q_{BMG} c c_G c_{BM} c_{BMG} f f_G f_{BM} f_{BMG} Q \u03C0_{BMG}')
+
+a_num = 175
+b_num = 2
+c_G_num = 7
+c_BM_num = 7
+c_BMG_num = 7
+f_G_num = 500
+f_BM_num = 500
+f_BMG_num = 500
+
+
+
+demand = sp.Eq(p, a-b*(Q))
+
+income = sp.Eq(p*Q, Q*(a-b*Q))
+costs = Q*c+f
+
+
+profitt_G = sp.Eq(pi_G, demand.rhs.subs(Q, q_G+q_BM)*q_G-costs.subs({Q:q_G, c:c_G, f:f_G}))
+profitt_BM = sp.Eq(pi_BM, demand.rhs.subs(Q, q_G+q_BM)*q_BM-costs.subs({Q:q_BM, c:c_BM, f:f_BM}))
+
+
+profitt_G_diff = sp.diff(profitt_G.rhs, q_G)
+profitt_BM_diff = sp.diff(profitt_BM.rhs, q_BM)
+
+
+```
+
+
+```{=tex}
+\begin{align*}
+\pi_G &= -c_G\cdot q_G - f_G + (a-b\cdot(q_G+q_BM))\cdot q_G \\
+\pi_BM &= -c_B\cdot q_BM - f_BM + (a-b\cdot(q_G+q_BM))\cdot q_BM \\
+\end{align*}
+```
+
+Derivert med hensyn på $q_G$ og $q_BM$ får vi:
+
+```{=tex}
+\begin{align*}
+a-b\cdot q_C - b(q_C + q_{BM})- c_G \\
+a-b\cdot q_{BM} - b(q_G + q_{BM})- c_{BM} 
+\end{align*}
+```
+Løst for $q_G$ og $q_{BM}$ får vi:
+```{python}
+solved_etterB = sp.solve([profitt_G_diff, profitt_BM_diff], [q_G, q_BM])
+
+
+cournot_etterB = sp.lambdify(
+    (a, b, c_G, c_BM), 
+    (solved_etter[q_G], solved_etter[q_BM]))
+kvantum_G_etter_B, kvantum_BM_B = cournot_etterB(a_num, b_num, c_G_num, c_BM_num)
+
+
+markedspris_B = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G_etter_B+kvantum_BM_B})
+
+
+```
+
+```{=tex}
+\begin{align*}
+q_G = \frac{a-2\cdot c_G +c_{BM}}{3b} \\
+q_BM = \frac{a +c_G - 2\cdot c_{BM}}{3b}
+\end{align*}
+```
+
+
+her starter slurvet for real
+```{python}
+
+profitt_G_num = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G_etter_B+kvantum_BM_B})*(kvantum_G_etter_B)-costs.subs({Q:kvantum_G_etter_B, c:c_G_num, f:f_G_num})
+profitt_bm_num = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_BM_B+ kvantum_G_etter_B})*(kvantum_BM_B)-costs.subs({Q:kvantum_BM_B, c:c_BM_num, f:f_BM_num})
+```
+
+
+dette gir oss kvantum på begge på 28, markedspris på 63 og profitt hver på 1068. 
+
+Etter fusjonen vil vi ha en monopolist og vi kan da regne ut profitten til monopolisten. 
+
+
+```{python}
+profitt_BMG = sp.Eq(pi_BMG, demand.rhs.subs(Q, q_BMG)*q_BMG-costs.subs({Q:q_BMG, c:c_BMG, f:f_BMG}))
+profitt_BMG_diff = sp.diff(profitt_BMG.rhs, q_BMG)
+
+solved_etterB_monopol = sp.solve(profitt_BMG_diff, q_BMG)[0]
+
+cournot_etterB_monopol = sp.lambdify(
+    (a, b, c_BMG), 
+    (solved_etterB_monopol))
+kvantum_BMG_B = cournot_etterB_monopol(a_num, b_num, c_BMG_num)
+
+markedspris_B = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_BMG_B})
+
+profitt_BMG_num = sp.Eq(pi_BMG, demand.rhs.subs({Q:kvantum_BMG_B, a:a_num, b:b_num})*kvantum_BMG_B-costs.subs({Q:kvantum_BMG_B, c:c_BMG_num, f:f_BMG_num}))
+
+
+```
+
+$$
+\pi_BMG = -c_{BMG}\cdot q_{BMG} - f_{BMG} + q_{BMG}\cdot (a-b\cdot q_{BMG})
+$$
+derivert og løst for q_BMG
+$$
+q_{BMG} = \frac{a-c_{BMG}}{2b}
+$$
+totalt kvantum på 42, pris 91 og total profitt 3028.
+
+
+
+\clearpage
+
+## c) Hva blir de samfunnsøkonomiske konsekvensene av en fusjon mellom Mack Mikrobrygg 13 og Graff Brygghus?
+
+\clearpage
+
+# Referanser
+::: {#refs}
+:::
+
+\clearpage
+
+
+\appendix
+
+\section {Appendix Generell KI bruk}
+
+I løpet av koden så kan det ses mange \# kommentarer der det er skrevet for eks "#fillbetween q1 and q2". Når jeg skriver kode i Visual Studio Code så har jeg en plugin som heter Github Copilot. Når jeg skriver slike kommentarer så kan den foresøke å fullføre kodelinjene mens jeg skriver de. Noen ganger klarer den det, men andre ikke. Det er vanskelig å dokumentere hvert bruk der den er brukt siden det "går veldig fort" men siden jeg ikke har fått på plass en slik dokumentasjon så kan all python kode der det er brukt kommentarer antas som at det er brukt Github Copilot. Nærmere info om dette KI verktøyet kan ses på <https://github.com/features/copilot>
+
+\clearpage
+
+\section {Appendix Python kode Oppgave 1a}
+
+```{python oppsett_oppgave1_a}
+#| echo: true
+q_O, q_C, p, c, f, pi_C, pi_O= sp.symbols('q_O q_C p c f \u03C0_C \u03C0_O')
+
+Invers_etterspors = sp.Eq(p, (990-(1/60)*(q_C+q_O)))
+
+
+profitt_1_eq = sp.Eq(pi_O, (Invers_etterspors.rhs-50)*q_C-3000000)
+profitt_2_eq = sp.Eq(pi_C, (Invers_etterspors.rhs-50)*q_O-3000000)
+
+
+derivert_profitt_2 = sp.diff(profitt_2_eq.rhs, q_O)
+
+reaksjon_olivitas = sp.solve(derivert_profitt_2, q_O)[0]
+
+profitt_1_eq = profitt_1_eq.subs(q_O, reaksjon_olivitas)
+
+derivert_profitt1 = sp.diff(profitt_1_eq.rhs, q_C) #kvantum for olivitas
+
+kvantum_olivitas = sp.solve(derivert_profitt1, q_C)[0]
+
+#setter inn kvantum i reaksjonsfunksjonen til Dr Choice AS
+kvantum_choice = reaksjon_olivitas.subs(q_C, kvantum_olivitas)#Kvantum for choice
+
+```
+
+```{python}
+#| echo: true
+markedspris = Invers_etterspors.rhs.subs({q_C:kvantum_olivitas, q_O:kvantum_choice})
+markedspris
+```
+
+```{python}
+#| echo: true
+print(f'''Kvantum for Olivitas: {round(kvantum_olivitas)} og Kvantum for Dr Choice AS: {round(kvantum_choice)}''')
+```
+
+```{python}
+#| echo: true
+profitt_olivitas = profitt_1_eq.rhs.subs(q_C, kvantum_olivitas).subs(q_O, kvantum_choice)
+profitt_olivitas = sp.Eq(pi_O, profitt_olivitas)
+profitt_olivitas
+```
+
+```{python}
+#| echo: true
+profitt_choice = profitt_2_eq.rhs.subs(q_O, kvantum_choice).subs(q_C, kvantum_olivitas)
+profitt_choice = sp.Eq(pi_C, profitt_choice)
+profitt_choice
+```
+
+\clearpage
+
+\section {Appendix Python kode Oppgave 1 b}
+
+```{python oppsett_oppgave1_b}
+#| echo: true
+import sympy as sp
+a, b, Q_O, Q_C, c, f, p, Q = sp.symbols('a b Q_O Q_C c f p Q')
+
+
+demand = sp.Eq(p, a-b*(Q_O+Q_C))
+
+income = sp.Eq(p*Q, Q*(a-b*Q))
+costs = Q*c-f
+
+MR = sp.solve(sp.diff(income.rhs-costs, Q), c)[0]
+
+MR1 = sp.Eq(sp.diff((a-b*(Q_O+Q_C))*Q_O-f, Q_O), c)
+RF1  = sp.solve(MR1, Q_O)[0]
+
+MR2 = sp.Eq(sp.diff((a-b*(Q_C+Q_O))*Q_C-f, Q_C), c)
+RF2 = sp.solve(MR2, Q_C)[0]
+
+
+optimalt_kvantum1 = sp.solve(sp.Eq(RF1.subs(Q_C, RF2), Q_O))[0][Q_O]
+
+optimalt_kvantum2 = sp.solve(sp.Eq(RF2.subs(Q_O, RF1), Q_C))[0][Q_C]
+
+profitt_1 = (demand.rhs-costs).subs(Q, optimalt_kvantum1)
+
+
+markedspris = round(float(sp.solve(demand.subs({a:990, b:1/60, Q_O:optimalt_kvantum1, Q_C:optimalt_kvantum2, c: 50}), p)[0]),3)
+
+profitt_1 = (demand.rhs-costs).subs({Q_O: optimalt_kvantum1, Q_C: optimalt_kvantum2, Q: optimalt_kvantum1, f: 3000000, a: 990, b: 1/60, c: 50}) 
+profitt_2 = (demand.rhs-costs).subs({Q_O: optimalt_kvantum1, Q_C: optimalt_kvantum2, Q: optimalt_kvantum2, f: 3000000, a: 990, b: 1/60, c: 50})
+
+
+
+kvantum_QO = int(optimalt_kvantum1.subs({a:990, b:1/60, c:50, f:3000000}))
+kvantum_QC = int(optimalt_kvantum2.subs({a:990, b:1/60, c:50, f:3000000}))
+
+print(f'''Optimalt kvantum for Q_O er {kvantum_QO} og for Q_C er {kvantum_QC}. Så det totale kvantumet blir {(kvantum_QO+kvantum_QC)} og markedsprisen blir {markedspris}''')
+
+print('''Profit for Q_O: ''', round(float(profitt_1),2), '''Profit for Q_C: ''', round(float(profitt_2),2), '''\nTotal profit: ''', round(float(profitt_1),2)+round(float(profitt_2),2))
+
+
+
+
+```
+
+\clearpage
+
+
+\section {Appendix Python kode Oppgave 2 a}
+
+```{python}
+
+```
+
+\clearpage
+
+\section {Appendix Python kode Oppgave 2 b}
+
+```{python}
+
+
+```
+
+\clearpage
+
+\section {Appendix Python kode Oppgave 2 c}
+
+```{python}
+
+
+```

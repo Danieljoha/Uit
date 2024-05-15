@@ -1,0 +1,1027 @@
+---
+format: 
+  pdf:
+    include-before-body:
+      - forsidesok2011.tex  
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+    toc-title: "Innholdsfortegnelse"
+    toccolor: black
+echo: false
+bibliography: references.bib
+csl: norsk-apa-manual.csl
+crossref: 
+  lof-title: "Figurliste"
+  fig-title: "Figur"
+  lot-title: "Tabelliste"
+  tbl-title: "Tabell"
+header-includes:
+  - \usepackage{wrapfig}
+  - \usepackage{subcaption}
+  - \usepackage{amsmath}
+  - \usepackage{cancel}
+  - \renewcommand{\maketitle}{}
+  - \usepackage{tikz}
+nocite: |
+  @*
+keep-tex: true
+---
+
+```{=tex}
+\newpage
+\hypersetup{linkcolor=black}
+\renewcommand{\contentsname}{Innholdsfortegnelse}
+\renewcommand*{\figureautorefname}{Figur}
+\renewcommand*{\tableautorefname}{Tabell}
+\tableofcontents
+\listoffigures
+\newpage
+```
+```{r}
+rm(list=ls())
+```
+
+# Utfordring 1.1 Solow grunnmodell
+
+Solow-modellen predikerer at nivået på spareraten og befolkningsvekstraten, er helt sentrale for nivået på produksjonen per arbeider på lang sikt (steady state).
+
+### Antakelser i solow sin grunnmodell
+
+Før vi utleder Solow-modellen så må vi ta for oss en del antagelser som må ligge til grunn for å best mulig og enklest gjøre det sammenlignbart. Og i forhold til den grunnleggende Solow-modellen så går man ut fra disse antakelsene:
+
+1.  Alle bedrifter produserer et homogent gode.
+
+2.  Fullkommen konkurranse, som vil si at bedriftene har en profitt på kroner 0.
+
+3.  En har to produksjonsfaktorer, arbeid og kapital, definert ved $Prod(Y)=Kapital(k) \> og \> arbeid(L)$
+
+4.  Konstant skalautbytte og avtakende marginal produktivitet, som vil si at ved konstant skalautbytte så vil for eksempel en dobling i innsatsfaktor(ene) gi en dobling i produksjonen, men siden den også er avtagende i marginalproduktiviteten så vil økningen i produksjonen være avtagende for hver økning
+
+5.  Alle i befolkningen (p) er i arbeid. $L=p$, det tas ikke hensyn til de som ikke er i stand til å jobbe, alle regnes under ett.
+
+6.  Befolkningen vokser med en konstant, eksogent gitt rate (n): $L(t)=L_0 e^{nt}$
+
+7.  Spareraten(netto) er eksogent gitt. og er lik for alle. og er en andel av den totale inntekten. $0\leq S\leq 1$
+
+8.  Lukket økonomi. som vil si at Import = 0 = Eksport, altså ingen handel med utlandet.
+
+#### Konsekvenser ved antagelsene.
+
+1.  All produksjon blir inntekt. Som er et mål på konsum-muligheten og som igjen er et mål på materiell velferd.
+
+2.  Sparing = Investering. All sparing blir produktivt kapital. Positiv nettosparing fører til vekst i kapitalstokken.
+
+\clearpage
+
+### Utledning av steady-state-nivået i grunnleggende Solow-modell matematisk
+
+```{python include =FALSE}
+#%%capture
+import sympy as sp 
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+alpha, t, s, k, n = sp.symbols('\u03B1 t s k n', real=True)
+
+
+Y = sp.Function('Y')(t)  # Y(t)
+K = sp.Function('K')(t)  # K(t)
+L = sp.Function('L')(t)  # L(t)
+k = sp.Function('k')(t)  # k(t)
+y = sp.Function('y')(t)  # y(t)
+
+
+
+Yfunc = sp.Eq(Y, K**alpha * L**(1-alpha))
+yfunc = Yfunc.subs(Y, y*L)
+yfuncleft = yfunc.subs(K, k*L).lhs/ L
+yfuncright = yfunc.subs(K, k*L).rhs/ L
+yfunc = sp.Eq(yfuncleft, yfuncright)
+
+#y(t) = k(t)**alpha
+
+#yfunc = sp.Eq(y, k**alpha)
+
+#S = Netto nyinvesteringer 
+#n = befolkningsvekst. eksogent gitt og voksede med konstant rate n
+#k(t) = K(t)/L(t)
+#k derivert for t = s*y(t)
+# L(t) vokser med en eksogent og konstant rate n. L(t)=L(0)*e^(n*t)
+
+
+#natural log of yfunc
+lnyfunc = sp.Eq(sp.log(y), sp.log(k**alpha))
+#derivative of lnyfunc
+dlnyfunc = sp.Eq(sp.diff(sp.log(y), t), sp.diff(sp.log(k**alpha), t))
+#dlnyfunc
+```
+
+Vi definerer produksjons-funksjonen hvor produksjonen avhenger av kapital og arbeid. $1 >\alpha > 0$ $$ Y(t) = K(t)^\alpha L(t)^{1-\alpha}$$
+
+Y viser oss BNP der kapital og arbeidskraft er de eneste produksjonsfaktorene, men på grunn av avtakende grenseproduktivitet vist med $\alpha$ og $1-\alpha$ ,så vil en økt mengde av enten kapital eller arbeidskraft bidra mindre enn 1:1 til totalproduksjonen.
+
+```{=tex}
+\fbox{
+ \addtolength{\linewidth}{-2\fboxsep}%
+ \addtolength{\linewidth}{-2\fboxrule}%
+ \begin{minipage}{\linewidth}
+  \begin{equation}
+    Y(t) = K(t)^\alpha \cdot L(t)^{1-\alpha}
+  \end{equation}
+  \begin{equation}
+    \frac{Y(t)}{L(t)} = \frac{K(t)^\alpha \cdot L(t)^{1-\alpha}}{L(t)}
+  \end{equation}
+  \begin{equation}
+    y(t) = K(t)^\alpha \cdot L(t)^{1-\alpha}\cdot L(t)^{-1}
+  \end{equation}
+  \begin{equation}
+    y(t) = K(t)^\alpha \cdot L(t)^{1-\alpha-1} \rightarrow K(t)^\alpha \cdot L(t)^{-\alpha} \rightarrow \left( \frac{K(t)}{L(t)} \right)^\alpha
+  \end{equation}
+  \begin{equation}
+    y(t) = \left( \frac{K(t)}{L(t)} \right)^\alpha 
+  \end{equation}
+  \begin{equation}
+    y(t) =  k(t)^\alpha
+  \end{equation}
+ \end{minipage}
+}
+```
+$y(t) = k(t)^\alpha$ viser forholdet mellom kapital per arbeider og produksjon per arbeider. På denne måten kan vi se at det som påvirker BNP per arbeider er avhengig av hvor mye kapital som er tilgjengelig per arbeider. For eksempel vil det gi oss en lav BNP, dersom det var 1 traktor for hver 10 arbeider, men dersom det var 1 traktor for hver arbeider så vil BNP per arbeider være høyere. Samtidig kan vi se at dersom hver arbeider da hadde 2 traktorer så ville det ikke bidratt like mye til BNP per arbeider som det den første traktoren gjorde.
+
+Ved å ta logaritmen av begge sider av likning (6) får vi $$ \ln y(t) = \alpha \cdot \ln k(t)$$
+
+Ved å derivere begge sider med hensyn på $t$, så får vi $$ \frac{\frac{\partial}{\partial t} y{\left(t \right)}}{y{\left(t \right)}} = \frac{\alpha \frac{\partial}{\partial t} k{\left(t \right)}}{k{\left(t \right)}} $$
+
+Dette skriver vi så om til $$ \frac{1}{y(t)} \cdot \frac{\partial y(t)}{\partial t} = \alpha \cdot \frac{1}{k(t)} \cdot \frac{\partial k(t)}{\partial t}$$
+
+Vi blir å skrive $\frac{1}{y(t)} \cdot \frac{\partial y(t)}{\partial t}$ som $g_y(t)$ og $\frac{1}{k(t)} \cdot \frac{\partial k(t)}{\partial t}$ som $g_k(t)$
+
+Som da gir oss
+
+$$g_y = \alpha \cdot g_k$$
+
+For å finne vekst i kapital per arbeider, så må vi se på hva vi vet om $k(t)$. Antagelse 6 er gitt i ligning 9.
+
+```{=tex}
+\fbox{
+ \addtolength{\linewidth}{-2\fboxsep}%
+ \addtolength{\linewidth}{-2\fboxrule}%
+ \begin{minipage}{\linewidth}
+  \begin{equation}
+    k(t) = \frac{K(t)}{L(t)}
+  \end{equation}
+  \begin{equation}
+    \frac{\partial k(t)}{\partial t} = s \cdot y(t)
+  \end{equation}
+  \begin{equation}
+    L(t) = L_0 \cdot e^{n\cdot t} 
+  \end{equation}
+ \end{minipage}
+}
+```
+Som vist i ligning 9 så vokser L med en eksogent gitt og konstant rate.
+
+Tar logaritmen av ligning 7 $\ln(k(t)) = \ln(K((t)) - \ln(L(t))$ og deriverer.
+
+$$\frac{1}{k(t)} \cdot \frac {\partial k(t)}{\partial t} = \frac{1}{K(t)}- \frac{1}{L(t)} \cdot \frac{\partial L(t)}{\partial t}$$
+
+$$\frac{1}{K(t)} = s \cdot Y(t) \frac{\partial L(t)}{\partial t} = n$$
+
+$$\frac{1}{k(t)} \cdot \frac {\partial k(t)}{\partial t} = \frac{s \cdot Y(t)}{K(t)}- n$$
+
+Deler så for å få det i per arbeider
+
+$$\frac{1}{k(t)} \cdot \frac {\partial k(t)}{\partial t} = s \cdot \frac{\frac{Y(t)}{L(t)}}{\frac{K(t)}{L(t)}} -n$$
+
+$$\frac{1}{k(t)} \cdot \frac {\partial k(t)}{\partial t} = s \cdot \frac{y(t)}{k(t)} - n$$
+
+$$\frac{1}{k(t)} \cdot \frac {\partial k(t)}{\partial t} = s \cdot \frac{k^\alpha}{k} - n$$
+
+deler så inn på k
+
+$$\frac{\partial k}{\partial t} = s \cdot \frac{k^\alpha}{k}-n$$
+
+$$\frac{\partial k}{ \partial t} = s \cdot k^\alpha - n \cdot k \tag{10}$$
+
+Vilkåret for steady-state er da at ligning 10 er lik 0.
+
+```{=tex}
+\fbox{
+ \addtolength{\linewidth}{-2\fboxsep}%
+ \addtolength{\linewidth}{-2\fboxrule}%
+ \begin{minipage}{\linewidth}
+  \begin{equation}
+    s \cdot k^{\alpha} - n \cdot k = 0
+  \end{equation}
+  \begin{equation}
+    s \cdot k^{\alpha} = n \cdot k
+  \end{equation}
+  \begin{equation}
+    \frac{s \cdot k^{\alpha}}{n} = k
+  \end{equation}
+  \begin{equation}
+    \frac{s \cdot \cancel{k^{\alpha}}}{n} \cdot \frac{1}{\cancel{k^{\alpha}}} = k \cdot \frac{1}{k^{\alpha}}
+  \end{equation}
+  \begin{equation}
+   \frac{s}{n} = k \cdot \frac{1}{k^\alpha}
+  \end{equation}
+  \begin{equation}
+    \frac{s}{n} = k^{1-\alpha}
+  \end{equation}
+  \begin{equation}
+    \left( \frac{s}{n}\right)^\frac{1}{1-\alpha} = \left(k^{\cancel{1-\alpha}}\right)^{\cancel{\frac{1}{1-\alpha}}}
+  \end{equation}
+  \begin{equation}
+    k^{ss}=\left( \frac{s}{n}\right)^{\frac{1}{1-\alpha}}
+  \end{equation}
+ \end{minipage}
+}
+```
+Siden $y(t)=k^\alpha$ så får vi da $y^{ss}=\left(k^{ss}\right)^\alpha$
+
+$y^{ss}=\left(\left( \frac{s}{n}\right)^\frac{1}{1-\alpha}\right)^\alpha$
+
+ganger ut parentesene og får
+
+$$y^{ss}=\left( \frac{s}{n}\right)^\frac{\alpha}{1-\alpha}$$
+
+som viser steady-state nivået for kapital per arbeider, som er punktet hvor økonomien ikke lenger opplever per arbeider vekst i kapital eller produksjon. Dette forteller oss at for en gitt kombinasjon av sparerate og befolknings-vekstrate er det et nivå av kapital per arbeider som økonomien vil konvergere mot over tid. Å ha 2 traktorer per arbeider vil være dyrt i drift og vil dermed lede til at det blir mindre kapital per arbeider som demper produksjonen, det motsatte skjer når det er langt færre traktorer enn det faktisk trengs, da alle som investerte penger i traktorer til arbeiderne, ville opplevd en stor avkastning og ville investert opp til det konvergerings-punktet. En høyere sparerate eller en lavere befolkningsvekst vil føre til et høyere steady-state nivå av kapital per arbeider.
+
+\clearpage
+
+## Likevekt, sparerate og befolkningsvekst-rate
+
+```{python include=FALSE}
+
+#%%capture
+
+alpha_num = 0.5
+
+eq = sp.Eq(s*k**alpha, n*k)
+
+eq = sp.solve(eq, k)
+intersect1 = eq[0].subs(alpha, alpha_num).subs(s, 0.4).subs(n, 0.1)
+intersect2 = eq[0].subs(alpha, alpha_num).subs(s, 0.6).subs(n, 0.1)
+
+intersect1 = float(intersect1)
+intersect2 = float(intersect2)
+
+def plotfunc(k, alpha):
+    return k**alpha
+
+def neeededinv(n, k):
+    return n*k
+
+def nettoinv(s, y):
+    return s*y
+
+x = np.linspace(0, 100, 1000)
+
+
+
+fig, ax = plt.subplots(figsize=(7, 5))
+
+
+
+#ax.plot(x, plotfunc(x, alpha_num), label='y(t)')
+
+ax.plot(x, neeededinv(0.1, x), label='n*k(t)')
+
+ax.plot(x, nettoinv(0.4, plotfunc(x, alpha_num)), label='s*y(t)')
+
+
+for i in np.linspace(int(intersect1)-10, int(intersect1)-2, 5):
+    ax.annotate('', xy=(i, neeededinv(0.1, i)), xytext=(i-0.5, neeededinv(0.1, i-0.5)),
+                arrowprops=dict(facecolor='black', shrink=1, headwidth=8, headlength=8), annotation_clip=False)#denne blir ikke bedre. ikkje rør. e AIDS
+
+
+for i in np.linspace(int(intersect1)+2, int(intersect1)+10, 5):
+    ax.annotate('', xy=(i, neeededinv(0.1, i)), xytext=(i+1, neeededinv(0.1, i+1)), 
+                arrowprops=dict(facecolor='black', shrink=1, headwidth=8, headlength=8), annotation_clip=False)#denne blir ikke bedre. ikkje rør. e AIDS
+
+
+
+
+
+for i in np.linspace(int(intersect1)-10, int(intersect1)-2, 5):
+    ax.annotate('', xy=(i, nettoinv(0.4, plotfunc(i, alpha_num))), xytext=(i-0.5, nettoinv(0.4, plotfunc(i-0.5, alpha_num))),
+                arrowprops=dict(facecolor='black', shrink=1, headwidth=8, headlength=8), annotation_clip=False)#denne blir ikke bedre. ikkje rør. e AIDS
+
+
+for i in np.linspace(int(intersect1)+2, int(intersect1)+10, 5):
+    ax.annotate('', xy=(i, nettoinv(0.4, plotfunc(i, alpha_num))), xytext=(i+0.5, nettoinv(0.4, plotfunc(i+0.5, alpha_num))), 
+                arrowprops=dict(facecolor='black', shrink=1, headwidth=8, headlength=8), annotation_clip=False)#denne blir ikke bedre. ikkje rør. e AIDS
+
+
+
+
+
+
+#showing kss on k axis
+ax.text(intersect1-1, -0.2, r'$k_0^{ss}$', fontsize=15)
+ax.vlines(intersect1, 0, nettoinv(0.4, plotfunc(intersect1, alpha_num)), linestyle='dashed')
+
+
+ax.text(23, 1.7, r'$s \cdot y$', fontsize=15)
+ax.text(23, 2.8, r'$n \cdot k$', fontsize=15)
+
+ax.text(-2, 0.4*plotfunc(intersect1, alpha_num), r'$y_0^{ss}$', fontsize=15)
+ax.hlines(0.4*plotfunc(intersect1, alpha_num), 0, intersect1, linestyle='dashed')
+
+
+#ax.scatter(intersect1, 0.4*plotfunc(intersect1, alpha_num), color='black', s=100)
+
+
+
+ax.set_xlim(0, 30)
+ax.set_ylim(0, 3)
+
+#spines
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+
+
+ax.set_xticks([])
+ax.set_yticks([])
+
+#ax.set_title('Likevekt i grunnleggende Solow-modell')
+plt.savefig('Likevekt_grunnleggende.png', dpi=300, bbox_inches='tight')
+
+```
+
+```{=tex}
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \includegraphics[width=0.48\textwidth]{Likevekt_grunnleggende.png}
+  \caption{Likevekt i den grunnleggende Solow-modellen}
+  \label{fig:likevekt_grunnleggende}
+  \vspace{-12mm}
+\end{wrapfigure}
+```
+```{python include=FALSE}
+
+#%%capture
+
+intersect1 = eq[0].subs(alpha, alpha_num).subs(s, 0.4).subs(n, 0.1)
+intersect2 = eq[0].subs(alpha, alpha_num).subs(s, 0.6).subs(n, 0.1)
+
+
+
+fig, (ax, ax1) = plt.subplots(1, 2, figsize=(15, 5))
+
+
+ax.plot(x, neeededinv(0.1, x), label='n*k(t)')
+
+ax.plot(x, nettoinv(0.4, plotfunc(x, alpha_num)), label='s0*y(t)')
+
+
+for i in range(20, 40, 5):
+    ax.annotate("", xy=(i, nettoinv(0.6, plotfunc(i, alpha_num))), xytext=(i, nettoinv(0.4, plotfunc(i, alpha_num))),
+            arrowprops=dict(arrowstyle="->"))
+
+
+ax.annotate("", xy=(5, nettoinv(0.6, plotfunc(5, alpha_num))), xytext=(5, nettoinv(0.4, plotfunc(5, alpha_num))),
+            arrowprops=dict(arrowstyle="->"))
+
+ax.plot(x, nettoinv(0.6, plotfunc(x, alpha_num)), label='s1 > s0')
+
+ax.scatter(intersect1, 0.4*plotfunc(intersect1, alpha_num), label='k0ss')
+ax.scatter(intersect2, 0.6*plotfunc(intersect2, alpha_num), label='k1ss')
+
+for i in np.linspace(float(intersect1)+2, float(intersect2)-1, 5):
+    ax.annotate('', xy=(i, neeededinv(0.1, i)), xytext=(i-1, neeededinv(0.1, i-1)),
+                arrowprops=dict(facecolor='black', shrink=0.5, headwidth=5, headlength=5))#denne blir ikke bedre. ikkje rør. e AIDS
+
+
+
+
+
+
+
+
+ax.text(47, 3, r'$s_0 \cdot y$', fontsize=15)
+
+ax.text(47, 3.8, r'$s_1 \cdot y$', fontsize=15)
+
+
+ax.text(40, 4.5, r'$n \cdot k$', fontsize=15)
+
+
+#showing kss on k axis
+ax.text(intersect1-1, -0.3, r'$k_0^{ss}$', fontsize=15)
+ax.vlines(intersect1, 0, nettoinv(0.4, plotfunc(intersect1, alpha_num)), linestyle='dashed')
+
+ax.text(intersect2-1, -0.3, r'$k_1^{ss}$', fontsize=15)
+ax.vlines(intersect2, 0, nettoinv(0.6, plotfunc(intersect2, alpha_num)), linestyle='dashed')
+
+
+
+#showing yss on y axis
+ax.text(-4, 0.4*plotfunc(intersect1, alpha_num), r'$y_0^{ss}$', fontsize=15)
+ax.hlines(0.4*plotfunc(intersect1, alpha_num), 0, intersect1, linestyle='dashed')
+
+ax.text(-4, 0.6*plotfunc(intersect2, alpha_num), r'$y_1^{ss}$', fontsize=15)
+ax.hlines(0.6*plotfunc(intersect2, alpha_num), 0, intersect2, linestyle='dashed')
+
+
+#arrow from kss0 to kss1 on x axis
+ax.annotate("", xy=(intersect1+2, -0.1), xytext=(intersect2-1, -0.1),
+            arrowprops=dict(arrowstyle="<-"), size=25, annotation_clip=False)
+
+
+#arrow from yss0 to yss1 on y axis
+ax.annotate("", xy=(-2, 0.4*plotfunc(intersect1, alpha_num)+0.3), xytext=(-2, 0.6*plotfunc(intersect2, alpha_num)-0.1),
+            arrowprops=dict(arrowstyle="<-"), size=20,annotation_clip=False)
+
+
+
+
+#no x or y numbers
+ax.set_xticks([])
+ax.set_yticks([])
+
+
+ax.set_xlim(0, 60)
+ax.set_ylim(0, 5)
+
+#spines
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+
+
+
+intersect1 = eq[0].subs(alpha, alpha_num).subs(s, 0.4).subs(n, 0.1)
+intersect2 = eq[0].subs(alpha, alpha_num).subs(s, 0.4).subs(n, 0.15)
+
+
+
+
+ax1.plot(x, neeededinv(0.1, x), label='n*k(t)')
+
+ax1.plot(x, nettoinv(0.4, plotfunc(x, alpha_num)), label='s0*y(t)')
+
+ax1.plot(x, neeededinv(0.15, x), label='n1 > n0')
+
+
+ax1.annotate("", xy=(20, neeededinv(0.15, 20)), xytext=(20, neeededinv(0.1, 20)),
+    arrowprops=dict(arrowstyle="->"))
+
+
+
+ax1.scatter(intersect1, 0.4*plotfunc(intersect1, alpha_num), label='y0ss')
+ax1.scatter(intersect2, 0.4*plotfunc(intersect2, alpha_num), label='y1ss')
+
+for i in np.linspace(float(intersect1-1), float(intersect2+2), 6):
+    ax1.annotate('', xy=(i-0.6, nettoinv(0.4, plotfunc(i-0.6, alpha_num))), xytext=(i, nettoinv(0.4, plotfunc(i, alpha_num))), 
+                arrowprops=dict(facecolor='black', shrink=0.5, headwidth=8, headlength=5))#
+
+
+
+
+ax1.text(23, 1.7, r'$s \cdot y$', fontsize=15)
+ax1.text(23, 2.6, r'$n_0 \cdot k$', fontsize=15)
+ax1.text(16, 2.8, r'$n_1 \cdot k$', fontsize=15)
+
+
+
+
+
+
+# #showing kss on k axis
+ax1.text(intersect1-1, -0.2, r'$k_0^{ss}$', fontsize=15)
+ax1.vlines(intersect1, 0, nettoinv(0.4, plotfunc(intersect1, alpha_num)), linestyle='dashed')
+
+ax1.text(intersect2-1, -0.2, r'$k_1^{ss}$', fontsize=15)
+ax1.vlines(intersect2, 0, nettoinv(0.4, plotfunc(intersect2, alpha_num)), linestyle='dashed')
+
+
+
+#showing yss on y axis
+ax1.text(-2, 0.4*plotfunc(intersect1, alpha_num), r'$y_0^{ss}$', fontsize=15)
+ax1.hlines(0.4*plotfunc(intersect1, alpha_num), 0, intersect1, linestyle='dashed')
+
+ax1.text(-2, 0.4*plotfunc(intersect2, alpha_num), r'$y_1^{ss}$', fontsize=15)
+ax1.hlines(0.4*plotfunc(intersect2, alpha_num), 0, intersect2, linestyle='dashed')
+
+
+#arrow from kss0 to kss1 on x axis
+ax1.annotate("", xy=(intersect1-1.5, -0.1), xytext=(intersect2+0.5, -0.1),
+            arrowprops=dict(arrowstyle="<-"), size=25, annotation_clip=False)
+
+
+#arrow from yss0 to yss1 on y axis
+ax1.annotate("", xy=(-1, 0.4*plotfunc(intersect1, alpha_num)-0.05), xytext=(-1, 0.4*plotfunc(intersect2, alpha_num)+0.15),
+            arrowprops=dict(arrowstyle="<-"), size=20,annotation_clip=False)
+
+
+
+
+#no x or y numbers
+ax1.set_xticks([])
+ax1.set_yticks([])
+
+
+ax1.set_xlim(0, 25)
+ax1.set_ylim(0, 3)
+
+#spines
+ax1.spines['top'].set_color('none')
+ax1.spines['right'].set_color('none')
+
+ax.set_title('Sparerate øker', fontsize=15)
+ax1.set_title('Befolkningsvekstrate øker', fontsize=15)
+
+
+
+ax.text(18, 4.5, r'$s_1 > s_0$', fontsize=15)
+ax1.text(7, 2.7, r'$n_1 > n_0$', fontsize=15)
+plt.savefig('Figur2og3.png', dpi=300, bbox_inches='tight')
+
+
+
+```
+
+\autoref{fig:likevekt_grunnleggende} viser langsiktig likevekt i den grunnleggende Solow-modellen. Vist med piler er hva som vil skje dersom y hadde vært på et annet punkt på s \cdot y linjen. De vil bevege seg mot steady-state nivået og stabiliseres der. Det er punktet der hvor nettoinvesteringer er lik de nødvendige investeringer, for å holde kapital per arbeider konstant.
+
+Så en økning i s vil gi høyere k og y.
+
+$k^{ss}=\left( \frac{s}{n}\right)^{\frac{1}{1-\alpha}}$
+
+$y^{ss}=\left( \frac{s}{n}\right)^\frac{\alpha}{1-\alpha}$
+
+```{=tex}
+\begin{figure}[b]
+  \centering
+  \includegraphics[width=\linewidth]{Figur2og3.png}
+  \captionof{figure}{Spareranten endres og befolkningsvekstraten endres}
+  \label{fig:fig4}
+\end{figure}
+```
+\autoref{fig:fig4} viser hva som skjer når spareraten eller befolknings-vekstraten øker. Økning i spareraten gir et høyere nivå av $k^{ss}$ siden mer av hvert års produksjon blir spart og investert i stedet for konsumert. Dette resulterer i en høyere $y^{ss}$. Så en økning i $s$ vil gi høyere $k$ og $y$.
+
+En økning i befolknings-vekstraten reduserer $k^{ss}$ og $y^{ss}$ fordi den samme mengden investeringer nå må fordeles over flere arbeidere. Hvis befolkningen vokser raskere, så trenges det mer kapital per arbeider, som gjør at produksjon per arbeider går ned.
+
+\clearpage
+
+# Utfordring 1.2 Konvergensteori
+
+Vi har samme antagelser som tidligere fra Solow sin grunnmodell og har ikke med teknologi eller naturressurser.
+
+Konvergens-teorien er en økonomisk teori fra Solow-modellen som predikerer at fattige land vil vokse raskere enn rike land. Dette betyr at forskjellene i BNP per innbygger vil avta over tid. Det finnes to typer konvergens-teori og først ser vi på betingelsesløs konvergens.
+
+## **Betingelsesløs konvergens (**Lik sparerate og befolkningsvekst i alle land)
+
+Betingelsesløs konvergens predikerer at dersom to land har ulik nivå på BNP per arbeider $y^{fattig} \neq y^{rik}$ men lik produksjons-funksjon, sparerate, befolknings-vekstrate og depresieringsrate i kapitalen og ingen av de har kommet til steady-state, så vil det fattige landet vokse raskere enn det rike landet og nivået i BNP per arbeider på sikt vil konvergere i de to landene, så $y^{fattig} \rightarrow y^{rik}$.
+
+```{python include = FALSE}
+#%%capture
+
+# Figur for betingelsesløs konvergens
+alpha_num = 0.6
+eq = sp.Eq(s*k**alpha, n*k)
+
+eq = sp.solve(eq, k)
+intersect1 = eq[0].subs(alpha, alpha_num).subs(s, 0.45).subs(n, 0.1)
+intersect2 = eq[0].subs(alpha, alpha_num).subs(s, 0.6).subs(n, 0.1)
+
+intersect1 = float(intersect1)
+intersect2 = float(intersect2)
+
+def plotfunc(k, alpha):
+    return k**alpha
+
+def neeededinv(n, k):
+    return n*k
+
+def nettoinv(s, y):
+    return s*y
+
+x = np.linspace(0, 100, 1000)
+
+fig, (ax,ax2) = plt.subplots(1,2, figsize=(15, 5))
+
+
+ax.plot(x, plotfunc(x, alpha_num), label='y(t)')
+ax.plot(x, neeededinv(0.1, x), label='n*k(t)')
+ax.plot(x, nettoinv(0.45, plotfunc(x, alpha_num)), label='s*y(t)')
+
+ax.text(10, -0.8, r'$k_0^{fattig}$', fontsize=15)
+ax.text(-8, 3.5, r'$y_0^{fattig}$', fontsize=15)
+ax.vlines(10, 0, 4, linestyle='dashed',color="cornflowerblue")
+ax.hlines(4, 0, 10, linestyle='dashed', color="cornflowerblue")
+ax.text(25, -0.8, r'$k_0^{rik}$', fontsize=15)
+ax.text(-5, 7, r'$y_0^{rik}$', fontsize=15)
+ax.vlines(25, 0, 7, linestyle='dashed', color="palevioletred")
+ax.hlines(7, 0, 25, linestyle='dashed', color="palevioletred")
+
+# Setting y-axis label and making it horizontal and upper left corner
+ax.set_ylabel('y', loc='top', rotation=0, fontsize=15)
+# Setting k-axis label
+ax.set_xlabel('k', loc='right', fontsize=15)
+# Writing the equation for y = k**alpha
+ax.text(45, 9, r'$y = k^{\alpha}$', fontsize=15)
+# Writing the equation for n*k
+ax.text(53, 6, r'$n \cdot k$', fontsize=15)
+# Writing the equation for s*y = s*k**alpha
+ax.text(50, 4.3, r'$s \cdot y = s \cdot k^{\alpha}$', fontsize=15)
+
+ax.set_xlim(0, 65)
+ax.set_ylim(0, 10)
+
+# Making an extra thick line
+ax.vlines(10, 1, 1.8,color="blue")
+# Arrow pointing to extra thick line from y-axis
+ax.arrow(0, 1.4, 8, 0, head_width=0.3, head_length=1, color='cornflowerblue',clip_on=False)
+# Text writing the derivative of dk{fattig}/dt >> 0
+ax.text(-8, 1.3, r'$\frac{d k^{fattig}}{d t} >> 0$', fontsize=12, color='cornflowerblue')
+# Making an extra thick line
+ax.vlines(25, 2.5, 3.1,color="red")
+# Arrow pointing from the right to the left
+ax.arrow(35, 2.8, -8, 0, head_width=0.3, head_length=1, color='palevioletred',clip_on=False)
+# Text writing the derivative of dk{rik}/dt > 0
+ax.text(35, 2.8, r'$\frac{d k^{rik}}{d t} > 0$', fontsize=14, color='palevioletred')
+#Removing spines
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+
+
+ax.set_xticks([])
+ax.set_yticks([])
+
+# showing 3 arrows
+for i in range(12, 22, 4):
+    ax.arrow(i, 0, 0.5, 0, head_width=0.3, head_length=1.2, fc='black',clip_on=False)
+
+# showing 2 arrows
+for i in range(28, 34, 3):
+    ax.arrow(i, 0, 0.5, 0, head_width=0.3, head_length=1.2, fc='black',clip_on=False)
+    
+    
+
+ax2.plot(x, plotfunc(x, alpha_num), label='y(t)')
+ax2.plot(x, neeededinv(0.1, x), label='n*k(t)')
+ax2.plot(x, nettoinv(0.45, plotfunc(x, alpha_num)), label='s*y(t)')
+
+ax2.text(10, -0.8, r'$k_0^{fattig}$', fontsize=15)
+ax2.text(-8, 3.5, r'$y_0^{fattig}$', fontsize=15)
+ax2.vlines(10, 0, 4, linestyle='dashed',color="cornflowerblue")
+ax2.hlines(4, 0, 10, linestyle='dashed', color="cornflowerblue")
+ax2.text(25, -0.8, r'$k_0^{rik}$', fontsize=15)
+ax2.text(-5, 7, r'$y_0^{rik}$', fontsize=15)
+ax2.vlines(25, 0, 7, linestyle='dashed', color="palevioletred")
+ax2.hlines(7, 0, 25, linestyle='dashed', color="palevioletred")
+
+# Setting y-axis label and making it horizontal and upper left corner
+ax2.set_ylabel('y', loc='top', rotation=0, fontsize=15)
+# Setting k-axis label
+ax2.set_xlabel('k', loc='right', fontsize=15)
+# Writing the equation for y = k**alpha
+ax2.text(45, 9, r'$y = k^{\alpha}$', fontsize=15)
+# Writing the equation for n*k
+ax2.text(53, 6, r'$n \cdot k$', fontsize=15)
+# Writing the equation for s*y = s*k**alpha
+ax2.text(50, 4.3, r'$s \cdot y = s \cdot k^{\alpha}$', fontsize=15)
+
+ax2.set_xlim(0, 65)
+ax2.set_ylim(0, 10)
+
+# Making an extra thick line
+ax2.vlines(10, 1, 1.8,color="blue")
+# Arrow pointing to extra thick line from y-axis
+ax2.arrow(0, 1.4, 8, 0, head_width=0.3, head_length=1, color='cornflowerblue',clip_on=False)
+# Text writing the derivative of dk{fattig}/dt >> 0
+ax2.text(-8, 1.3, r'$\frac{d k^{fattig}}{d t} >> 0$', fontsize=12, color='cornflowerblue')
+# Making an extra thick line
+ax2.vlines(25, 2.5, 3.1,color="red")
+# Arrow pointing from the right to the left
+ax2.arrow(35, 2.8, -8, 0, head_width=0.3, head_length=1, color='palevioletred',clip_on=False)
+# Text writing the derivative of dk{rik}/dt > 0
+ax2.text(35, 2.8, r'$\frac{d k^{rik}}{d t} > 0$', fontsize=13, color='palevioletred')
+#Removing spines
+ax2.spines['top'].set_color('none')
+ax2.spines['right'].set_color('none')
+
+
+ax2.set_xticks([])
+ax2.set_yticks([])
+
+ax2.hlines(0.6*plotfunc(intersect1, alpha_num)+3.78, 0, intersect1, linestyle='dashed', color="black")
+ax2.vlines(intersect1, 0, nettoinv(0.45, plotfunc(intersect1, alpha_num))+5.25, linestyle='dashed', color="black")
+ax2.scatter(intersect1, 0.45*plotfunc(intersect1, alpha_num), color='black', s=100)
+# Writing the equation for y^(rik)^ss = y^(fattig)^ss
+ax2.text(-14.5, 9.2, r'$y^{rik}_{ss} = y^{fattig}_{ss}$', fontsize=15)
+# Writing the equation for k^(rik)^ss = k^(fattig)^ss
+ax2.text(37, -0.7, r'$k^{rik}_{ss} = k^{fattig}_{ss}$', fontsize=15)
+# showing 3 arrows
+for i in range(12, 22, 4):
+    ax2.arrow(i, 0, 0.5, 0, head_width=0.3, head_length=1.2, fc='black',clip_on=False)
+
+# showing 2 arrows
+for i in range(28, 34, 3):
+    ax2.arrow(i, 0, 0.5, 0, head_width=0.3, head_length=1.2, fc='black',clip_on=False)
+
+plt.savefig("figurx.png", dpi=300,bbox_inches='tight')
+```
+
+I \autoref{fig:figurx} ser vi hvordan det fattige landet vil konvergere raskere mot steady-state fordi tangenten til den deriverte i $\frac{\partial k^{fattig}}{\partial t}$ har et større stigningstall enn det rike landet $\frac{\partial k^{rik}}{\partial t}$ og de faktiske investeringene til begge landene er større enn de nødvendige. Men $k^{fattig}$ har enda større sprik mellom faktisk og nødvendige investeringer så kapitalintensiteten vil øke raskere.
+
+```{=tex}
+\begin{figure}[h]
+\centering
+  \includegraphics[width=\linewidth]{figurx.png}
+  \captionof{figure}{Konvergens i Solow-modellen}
+  \label{fig:figurx}
+\end{figure}
+```
+Dette vil gi det fattige landet en større vekst og begge to vil til slutt ende med produksjon per arbeider $y^{fattig}_{ss} = y^{rik}_{ss}$ og kapital per arbeider $k^{fattig}_{ss} = k^{rik}_{ss}$ i steady-state som vises i likevektspunktet i høyre \autoref{fig:figurx}.
+
+Betingelsesløs konvergens er den minst interessante formen for konvergens i Solow-modellens predikering av produksjon per arbeider når man tar hensyn til grunnmodellen siden man kan si det ikke er realistiske forutsetninger (lukket økonomi) og det da sjeldent vil kunne relateres til virkeligheten.
+
+```{python include=FALSE}
+#%%capture
+
+# Betinget konvergens figur 1
+intersect1 = eq[0].subs(alpha, alpha_num).subs(s, 0.45).subs(n, 0.14)
+intersect2 = eq[0].subs(alpha, alpha_num).subs(s, 0.58).subs(n, 0.12)
+
+intersect1 = float(intersect1)
+intersect2 = float(intersect2)
+
+# Plotting the functions
+fig, ax = plt.subplots(figsize=(7, 5))
+
+ax.plot(x, neeededinv(0.12, x))
+ax.plot(x, neeededinv(0.14, x), linestyle="dotted")
+ax.plot(x, nettoinv(0.45, plotfunc(x, alpha_num)), linestyle="dotted")
+ax.plot(x, nettoinv(0.58, plotfunc(x, alpha_num)))
+
+
+# Setting k-axis label
+ax.set_xlabel('k', loc='right', fontsize=15)
+# Writing the equation for y = k**alpha
+ax.text(52, 8.35, r'$n^{fattig} \cdot k$', fontsize=15, color='orange')
+ax.text(54, 7.2, r'$n^{rik} \cdot k$', fontsize=15, color='darkslateblue')
+# Writing the equation for s*y = s*k**alpha
+# what is a nice red color
+ax.text(55, 5.9, r'$s^{rik} \cdot k^{\alpha}$', fontsize=15, color='crimson')
+# Writing the equation for s*y = s*k**alpha
+ax.text(55, 4.5, r'$s^{fattig} \cdot k^{\alpha}$', fontsize=15, color='forestgreen')
+
+#Removing spines
+ax.spines['top'].set_color('none')
+ax.spines['right'].set_color('none')
+
+ax.set_xticks([])
+ax.set_yticks([])
+
+# Likevekt 1
+ax.text(intersect1, -0.6, r'$k_0^{fattig}$', fontsize=15)
+ax.vlines(intersect1, 0, nettoinv(0.45, plotfunc(intersect1, alpha_num)), linestyle='dashed')
+ax.scatter(intersect1, 0.45*plotfunc(intersect1, alpha_num), color='black', s=50)
+
+
+# Likevekt 2
+ax.text(intersect2, -0.5, r'$k_0^{rik}$', fontsize=15)
+ax.vlines(intersect2, 0, nettoinv(0.58, plotfunc(intersect2, alpha_num)), linestyle='dashed')
+ax.scatter(intersect2, 0.58*plotfunc(intersect2, alpha_num), color='black', s=50)
+
+ax.set_xlim(0, 65)
+ax.set_ylim(0, 10)
+plt.savefig("ubetinget_konvergens.png", dpi=300,bbox_inches='tight')
+```
+
+```{python include= FALSE}
+#%%capture
+
+# Betinget konvergens figur 2
+intersect1 = eq[0].subs(alpha, alpha_num).subs(s, 0.45).subs(n, 0.14)
+intersect2 = eq[0].subs(alpha, alpha_num).subs(s, 0.58).subs(n, 0.12)
+intersect3 = eq[0].subs(alpha, alpha_num).subs(s, 0.51).subs(n, 0.13)
+
+intersect1 = float(intersect1)
+intersect2 = float(intersect2)
+intersect3 = float(intersect3)
+
+# Plotting the functions
+fig, ax2 = plt.subplots(figsize=(7, 5))
+
+ax2.plot(x, neeededinv(0.12, x), label='$n^{rik} \cdot k$')
+ax2.plot(x, neeededinv(0.14, x), label='$n^{fattig} \cdot k$', linestyle="dotted")
+ax2.plot(x, nettoinv(0.45, plotfunc(x, alpha_num)), label=r'$s^{fattig} \cdot k^{\alpha}$',linestyle="dotted")
+ax2.plot(x, nettoinv(0.58, plotfunc(x, alpha_num)), label = r'$s^{rik} \cdot k^{\alpha}$')
+ax2.plot(x, neeededinv(0.13, x), label='$n \cdot k$', color="black")
+ax2.plot(x, nettoinv(0.51, plotfunc(x, alpha_num)), label=r'$s \cdot k^{\alpha}$', color="black")
+# Setting k-axis label
+ax2.set_xlabel('k', loc='right', fontsize=15)
+
+#Removing spines
+ax2.spines['top'].set_color('none')
+ax2.spines['right'].set_color('none')
+
+ax2.set_xticks([])
+ax2.set_yticks([])
+
+# Likevekt 1
+ax2.text(intersect1-1, -0.6, r'$k_0^{fattig}$', fontsize=15)
+ax2.vlines(intersect1, 0, nettoinv(0.45, plotfunc(intersect1, alpha_num)), linestyle='dashed')
+ax2.scatter(intersect1, 0.45*plotfunc(intersect1, alpha_num), color='black', s=50)
+
+
+# Likevekt 2
+ax2.text(intersect2, -0.5, r'$k_0^{rik}$', fontsize=15)
+ax2.vlines(intersect2, 0, nettoinv(0.58, plotfunc(intersect2, alpha_num)), linestyle='dashed')
+ax2.scatter(intersect2, 0.58*plotfunc(intersect2, alpha_num), color='black', s=50)
+
+# Likevekt 3
+ax2.text(intersect3, -0.5, r'$k_0^{ss}$', fontsize=15)
+ax2.vlines(intersect3, 0, nettoinv(0.51, plotfunc(intersect3, alpha_num)), linestyle='dashed')
+ax2.scatter(intersect3, 0.51*plotfunc(intersect3, alpha_num), color='black', s=50)
+
+# showing 2 arrows
+for i in range(22, 26, 3):
+    ax2.arrow(i, 0, 0.5, 0, head_width=0.3, head_length=1.2, fc='black',clip_on=False)
+
+# showing 2 arrows from the right to left
+for i in range(38, 44, 3):
+    ax2.arrow(i, 0, -0.5, 0, head_width=0.3, head_length=1.2, fc='black',clip_on=False)
+    
+# Drawing more arrows towards the steady state
+ax2.arrow(57, 5.3, 0, 0.15, head_width=0.7, head_length=0.2, color='forestgreen',clip_on=False)
+ax2.arrow(57, 6.3, 0, -0.15, head_width=0.7, head_length=0.2, color='crimson',clip_on=False)
+
+ax2.arrow(55, 6.7, -0.03, 0.15, head_width=0.7, head_length=0.2, color='darkslateblue',clip_on=False)
+ax2.arrow(54.5, 7.6, 0.03, -0.15, head_width=0.7, head_length=0.2, color='orange',clip_on=False)
+
+ax2.set_xlim(0, 65)
+ax2.set_ylim(0, 10)
+ax2.legend(loc='upper left', fontsize=15)
+plt.savefig("betinget_konvergens.png", dpi=300,bbox_inches='tight')
+```
+
+\clearpage
+
+## **Betinget konvergens** (Ulik nivå på sparerate og befolkningsvekst, åpen økonomi)
+
+To land har lik produksjon og åpen økonomi, men med ulik nivå på sparerate og befolkningsvekst så vil nivå på BNP per arbeider konvergere, gitt at det er åpne økonomier. Også her starter økonomiene i forskjellige steady-states, men ender på sikt opp i lik steady-state.
+
+```{=tex}
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \centering
+  \includegraphics[width=0.5\textwidth]{ubetinget_konvergens.png}
+  \captionof{figure}{Betinget konvergens}
+  \label{fig:betinget}
+  \includegraphics[width=0.5\textwidth]{betinget_konvergens.png}
+  \captionof{figure}{Betinget konvergens}
+  \label{fig:ubetinget}
+  \vspace{-10mm}
+\end{wrapfigure}
+```
+Det fattige landet vil i starten konvergere i likevektspunktet $k_0^{fattig}$ for nødvendige og faktiske investeringer, og det samme for det rike landet i likevektspunktet for $k_0^{rik}$. Om det er lukkede økonomier, vil ikke landene konvergere. Men siden vi har åpen økonomi så predikerer teorien at siden det fattige landet har lav sparerate og høy befolkning og det rike landet har høy sparerate men lav befolkning, så vil arbeidere fra det fattige landet flytte til det rike. Kapitaleire i det rike landet vil også investere i det fattige landet siden de vil få bedre avkastning for produksjonsfaktorene der enn hjemme.
+
+Som man kan se i \autoref{fig:ubetinget} så vil dette føre til at spareraten i det rike landet presses ned mens spareraten øker i det fattige landet, og befolkningstallene øker i det rike landet og minker i det fattige. $k_0^{rik}$ minker mens $k_0^{fattig}$ øker og de to landene vil ende opp i $k_0^{ss}$ likevekt over tid. Dette er historisk sett også hva som har skjedd i virkeligheten mellom økonomier, men trenger ikke alltid være korrekt, siden man i grunnmodellen ikke har med teknologisk utvikling eller naturressurser som kan predikere at ulike økonomier kan ende opp i ulike steady-states.
+
+\clearpage
+
+# Utfordring 1.3 Solow-modellen med teknologi og naturressurser
+
+Solow-modellen med teknologisk utvikling og naturressurser gir prediksjoner om hvordan ulike faktorer påvirker vekstraten i BNP per innbygger på lang sikt.
+
+```{python}
+
+import sympy as sp
+
+A, alpha, t, n, s, k, beta, gamma, m, h, u, A_0, R_0, L_0, g_A, j, theta, g_y = sp.symbols('A \u03B1 t n s k \u03B2 \u03B3 m h u A_0 R_0 L_0 gA j \u03B8 g_y', real=True)
+Y = sp.Function('Y')(t)
+K = sp.Function('K')(t)
+L = sp.Function('L')(t)
+qk = sp.Function('q_k')(t)
+ql = sp.Function('q_l')(t)
+qr = sp.Function('q_r')(t)
+R = sp.Function('R')(t)
+y = sp.Function('y')(t)
+
+Yfunc = sp.Eq(Y, A * (qk * K)**alpha * (ql * L)**beta * (qr * R)**gamma)
+
+
+
+
+#dividing by L
+yfunc = Yfunc
+yfuncright = yfunc.rhs / L
+yfuncleft = yfunc.lhs / L
+yfuncleft = yfuncleft.subs(Y, y*L)
+yfunc = sp.Eq(yfuncleft, yfuncright)
+# yfunc
+
+#y = Y/L
+yfuncright = yfuncright.subs(qk, sp.exp(j*t)).subs(ql, sp.exp(m*t)).subs(qr, sp.exp(h*t)).subs(A, A_0*sp.exp(g_A*t)).subs(L, L_0*sp.exp(n*t)).subs(R, R_0*sp.exp(-u*t))
+
+yfunc = sp.Eq(yfuncleft, yfuncright)
+
+#yfunc
+
+#log of yfunc
+lnyfunc = sp.Eq(sp.log(yfuncleft), sp.log(yfuncright))
+
+#derivative of lnyfunc
+dlnyfunc = sp.Eq(sp.diff(sp.log(yfuncleft), t), sp.diff(sp.log(yfuncright), t))
+dlnyfunc = sp.simplify(dlnyfunc)
+#dlnyfunc
+
+dlnysubs = dlnyfunc.subs(sp.Derivative(K, t)/K, s*y/k)
+dlnysubs = dlnysubs.subs(g_A+h*gamma+j*alpha+m*beta, theta)
+
+dlnysubs = dlnysubs.subs(sp.Derivative(y, t)/y, g_y)
+
+#dlnysubs
+
+```
+
+### Utledning av Solow-modellen med teknologi og naturressurser (ikke i steady-state)
+
+```{=tex}
+\fbox{
+ \addtolength{\linewidth}{-2\fboxsep}%
+ \addtolength{\linewidth}{-2\fboxrule}%
+\begin{minipage}{\linewidth}
+\begin{equation}
+    Y(t) = A(K(t)q_k(t))^\alpha(L(t)q_l(t))^\beta (R(t)q_r(t))^\gamma 
+\end{equation}
+\text{Tar logaritmen av uttrykket:}
+\begin{equation}
+    log(y(t)) = log(\frac{A_0 K(t) e^{jt})^\alpha (L_0 e^{mt} e^{n t})^{\beta} (R_0 e^{ht} e^{-ut})^\gamma e^{g_At} e^{-n t}}{L_0})
+\end{equation}
+\text{Deriverer med hensyn på t:}
+\begin{equation}
+    \frac{\frac{d}{dt} y(t)}{y(t)} = g_A + \gamma h + \alpha j + \beta m + \beta n - n - u \gamma + \alpha \frac{\frac{d}{dt} K(t)}{K(t)}
+\end{equation}
+\text{Substituerer inn for noen uttrykk som er utledet tidligere:}
+\begin{equation*}
+    \frac{\partial K}{t} = s\cdot Y \rightarrow \frac{\frac{\partial K}{\partial t}}{K(t)} = \frac{sY}{K} = \left(\frac{sy}{k}\right)
+\end{equation*}
+\begin{equation*}
+    \frac{\frac{d}{dt} y(t)}{y(t)} = g_y
+\end{equation*}
+\text{Faktoriserer uttrykket så mye som mulig:}
+\begin{equation}
+    g_y = g_A + \gamma h + \alpha j + \beta m + \beta n - n - u \gamma + \alpha \left(\frac{sy}{k}\right)
+\end{equation}
+\begin{equation*}
+    \theta = g\_A + \gamma h + \alpha j + \beta m 
+\end{equation*}
+\begin{equation}
+    g_y = \theta + \beta n - n - u \gamma + \alpha \left(\frac{sy}{k}\right)
+\end{equation}
+\begin{equation*}
+    \beta+\alpha+\gamma = 1 \rightarrow \beta = \alpha - \gamma +1
+\end{equation*}
+\begin{equation}
+    g_y = \theta + n(-\alpha-\beta+1) - n - u \gamma + \alpha \left(\frac{sy}{k}\right)
+\end{equation}
+\begin{equation}
+    g_y = \theta - \alpha n - n \gamma - u \gamma + \alpha \left(\frac{sy}{k}\right)
+\end{equation}
+ \end{minipage}
+}
+```
+### Solow-modellen og faktorer for økonomisk vekst på lang sikt
+
+Teknologisk fremgang, representert ved en eksogen vekstrate, antas å ha en positiv, men avtagende, marginal effekt på produksjon per arbeider.
+
+Naturressurser fungerer som en begrensende faktor i modellen. Det er en begrenset mengde som blir brukt opp.
+
+Uttrykket $\left(\frac{sy-nk}{k}\right)$ representerer vekstraten i kapital. Det beregnes ved å multiplisere spareraten med produksjon per arbeider, og deretter trekke fra produktet av befolkningsvekst-raten og kapital. Til slutt deles dette med kapital for å få vekstraten i kapital.
+
+$\gamma (u+n)$ viser hvor mye naturressurser som brukes opp i forhold til befolknings-vekstraten. Her representerer $u$ reduksjonen i naturressurser, og $n$ representerer befolkningsveksten.
+
+Ligningen $g_y(t) = \theta+ \alpha \frac{sy(t) -nk}{k(t)} - \gamma(u+n)$ representerer produksjon per arbeider. Vi antar her at teknologien er konstant.
+
+Hvis $\theta+ \alpha \frac{sy(t) -nk}{k(t)}$ er mindre enn $-\gamma(u+n)$, vil det føre til redusert eller negativ økonomisk vekst. Dette skjer når naturressurser brukes opp, eller når befolkningsveksten er høy, noe som fører til at det er flere som skal dele på kapitalen. Dette reduserer arbeidseffektiviteten, og det er ikke mulig å investere nok til å opprettholde en stabil tilstand.
+
+Men hvis $\theta+ \alpha \frac{sy(t) -nk}{k(t)}$ er større enn $-\gamma(u+n)$, vil det føre til positiv økonomisk vekst. Dette skjer når befolkningsveksten er lavere enn investeringskapasiteten, noe som resulterer i høyere kapital per arbeider. Det kan også skje når naturressurser ikke brukes overdrevent i produksjonen, eller når sparing og investering er høy, noe som fører til økt produksjon og økonomisk vekst.
+
+\clearpage
+
+# Referanser
+
+::: {#refs}
+:::
+
+\clearpage
+
+\appendix
+
+\section {Appendix Generell KI bruk}
+
+I løpet av koden så kan det ses mange \# kommentarer der det er skrevet for eks "#fillbetween q1 and q2". Når jeg skriver kode i Visual Studio Code så har jeg en plugin som heter Github Copilot. Når jeg skriver slike kommentarer så kan den foresøke å fullføre kodelinjene mens jeg skriver de. Noen ganger klarer den det, men andre ikke. Det er vanskelig å dokumentere hvert bruk der den er brukt siden det "går veldig fort" men siden jeg ikke har fått på plass en slik dokumentasjon så kan all python kode der det er brukt kommentarer antas som at det er brukt Github Copilot. Nærmere info om dette KI verktøyet kan ses på <https://github.com/features/copilot>
+
+\section {Appendix 1.1 KI bruk}
+
+\section {Appendix Kapittel 1.2 KI bruk}
+
+\section {Appendix Kapittel 1.3 KI bruk}

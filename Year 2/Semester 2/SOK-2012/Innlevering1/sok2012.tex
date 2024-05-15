@@ -1,0 +1,650 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  12pt,
+  a4paper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[top=20mm,left=20mm,heightrounded]{geometry}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\KOMAoption{captions}{tableheading}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{cancel}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\renewcommand{\maketitle}{}
+\definecolor{cornflowerblue}{RGB}{100,149,237}
+\definecolor{darkgrey}{RGB}{220,220,220}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\rightmark}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{\thepage}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{Figurliste}
+\else
+  \newcommand\listfigurename{Figurliste}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{Tabelliste}
+\else
+  \newcommand\listtablename{Tabelliste}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figur}
+\else
+  \newcommand\figurename{Figur}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Tabell}
+\else
+  \newcommand\tablename{Tabell}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+
+\newgeometry{left=0cm, right=0cm, top=0cm, bottom=0cm}
+\vspace*{0.5cm} 
+\hspace*{1.5cm}\includegraphics[width=10cm]{dokumentobjekter/texstuff/UiT_Logo_Bok_Bla_RGB.png} 
+
+
+\begin{flushleft}
+    \vspace*{0.5cm}
+    \hspace*{2.5cm}{\color{black}\fontsize{11}{13.2}\selectfont Handelshøgskolen ved UiT \\[0.2em]
+    \hspace*{2.5cm}\color{black}\fontsize{8}{13.2}\selectfont Fakultet for biovitenskap, fiskeri og økonomi \\[0.2em]
+    \hspace*{2.5cm}\large{\color{black}\textbf{Obligatorisk oppgave}}  \\[0.5em]
+    \hspace*{2.5cm}\color{black}\fontsize{12}{14.4}\selectfont Eksperimentell metode \\[0.5em]
+\hspace*{2.5cm}\color{black}\fontsize{11}{13.2}\selectfont Daniel Johannessen og Daniel Groth \\[0.5em]
+    \hspace*{2.5cm}\color{black}\fontsize{11}{13.2}\selectfont Sok-2012, Vår 2024 \\[0.5em]
+    \hspace*{2.0cm}
+    \par}
+\end{flushleft} 
+
+
+
+\begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=south west, inner sep=0] at (current page.south west) {\includegraphics[width=\paperwidth]{dokumentobjekter/texstuff/forside_bilde.png}};
+\end{tikzpicture}
+
+
+\newgeometry{left=20mm, right=20mm, top=20mm, bottom=20mm}
+
+
+
+
+\thispagestyle{plain}
+\begin{center}
+    \Large
+    \textbf{Obligatorisk oppgave}
+\end{center}
+
+
+Denne oppgaven handler om å desinge et eget eksperiment. Spørmålene er ment for å strukturere arbeidsporssesen deres. Dere kan velge å lever oppgave i grupper fra 1 (alene) til 3. 
+
+
+
+Send en epost før 15. Mars til
+oivind.d.schoyen@uit.no om hvilken gruppe dere er del av.
+Innleveringsfristen for oppgaven er 15. Mai. 2024. Klokken 15:30.
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\hypersetup{linkcolor=black}
+\renewcommand{\contentsname}{Innholdsfortegnelse}
+\renewcommand*{\figureautorefname}{Figur}
+\renewcommand*{\tableautorefname}{Tabell}
+\tableofcontents
+\hypersetup{linkcolor=blue}
+\newpage
+
+\subsection{Eksperimentell metode}\label{eksperimentell-metode}
+
+\subsubsection{1. A.}\label{a.}
+
+\paragraph{Hvilke spørsmål om menneskelig adferd kan besvares ved hjelp
+av eksperimentelle
+metoder?}\label{hvilke-spuxf8rsmuxe5l-om-menneskelig-adferd-kan-besvares-ved-hjelp-av-eksperimentelle-metoder}
+
+Kan ikke teste mot kjønn for eksempel siden du ikke kan kontrollere
+hvilket kjønn noen er i. Medfødte egenskaper kan ikke kontrolleres. kan
+ikke variere høyde.
+
+Kan bare besvare ting der det er ting vi kan variere. kan ikke besvare
+ting der spørsmålet gjelder noe vi ikke kan variere som medfødte
+egenskaper.
+
+\subsubsection{1. B Forklar hva en RCT er og hva det er godt
+for?}\label{b-forklar-hva-en-rct-er-og-hva-det-er-godt-for}
+
+Randomized Controlled Trial. Du har en kontrollgruppe og en
+eksperimentell gruppe. Du randomiserer individer inn i gruppene. Det er
+godt for å teste effekten av en behandling da du kan teste effekten ved
+å se på forskjellen mellom gruppene. teste kausalitet
+
+\subsection{Test om mennesker gjør rasjonelle
+valg}\label{test-om-mennesker-gjuxf8r-rasjonelle-valg}
+
+\subsubsection{2.1. Hvilken effekt har et kurs i sannsynlighet på valg
+av konvolutter i et
+eksperiment?}\label{hvilken-effekt-har-et-kurs-i-sannsynlighet-puxe5-valg-av-konvolutter-i-et-eksperiment}
+
+Vi gir folk 100kr, og starter med å fortelle de om premissene om et
+spill hvor de får et valg mellom 3 konvolutter der en av konvoluttene
+inneholder 150kr og to av de inneholder ingenting. Før de låser inn sitt
+svar så forteller vi at vi vet hvilken konvolutt pengene ligger i og
+åpner en av de med ingenting i seg, De får så en mulighet til å bytte
+valg av konvolutter. De blir så gitt et valg om å spille det spillet men
+at det koster de 50 kroner av de 100 kroner de fikk.
+
+Vi gir igjen folk 100kr men denne gangen så gir vi den ene gruppen et
+kurs i sannsynlighet først og den andre gruppen får ikke kurset. Vi
+ønsker å se om de som har fått kurset i sannsynlighet tar bedre valg enn
+de som ikke har fått kurset.
+
+\clearpage
+
+\subsubsection{2.2. Bruk google scholar til å finne en eller to
+publiserte vitenskapelig studie (teoretisk eller empirisk) som forklarer
+hvorfor X kan ha en effekt på Y
+.}\label{bruk-google-scholar-til-uxe5-finne-en-eller-to-publiserte-vitenskapelig-studie-teoretisk-eller-empirisk-som-forklarer-hvorfor-x-kan-ha-en-effekt-puxe5-y-.}
+
+\href{https://www.tandfonline.com/doi/full/10.1080/1445979042000224377}{Impact
+of warning and brief intervention messages on knowledge of gambling
+risk, irrational beliefs and behaviour}
+
+``In contrast to those who watched the video only, participants in the
+two message conditions showed greater knowledge of the risks of
+gambling. The limit‐setting strategy produced significant reductions in
+gambling‐related irrational beliefs. Across conditions, participants did
+not gamble differently. These results suggest that warning messages
+might have informational value and that limit‐setting strategies hold
+promise for producing cognitive change in gamblers. Under the present
+analog procedure, such messages did not significantly affect gambling
+behaviour.''
+
+Studien til Steenbergh et al. (2004) viser at å informere mennesker på
+forhånd om risikoen av gambling ikke ga noen signifikante effekter på
+spilleavhengighet.
+
+\href{https://www.tandfonline.com/doi/abs/10.1080/00207590600788047}{The
+effect of knowledge of mathematics on gambling behaviours and erroneous
+perceptions}
+
+``The importance of knowledge of mathematics as a protective factor
+against excessive gambling is questionable. The theoretical and
+practical implications of these results are discussed with regard to the
+prevention of excessive gambling.''
+
+Studien til Pelletier \& Ladouceur (2007) viser at å kunne matematikken
+eller forstå oddsen og bruke det som en beskyttende faktor mot
+spilleavhengighet er tvilsom.
+
+\href{https://www.sciencedirect.com/science/article/pii/0030507379900114}{The
+role of statistical knowledge in gambling decisions: Moment vs risk
+dimension approaches}
+
+``This study suggests that the conflicting findings of previous studies
+can be partly explained by controlling for the confounding effects of
+statistical training. It is suggested that statistical knowledge (1)
+reduces the cognitive complexity of assessing duplex bets, (2) improves
+the quality of risk-assessment, and (3) increases the propensity that
+subjects will follow a moment model. The findings were corroborated by
+regression analyses, although note was made of the methodological
+difficulties inherent in this approach.''
+
+Studien til Schoemaker (1979) sier at å kunne statistikk eller ha blitt
+kurset i det kan vise til redusert kognitive kompleksit ved vurdering av
+duplex-spill og forbedrer kvaliteten av risiko vurdering.
+
+\href{https://psycnet.apa.org/record/2006-03168-007}{Does learning about
+the mathematics of gambling change gambling behavior?}
+
+``The present research examined the influence of improved knowledge of
+odds and mathematical expectation on the gambling behavior of university
+students. A group of 198 students in an introductory statistics class
+received instruction on probability theory using examples from gambling.
+A comparison group of 134 students received generic instruction on
+probability, and another group of 138 students in classes on unrelated
+topics received no mathematical instruction. Students receiving the
+intervention demonstrated superior ability to calculate gambling odds as
+well as resistance to gambling fallacies 6 months after the
+intervention. Unexpectedly, this improvement in knowledge and skill was
+not associated with any decreases in actual gambling behavior. The
+implication of this research is that enhanced mathematical knowledge on
+its own may be insufficient to change gambling behavior.''
+
+Studien til Williams \& Connolly (2006) sier at de studentene som lærte
+om statistikk og sannsynlighet viste bedre resultater for å kalkulere
+gambling odds og hadde større motstandsdyktighet for å ikke bli avhengig
+ovenfor gruppen som ikke ble kurset. Men den viste også at selv om de
+ble kurset så hadde det ikke noen effekt på nedgang i spilleatferd.
+
+\clearpage
+
+\subsection{3. Design ett eksperiment.}\label{design-ett-eksperiment.}
+
+Der du måler effekten av X på Y ved hjelp av en kontrollgruppe der
+individer tilfeldig trekkes inn i gruppe \(\overline T\) eller gruppe
+\(T\) .
+
+X: Sannsynligheten for å velge å bytte konvolutt i Monty Hall-problemet,
+målt som andelen deltakere som velger å bytte etter å ha mottatt
+informasjon om innholdet i en av de andre konvoluttene. Y: Deltakelse i
+et kurs i sannsynlighet
+
+Vi randomiserer deltakerne til enten kontrollgruppen eller
+eksperimentgruppen. Kontrollgruppen mottar ikke noe kurs, mens
+eksperimentgruppen deltar i et kurs i sannsynlighetsteori.
+
+Intervensjon: Kurset i sannsynlighet går raskt over grunnleggende
+sannsynlighetsregler, forventningsverdier, uavhengighet, og en grundig
+gjennomgang av Monty Hall-problemet og Bayes' teorem.
+
+Eksperimentell oppsett: Før kurset gis begge gruppene 100 kr hver. De
+får deretter et tilbud om å bruke 50 kr for å delta i et Monty
+Hall-lignende spill. I spillet velger de en av tre konvolutter. En av
+konvoluttene inneholder 150 kr, mens de to andre er tomme.
+Eksperimentlederen åpner deretter en av de to resterende konvoluttene
+som er tom og gir deltakeren valget om å bytte til den gjenværende
+konvolutten eller beholde det opprinnelige valget. Dette gjøres så igjen
+for begge gruppene etter at eksperimentgruppen har deltatt i kurset. Vi
+ser da på differansen i andelen som bytter konvolutt mellom de som har
+tatt kurset og de som ikke har tatt kurset både før og etter kurset.
+
+\clearpage
+
+\subsection{Effekt og analyse}\label{effekt-og-analyse}
+
+\subsubsection{4. Forklar enklest mulig hvordan oppsetet ditt viser
+effekten av X på Y
+.}\label{forklar-enklest-mulig-hvordan-oppsetet-ditt-viser-effekten-av-x-puxe5-y-.}
+
+Et mål \(M_t\) av effekten X på Y ved å studere
+\(M_{\overline T} − M_{\underline T}\) .
+
+Når vi nå ser hvilke valg de 2 gruppene har tatt, så kan vi se om det
+har vært en signifikant endring i om de velger å kaste terningen eller
+ikke.
+
+\subsubsection{Bevis på best valg}\label{bevis-puxe5-best-valg}
+
+Siden vi vet at konvolutten som åpnes er tom så setter vi opp Monty Hall
+problemet i med Bayes. Da kan vi se hvordan denne informasjonen påvirker
+eller ``oppdaterer'' sannsynligheten for at premien befinner seg i en
+bestemt konvolutt.
+
+For å vise dette matematisk så definerer vi hendelsene:
+
+\begin{itemize}
+\item
+  \(G_i\): Hendelsen at gevinsten (150 kr) er i konvolutt \(i\) (hvor
+  \(i\) kan være 1, 2, eller 3).
+\item
+  \(D_j\): Hendelsen at deltakeren velger konvolutt \(j\) (hvor \(j\)
+  også kan være 1, 2, eller 3).
+\item
+  \(V_k\): Hendelsen at verten åpner konvolutt \(k\) (hvor \(k\) kan
+  være 1, 2, eller 3) og viser at den er tom.
+\end{itemize}
+
+\subsubsection{1. Uavhengighet}\label{uavhengighet}
+
+Vi antar at deltakeren velger en konvolutt tilfeldig, og at gevinsten er
+plassert tilfeldig i en av de tre konvoluttene. Dette betyr at
+hendelsene \(G_i\) og \(D_j\) er uavhengige for alle \(i\) og \(j\) .
+
+Dette betyr at: \(P(G_i \mid D_j) = P(G_i)\) for alle \(i\) og \(j\).
+
+\subsubsection{2. Initial
+Sannsynligheter}\label{initial-sannsynligheter}
+
+Før noe valg er gjort, er sannsynligheten for at gevinsten er i en
+hvilken som helst konvolutt lik:
+\[ P(G_i) = P(D_j) = P(V_k) = \frac{1}{3} \] for \(i, j, k = 1, 2, 3\).
+
+\subsubsection{3. Avhengighet}\label{avhengighet}
+
+\paragraph{Første valg blir gjort.}\label{fuxf8rste-valg-blir-gjort.}
+
+Når vi åpner den andre konvolutten så er den avhengig av hvilken
+konvolutt deltakeren har valgt og hvor gevinsten befinner seg. Vi åpner
+alltid åpner en tom konvolutt og aldri den som deltakeren har valgt
+eller den som inneholder gevinsten.
+
+Dette betyr at: \[ P(V_k \mid G_i, D_j) \] er 0 hvis \(k = i\) eller
+\(k = j\) (med mindre \(i = j\)), og ellers 1 delt på antall gjenværende
+konvolutter.
+
+\subsubsection{4. Bayes Teorem}\label{bayes-teorem}
+
+Bayes teorem forteller oss hvordan vi kan oppdatere sannsynligheten for
+at gevinsten er i en bestemt konvolutt gitt at verten åpner en annen
+konvolutt: \[ 
+P(G_i \mid V_k, D_j) = \frac{P(V_k \mid G_i, D_j) \cdot P(G_i)}{P(V_k \mid D_j)} 
+\]
+
+For å beregne \(P(V_k \mid D_j)\) under brøkstreken er sannsynligheten
+for at verten åpner konvolutt \(k\), gitt at deltakeren har valgt
+konvolutt \(j\).
+
+Dette krever marginalisering over alle mulige steder gevinsten kan være:
+\[ P(V_k \mid D_j) = \sum_{i=1}^3 P(V_k \mid G_i, D_j) \cdot P(G_i) \]
+
+\subsubsection{Eksempel}\label{eksempel}
+
+Anta at deltakeren velger konvolutt 1 (\(D_1\)) og verten åpner
+konvolutt 3 ( \(V_3\) ), som er tom. Vi vil beregne
+\(P(G_2 \mid V_3, D_1)\).
+
+\begin{itemize}
+\tightlist
+\item
+  \(P(V_3 \mid G_1, D_1) = 1/2\) fordi verten må velge mellom konvolutt
+  2 og 3 når gevinsten er i konvolutt 1 og deltakeren har valgt
+  konvolutt 1.
+\item
+  \(P(V_3 \mid G_2, D_1) = 1\) fordi verten bare kan åpne konvolutt 3
+  når gevinsten er i konvolutt 2 og deltakeren har valgt konvolutt 1.
+\item
+  \(P(V_3 \mid G_3, D_1) = 0\) fordi verten aldri vil åpne konvolutten
+  med gevinsten.
+\end{itemize}
+
+Så:
+
+\[ 
+P(V_3 \mid D_1) = P(V_3 \mid G_1, D_1) \cdot P(G_1) + P(V_3 \mid G_2, D_1) \cdot P(G_2) + P(V_3 \mid G_3, D_1) \cdot P(G_3) 
+\]
+
+\[ P(V_3 \mid D_1) = \frac{1}{2} \cdot \frac{1}{3} + 1
+\cdot \frac{1}{3} + 0 \cdot \frac{1}{3} = \frac{1}{2} \]
+
+Deretter:
+
+\[ P(G_2 \mid V_3, D_1) = \frac{P(V_3 \mid G_2, D_1) \cdot P(G_2)}{P(V_3 \mid D_1)} = \frac{1 \cdot \frac{1}{3}}{\frac{1}{2}} = \frac{2}{3} \]
+
+Dette viser at det er en \(\frac{2}{3}\) sannsynlighet for at gevinsten
+er i den konvolutten deltakeren ikke valgte, som er konvolutt 2 i dette
+tilfellet.
+
+\clearpage
+
+\subsubsection{5. Forklar hvordan du skal analysere dataene fra
+eksperimentet ditt for å vise effekten av X på Y
+.}\label{forklar-hvordan-du-skal-analysere-dataene-fra-eksperimentet-ditt-for-uxe5-vise-effekten-av-x-puxe5-y-.}
+
+\paragraph{Forklar de grunnlegende premissene for eventuelle statistiske
+metoder du
+anvender.}\label{forklar-de-grunnlegende-premissene-for-eventuelle-statistiske-metoder-du-anvender.}
+
+Vi kan bruke en z-test for å se om det er en signifikant forskjell i
+valgene til de som har fått kurset i sannsynlighet, og de som ikke har
+fått kurset gitt at vi får nok deltagere.
+
+De grunnleggende premissene er da at vi får minimum 30 stykk i hver
+gruppe og at de er uavhengige av hverandre.
+
+Det kan også kanskje brukes en T test men vi er usikker siden dataen i
+gruppene er binær.
+
+\subsection{6}\label{section}
+
+\subsubsection{6.1 Skriv en enkel pre-analyse plan for eksperimentet
+ditt.}\label{skriv-en-enkel-pre-analyse-plan-for-eksperimentet-ditt.}
+
+Preanalysis plan:
+
+Vi gir folk 100kr, og starter med å fortelle de om premissene om et
+spill hvor de får et valg mellom 3 konvolutter der en av konvoluttene
+inneholder 150kr og to av de inneholder ingenting. Før de låser inn sitt
+svar så forteller vi at vi vet hvilken konvolutt pengene ligger i og
+åpner en av de med ingenting i seg, De får så en mulighet til å bytte
+valg av konvolutter. De blir så gitt et valg om å spille det spillet men
+at det koster de 50kr av de 100kr de fikk.
+
+Vi gir igjen folk 100kr men denne gangen så gir vi den ene gruppen et
+kurs i sannsynlighet først og den andre gruppen får ikke kurset. Vi
+ønsker å se om de som har fått kurset i sannsynlighet tar bedre valg enn
+de som ikke har fått kurset.
+
+Vi vil så bruke en t-test for å se om det er en signifikant forskjell i
+valgene til de som har fått kurset i sannsynlighet og de som ikke har
+fått kurset.
+
+\subsubsection{6.2 Forklar hvorfor det er viktig å publisere en
+pre-analysis plan før du analyserer data. Hvordan hjelper pre-analysis
+plan å tolke data for
+utenforstående?}\label{forklar-hvorfor-det-er-viktig-uxe5-publisere-en-pre-analysis-plan-fuxf8r-du-analyserer-data.-hvordan-hjelper-pre-analysis-plan-uxe5-tolke-data-for-utenforstuxe5ende}
+
+Det er viktig å publisere en pre-analyse plan før du analyserer data
+fordi det er lett å manipulere dataene for å få det resultatet du
+ønsker. Ved å publisere en pre-analyse plan så kan du vise at du ikke
+har manipulert dataene og at du har fulgt planen du har lagt. Dette
+hjelper utenforstående å tolke dataene fordi de kan se at du har fulgt
+planen og at du ikke har manipulert dataene for å få det resultatet du
+ønsker.
+
+\clearpage
+
+\section{Referanser}\label{referanser}
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-noauthor_pre-analysis_nodate}
+A pre-analysis plan checklist. (n.d.). In \emph{World Bank Blogs}.
+Retrieved May 11, 2024, from
+\url{https://blogs.worldbank.org/en/impactevaluations/a-pre-analysis-plan-checklist}
+
+\bibitem[\citeproctext]{ref-newall_statistical_2023}
+Newall, P. W. S., Walasek, L., Hassanniakalager, A., Russell, A. M. T.,
+Ludvig, E. A. \& Browne, M. (2023). Statistical risk warnings in
+gambling. \emph{Behavioural Public Policy}, \emph{7}(2), 219--239.
+\url{https://doi.org/10.1017/bpp.2020.59}
+
+\bibitem[\citeproctext]{ref-pelletier_effect_2007}
+Pelletier, M. \& Ladouceur, R. (2007). The effect of knowledge of
+mathematics on gambling behaviours and erroneous perceptions.
+\emph{International Journal of Psychology}, \emph{42}(2), 134--140.
+\url{https://doi.org/10.1080/00207590600788047}
+
+\bibitem[\citeproctext]{ref-schoemaker_role_1979}
+Schoemaker, P. J. H. (1979). The role of statistical knowledge in
+gambling decisions: {Moment} vs risk dimension approaches.
+\emph{Organizational Behavior and Human Performance}, \emph{24}(1),
+1--17. \url{https://doi.org/10.1016/0030-5073(79)90011-4}
+
+\bibitem[\citeproctext]{ref-steenbergh_impact_2004}
+Steenbergh, T. A., Whelan, J. P., Meyers, A. W., May, R. K. \& Floyd, K.
+(2004). Impact of warning and brief intervention messages on knowledge
+of gambling risk, irrational beliefs and behaviour. \emph{International
+Gambling Studies}, \emph{4}(1), 3--16.
+\url{https://doi.org/10.1080/1445979042000224377}
+
+\bibitem[\citeproctext]{ref-williams_does_2006}
+Williams, R. J. \& Connolly, D. (2006). Does learning about the
+mathematics of gambling change gambling behavior? \emph{Psychology of
+Addictive Behaviors}, \emph{20}(1), 62--68.
+\url{https://doi.org/10.1037/0893-164X.20.1.62}
+
+\end{CSLReferences}
+
+\clearpage
+
+\appendix
+
+\section {Appendix Generell KI bruk}
+
+I løpet av koden så kan det ses mange \# kommentarer der det er skrevet
+for eks ``\#fillbetween q1 and q2''. Når vi skriver kode i Visual Studio
+Code så finnes det en plugin som heter Github Copilot. Når vi skriver
+slike kommentarer så kan den foresøke å fullføre kodelinjene mens vi
+skriver de. Noen ganger klarer den det, men andre ikke. Det er vanskelig
+å dokumentere hvert bruk der den er brukt siden det ``går veldig fort''
+men siden det ikke er fått på plass en slik dokumentasjon så kan all
+python kode der det er brukt kommentarer antas som at det er brukt
+Github Copilot. Nærmere info om dette KI verktøyet kan ses på
+\url{https://github.com/features/copilot}
+
+
+
+\end{document}
