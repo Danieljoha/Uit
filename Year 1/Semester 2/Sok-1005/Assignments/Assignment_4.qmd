@@ -4,7 +4,7 @@ author: "Daniel Nikolai Johannessen"
 format:
   html: 
     df-print: kable
-
+    self-contained: true
 editor: visual
 warning: false
 message: false
@@ -12,6 +12,14 @@ echo: false
 toc: true
 tof: true
 ---
+
+```{=html}
+<div class="center">
+    <a href="https://danieljoha.github.io/Sok-1005/" class="larger">Back to Sok-1005 main folder</a>
+</div>
+```
+
+
 
 ```{r, warning=FALSE, message=FALSE}
 rm (list = ls())
