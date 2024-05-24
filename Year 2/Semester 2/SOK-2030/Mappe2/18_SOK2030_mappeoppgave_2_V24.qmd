@@ -655,7 +655,7 @@ plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stacke
 \label{fig:markedsandel_etter_stackel}
 \end{figure}
 ```
-Vi ser at Mack ihvertfall vil ønsker å innta en ledende posisjon i markedet og at dette vil gi en økt profitt for de fusjonerte selskapene men dette ville gitt en lavere markedspris og totalt lavere kvantum.
+Vi ser at Mack ihvertfall vil ønsker å innta en ledende posisjon i markedet og at dette vil gi en økt profitt for de fusjonerte selskapene men dette ville gitt en lavere markedspris og totalt høyere kvantum.
 
 
 
