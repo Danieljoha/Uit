@@ -36,6 +36,11 @@ header-includes:
   - \fancyhead[L]{\rightmark}
   - \fancyhead[R]{\thepage}
   - \fancyfoot[C]{\thepage}
+  - \usepackage{colortbl}
+  - \definecolor{cornflowerblue}{RGB}{100,149,237}
+  - \definecolor{darkblue}{RGB}{115,150,255}
+  - \definecolor{lighterblue}{RGB}{131, 191, 212} 
+  - \definecolor{lightblue}{RGB}{178,211,220}
 keep-tex: true
 nocite: |
   @*
@@ -57,12 +62,11 @@ Valg av farger i figurer er tatt fra forelesingsslides til forelesing 10 fra fig
 Vi er blitt fortalt at vi ikke trenger å referere til pensum som forelesingsslides eller boken, så dette er gjort veldig lite. Det er satt inn referanser til boken når jeg har følt at jeg har hentet lite fra forelesingene og heller særdeles mye fra boken. 
 
 
+Brukte tiden min dårlig og dermed ble det dessverre en del slurv på oppgave 2C så er ikke akkurat fornøyd med den.
 
 
-\begin{center}
-    \Large
-    \textbf{Sammendrag}
-\end{center}
+
+
 
 
 \newpage
@@ -80,6 +84,7 @@ Vi er blitt fortalt at vi ikke trenger å referere til pensum som forelesingssli
 from matplotlib import pyplot as plt
 import numpy as np
 import sympy as sp
+from IPython.display import display, Math, Latex
 ```
 
 ```{=tex}
@@ -120,16 +125,26 @@ Denne modellen løses i to trinn der lederbedriften, Olivita, velger sitt kvantu
 \hline
 \textbf{Variabel} & \textbf{Forklaring} \\
 \hline
-$\pi_i$ & Profitt hvor $i$ indikerer hvilken bedrift det tilhører I-c-f \\
+$\pi_i$ & Profitt hvor $i$ indikerer hvilken bedrift det tilhører\\
+\hline
 $I$ & Inntekt, altså pris per vare ganger kvantum solgt \\
+\hline
 $c_i$ & Marginalkostnad per vare produsert \\
-$f_i$ & Faste kostnader, her 3 millioner kroner for begge bedriftene \\
-$P$ & Pris per vare, altså per flaske av Omega-3-produktene \\
+\hline
+$f_i$ & Faste kostnader for en gitt bedrift \\
+\hline
+$P$ & Pris per vare, for en gitt bedrift \\
+\hline
 $Q$ & Kvantum i markedet som er summen av alle $q_i$ altså $\Sigma q_i$ \\
+\hline
 $q_i^*$ & Optimalt kvantum produsert av en gitt bedrift \\
+\hline
 $q_i$ & Kvantum produsert av en gitt bedrift \\
-$a$ & Representerer maksimal betalingsvillighet, her 990 \\
+\hline
+$a$ & Representerer maksimal betalingsvillighet \\
+\hline
 $b$ & Koeffisient for prisfølsomhet i markedet \\
+\hline
 $RF_i$ & Reaksjonsfunksjon for bedrift $i$ \\
 \hline
 \end{tabular}
@@ -355,7 +370,7 @@ display(RF1.subs({a:990, b:1/60, c:50}))
 display(RF2.subs({a:990, b:1/60, c:50}))
 ```
 
-\hypertarget{begrunnelse}{Her har jeg tatt å satt inn for verdiene til}
+\hypertarget{begrunnelse}{Her har jeg tatt å satt inn for verdiene til} 
 
 $a$, $b$ og $c$ i reaksjonsfunksjonene til bedriftene. Det vi kan se er at begge reaksjonsfunksjonene har negativ helning så dersom Olivita øker sin produksjon så vil reaksjonsfunksjonen til Dr Choice AS reduseres og det samme vil skje dersom Dr Choice AS øker sin produksjon. Dette tyder på at det er strategiske substitutter.
 
@@ -449,9 +464,15 @@ c_BM_num = 7
 cournot = sp.lambdify(
     (a, b, c_G, c_B, c_M), 
     (solved[q_G], solved[q_B], solved[q_M]))
-kvantum_G, kvantum_B, kvantum_M = cournot(a_num, b_num, c_G_num, c_B_num, c_M_num)
+kvantum_G_before_cournot, kvantum_B_before_cournot, kvantum_M_before_cournot = cournot(a_num, b_num, c_G_num, c_B_num, c_M_num)
 
-markedspris = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G+kvantum_B+kvantum_M})
+markedspris_before_cournot = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G_before_cournot+kvantum_B_before_cournot+kvantum_M_before_cournot})
+
+profitt_G_num = round(float(profitt_G.rhs.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_G:c_G_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_G:f_G_num})),2)
+profitt_B_num = round(float(profitt_B.rhs.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_B:c_B_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_B:f_B_num})),2)
+profitt_M_num = round(float(profitt_M.rhs.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_M:c_M_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_M:f_M_num})),2)
+
+
 ```
 
 ```{=tex}
@@ -468,7 +489,7 @@ Tallene er oppgitt i tusener som gir oss at Graff Brygghus og Bryggeri 13 produs
 fig, ax = plt.subplots()
 
 labels = ['Graff Brygghus', 'Bryggeri 13', 'Mack Mikrobryggeri']
-sizes = [kvantum_G, kvantum_B, kvantum_M]
+sizes = [kvantum_G_before_cournot, kvantum_B_before_cournot, kvantum_M_before_cournot]
 
 ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#3599a4', '#24666d'])
 plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier.png', dpi=300, bbox_inches='tight')
@@ -487,9 +508,13 @@ P = 175 - 4\cdot(10.125 + 10.125 + 10.875) = 175 - 4\cdot 31.125 = 175 - 124.5 =
 $$ Dette gir oss at markedsprisen er 50.5 kr per flaske mikroøl. Så kan jeg bare sette inn tallene i de tidligere profittfunksjonene og får:
 
 ```{python}
-profitt_G_before = profitt_G.subs({q_G:kvantum_G, q_B:kvantum_B, q_M:kvantum_M, c_G:c_G_num, a:a_num, b:b_num, p:markedspris, f_G:f_G_num})
-profitt_B_before = profitt_B.subs({q_G:kvantum_G, q_B:kvantum_B, q_M:kvantum_M, c_B:c_B_num, a:a_num, b:b_num, p:markedspris, f_B:f_B_num})
-profitt_M_before = profitt_M.subs({q_G:kvantum_G, q_B:kvantum_B, q_M:kvantum_M, c_M:c_M_num, a:a_num, b:b_num, p:markedspris, f_M:f_M_num})
+profitt_G_before_cournot = profitt_G.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_G:c_G_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_G:f_G_num})
+
+
+profitt_B_before_cournot = profitt_B.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_B:c_B_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_B:f_B_num})
+
+
+profitt_M_before_cournot = profitt_M.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_M:c_M_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_M:f_M_num})
 ```
 
 ```{=tex}
@@ -510,8 +535,8 @@ Nå starter jeg ved å se på hva som skjer om Mack Mikrobryggeri og Bryggeri 13
 Når Mack Mikrobryggeri og Bryggeri 13 fusjonerer vil vi ha et marked med 2 aktører med asymmetriske kostnader. Derfor bruker jeg igjen Cournot-modellen for asymmetriske bedrifter men nå med 2 aktører. Jeg blir å betegne Mack og Bryggeri 13 $BM$. Jeg setter opp ligningene for profitten til hver av bedriftene etter fusjonen:
 
 ```{python}
-profitt_G_etter = sp.Eq(pi_G, demand.rhs.subs(Q, q_G+q_BM)*q_G-costs.subs({Q:q_G, c:c_G, f:f_G}))
-profitt_MB_etter = sp.Eq(pi_BM, demand.rhs.subs(Q, q_G+q_BM)*q_BM-costs.subs({Q:q_BM, c:c_BM, f:f_BM}))
+profitt_G_etter_cournot = sp.Eq(pi_G, demand.rhs.subs(Q, q_G+q_BM)*q_G-costs.subs({Q:q_G, c:c_G, f:f_G}))
+profitt_MB_etter_cournot = sp.Eq(pi_BM, demand.rhs.subs(Q, q_G+q_BM)*q_BM-costs.subs({Q:q_BM, c:c_BM, f:f_BM}))
 ```
 
 ```{=tex}
@@ -523,10 +548,10 @@ profitt_MB_etter = sp.Eq(pi_BM, demand.rhs.subs(Q, q_G+q_BM)*q_BM-costs.subs({Q:
 Jeg deriverer disse og løser for $q_G$ og $q_{BM}$ for å finne reaksjonsfunksjonene og kvantum:
 
 ```{python}
-derivert_profitt_G_etter = sp.diff(profitt_G_etter.rhs, q_G)
-derivert_profitt_MB_etter = sp.diff(profitt_MB_etter.rhs, q_BM)
+derivert_profitt_G_etter_cournot = sp.diff(profitt_G_etter_cournot.rhs, q_G)
+derivert_profitt_MB_etter_cournot = sp.diff(profitt_MB_etter_cournot.rhs, q_BM)
 
-solved_etter = sp.solve([derivert_profitt_G_etter, derivert_profitt_MB_etter], [q_G, q_BM])
+solved_etter_cournot = sp.solve([derivert_profitt_G_etter_cournot, derivert_profitt_MB_etter_cournot], [q_G, q_BM])
 ```
 
 ```{=tex}
@@ -536,16 +561,21 @@ q_{BM} = \frac{a + c_G -2\cdot c_{BM}}{3\cdot b} = \frac{175 + 10 -2\cdot 7}{3\c
 \end{align*}
 ```
 ```{python}
-cournot_etter = sp.lambdify(
+cournot_etter_cournot = sp.lambdify(
     (a, b, c_G, c_BM), 
-    (solved_etter[q_G], solved_etter[q_BM]))
+    (solved_etter_cournot[q_G], solved_etter_cournot[q_BM]))
     
-kvantum_G_etter, kvantum_BM = cournot_etter(a_num, b_num, c_G_num, c_BM_num)
+kvantum_G_etter_cournot, kvantum_BM_etter_cournot = cournot_etter_cournot(a_num, b_num, c_G_num, c_BM_num)
+markedspris_etter_cournot = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G_etter_cournot+kvantum_BM_etter_cournot})
+
+profitt_G_etter_cournot = round(float(profitt_G_etter_cournot.rhs.subs({q_G:kvantum_G_etter_cournot, q_BM:kvantum_BM_etter_cournot, c_G:c_G_num, a:a_num, b:b_num, f_G:f_G_num})),2)
+profitt_BM_etter_cournot = round(float(profitt_MB_etter_cournot.rhs.subs({q_G:kvantum_G_etter_cournot, q_BM:kvantum_BM_etter_cournot, c_BM:c_BM_num, a:a_num, b:b_num, f_BM:f_BM_num})),2)
 ```
 
 Ved å substituere inn tallene får vi at Mack Mikrobryggeri vil produsere 13500 flasker mikroøl, mens Bryggeri 13 vil produsere 14250 flasker mikroøl.
 
-Jeg kan nå sette dette inn i etterspørselsfunksjonen å få markedspris $$
+Jeg kan nå sette dette inn i etterspørselsfunksjonen å få markedspris 
+$$
 p = 175 - 4 \cdot (13.5 + 14.25) = 64
 $$
 
@@ -559,14 +589,12 @@ Vi ser at denne prisen er høyere enn den opprinnelige prisen før fusjon. Jeg k
 ```
 Vi ser at Graff Brygghus har tjent mer på fusjonen enn de fusjonerte selskapene Mack og Bryggeri 13. Vi kan også se hvordan markedsandelene har endret seg i \autoref{fig:markedsandel_etter}.
 
-\newpage
-
 ```{python}
 %%capture
 fig, ax = plt.subplots()
 
 labels = ['Graff Brygghus', 'Mack Mikrobryggeri']
-sizes = [kvantum_G_etter, kvantum_BM]
+sizes = [kvantum_G_etter_cournot, kvantum_BM_etter_cournot]
 
 ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#24666d'])
 plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon.png', dpi=300, bbox_inches='tight')
@@ -590,21 +618,21 @@ Men selv om Graff Brygghus har hatt en stor økning i profitt, vil også det fus
 
 Så fusjonen vil gi økt profitt for begge bedriftene. Selv om det har vært bedre for Graff Brygghus, vil Mack og Bryggeri 13 også tjene mer på fusjonen gjennom økte priser. Av den grunn vil fusjonen være en god ide for begge bedriftene.
 
-\clearpage
-
 #### Forklaring av Fusjonsparadokset symmetriske bedrifter generelt
 
 Fusjonsparadokset er det uintuitive som skjer i horisontale fusjoner i Cournot-modellen hvor det viser seg at det ikke vil være lønnsomt for de fusjonerende selskapene, men lønnsomme for de ikke-fusjonerende selskapene. Bedriftene konkurrerer i kvantitet som fører en fusjon mellom to selskaper i et tre-selskapsmarked til at de fusjonerte selskapene oppnår lavere samlet produksjon og lavere samlet profitt enn før fusjonen. Dette er fordi antallet aktører i markedet reduseres, noe som øker markedsprisen. Denne prisøkningen er til fordel for det ikke-fusjonerte selskapet, som kan øke sin produksjon og selge til en høyere pris. De fusjonerte selskapene, derimot, produserer nå samlet sett mindre enn de gjorde individuelt før fusjonen, og dermed reduseres deres samlede profitt.[@pepall2014, s. 388-394]
 
+\newpage
+
 #### Kostnadssynergier i asymmetriske bedrifter i casen
 
-I dette tilfellet ser vi at Graff Brygghus drar nytte av fusjonen mellom Mack Mikrobryggeri og Bryggeri 13 ved å kunne selge sitt økte kvantum til en høyere pris. Samtidig har det fusjonerte selskapet oppnådd kostnadssynergier som gir dem en økning i effektiviteten og en økt samlet profitt enn før fusjonen på grunn av økt markedspris.
+I dette tilfellet ser vi at Graff Brygghus drar nytte av fusjonen mellom Mack Mikrobryggeri og Bryggeri 13 ved å kunne selge sitt økte kvantum til en høyere pris. Samtidig har det fusjonerte selskapet oppnådd kostnadssynergier som gir dem en økning i effektiviteten og en økt samlet profitt enn før fusjonen på grunn av økt markedspris. Men i virkeligheten så er det ikke bare en gang du velger kapasitet og med denne økte kapasiteten og lavere marginale kostnader med lavere faste kostnader enn hver for seg vil det fusjonerte selskapet kunne innta en lederposisjon i markedet og dermed endre dynamikken i markedet. Dette vil føre til at det fusjonerte selskapet vil ha en fordel i markedet og at det er Stackelberg-modellen som bør brukes. 
 
 #### Stackelberg-modellen
 
-Det kan derimot være slik at fusjonen mellom Mack Mikrobryggeri og Bryggeri 13 med den dobble kapasiteten og lavere totale kostnader vil innta en leder posisjon i markedet og at det derfor er Stackelberg-modellen som skal brukes. Dette vil endre på dynamikken betydelig og vi vil se at det fusjonerte selskapet vil ha en fordel i markedet. 
+En fusjon mellom Mack Mikrobryggeri og Bryggeri 13 der kapasiteten flyttes over til mack vil da gi dobbel kapasitet med den lavere marginalkostnaden og lavere faste kostnader enn de hadde individuelt. Dermed vil en fusjon føre til at det fusjonerte selskapet vil ha en fordel i markedet slik at de vil innta en leder posisjon i markedet. Derfor er det Stackelberg-modellen som bør brukes. 
 
-For å beregne denne så følger jeg samme fremgangsmåte som tidligere men med asymmetriske bedrifter. Jeg blir ikke å vise all utregning men dette gjøres i python.  
+For å beregne denne så følger jeg samme fremgangsmåte som i oppgave 1a men med asymmetriske bedrifter. Jeg blir ikke å vise all utregning for å spare plass men dette gjøres i python.  Svarene vises i \autoref{table:3}
 
 
 ```{python}
@@ -613,35 +641,35 @@ q_BM, q_G, p, c, f, pi_G, pi_BM= sp.symbols('q_BM q_G p c f \u03C0_G \u03C0_BM')
 Invers_etterspors = sp.Eq(p, (175-(4)*(q_G+q_BM)))
 
 
-profitt_1_eq = sp.Eq(pi_BM, (Invers_etterspors.rhs-7)*q_G-500)
-profitt_2_eq = sp.Eq(pi_G, (Invers_etterspors.rhs-10)*q_BM-300)
+profitt_1_eq_stack = sp.Eq(pi_BM, (Invers_etterspors.rhs-7)*q_G-500)
+profitt_2_eq_stack = sp.Eq(pi_G, (Invers_etterspors.rhs-10)*q_BM-300)
 
 
-derivert_profitt_2 = sp.diff(profitt_2_eq.rhs, q_BM)
+derivert_profitt_2_stack = sp.diff(profitt_2_eq_stack.rhs, q_BM)
 
-reaksjon_BM = sp.solve(derivert_profitt_2, q_BM)[0]
+reaksjon_BM_stack = sp.solve(derivert_profitt_2_stack, q_BM)[0]
 
-profitt_1_eq = profitt_1_eq.subs(q_BM, reaksjon_BM)
+profitt_1_eq_stack = profitt_1_eq_stack.subs(q_BM, reaksjon_BM_stack)
 
-derivert_profitt1 = sp.diff(profitt_1_eq.rhs, q_G) #kvantum for kvantum og bryggeri
+derivert_profitt1_stack = sp.diff(profitt_1_eq_stack.rhs, q_G) #kvantum for kvantum og bryggeri
 
-kvantum_BM = sp.solve(derivert_profitt1, q_G)[0]
+kvantum_BM_stack = sp.solve(derivert_profitt1_stack, q_G)[0]
 
 #setter inn kvantum i reaksjonsfunksjonen til Dr Choice AS
-kvantum_G = reaksjon_BM.subs(q_G, kvantum_BM)#Kvantum for mack og bryggeri 13
-markedspris = Invers_etterspors.rhs.subs({q_G:kvantum_BM, q_BM:kvantum_G})
-profitt_BM = float(profitt_1_eq.rhs.subs(q_G, kvantum_BM).subs(q_BM, kvantum_G))
+kvantum_G_stack = reaksjon_BM_stack.subs(q_G, kvantum_BM_stack)#Kvantum for mack og bryggeri 13
+markedspris_stack = Invers_etterspors.rhs.subs({q_G:kvantum_BM_stack, q_BM:kvantum_G_stack})
+profitt_BM_stack = float(profitt_1_eq_stack.rhs.subs(q_G, kvantum_BM_stack).subs(q_BM, kvantum_G_stack))
 
-profitt_G = float(profitt_2_eq.rhs.subs(q_BM, kvantum_G).subs(q_G, kvantum_BM))
+profitt_G_stack = float(profitt_2_eq_stack.rhs.subs(q_BM, kvantum_G_stack).subs(q_G, kvantum_BM_stack))
 
-print(f'''Kvantum for fusjonert Mack: {round(kvantum_BM,2)} og Kvantum for Graff Brygghus: {round(kvantum_G, 2)}. \nDet totale kvantumet i markedet er {round(kvantum_BM+kvantum_G, 2)} til en Markedsprisen på {round(markedspris, 2)}.\n\nProfitten for selskapene er {round(profitt_BM, 2)} for fusjonert Mack og {round(profitt_G, 2)} for Graff Brygghus.''')
+print(f'''Kvantum for fusjonert Mack: {round(kvantum_BM_stack,2)} og Kvantum for Graff Brygghus: {round(kvantum_G_stack, 2)}. \nDet totale kvantumet i markedet er {round(kvantum_BM_stack+kvantum_G_stack, 2)} til en Markedsprisen på {round(markedspris_stack, 2)}.\n\nProfitten for selskapene er {round(profitt_BM_stack, 2)} for fusjonert Mack og {round(profitt_G_stack, 2)} for Graff Brygghus.''')
 ``` 
 ```{python}
 %%capture
 fig, ax = plt.subplots()
 
 labels = ['Graff Brygghus', 'Mack Mikrobryggeri']
-sizes = [kvantum_G, kvantum_BM]
+sizes = [kvantum_G_stack, kvantum_BM_stack]
 
 ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#24666d'])
 plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stackel.png', dpi=300, bbox_inches='tight')
@@ -650,12 +678,49 @@ plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stacke
 ```{=tex}
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.4\textwidth]{dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stackel.png}
+\includegraphics[width=0.7\textwidth]{dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stackel.png}
 \caption{Markedsandelen til mikrobryggeriene etter fusjonen under Stackelberg med ledende Mack}
 \label{fig:markedsandel_etter_stackel}
 \end{figure}
 ```
-Vi ser at Mack ihvertfall vil ønsker å innta en ledende posisjon i markedet og at dette vil gi en økt profitt for de fusjonerte selskapene men dette ville gitt en lavere markedspris og totalt lavere kvantum.
+
+
+\clearpage
+
+```{python}
+tbl1 = rf"""
+\begin{{table}}[h]
+\centering
+\begin{{tabular}}{{|l|l|l|l|}}
+\hline
+\rowcolor{{cornflowerblue}} \textbf{{Bedrift}} & \textbf{{Variabel}} & \textbf{{Cournot}} & \textbf{{Stackelberg}} \\ \hline
+\rowcolor{{lighterblue}} Mack Mikrobryggeri      & Profitt                  & ${profitt_M_num*1000}~kr$             & -           \\ \hline
+\rowcolor{{lighterblue}} Bryggeri 13  & Profitt                  & ${profitt_B_num*1000}~kr$             & -           \\ \hline
+\rowcolor{{lighterblue}} Graff Brygghus  & Profitt                  & ${profitt_G_num*1000}~kr$             & -           \\ \hline 
+\textbf{{Total}}  & -                  & ${(profitt_G_num*1000) + (profitt_B_num*1000) + (profitt_M_num*1000)}~kr$             & -           \\ \hline
+\rowcolor{{lightblue}} Mack Mikrobryggeri      & Kvantum                  & ${kvantum_M_before_cournot*1000}$             & -           \\ \hline
+\rowcolor{{lightblue}} Bryggeri 13  & Kvantum                  & ${kvantum_B_before_cournot*1000}$             & -           \\ \hline
+\rowcolor{{lightblue}} Graff Brygghus  & Kvantum                  & ${kvantum_G_before_cournot*1000}$             & -           \\ \hline 
+\textbf{{Total}}  & -                  & ${(kvantum_M_before_cournot*1000)+(kvantum_B_before_cournot*1000)+(kvantum_G_before_cournot*1000)}$             & -          \\ \hline
+- & \textbf{{Markedspris}} & ${round(markedspris_before_cournot,2)}~kr$ & - \\ \hline
+\rowcolor{{cornflowerblue}} \textbf{{Bedrift etter fusjon}} & \textbf{{Variabel}} & \textbf{{Cournot}} & \textbf{{Stackelberg}} \\ \hline
+\rowcolor{{lighterblue}} Fusjonert Mack og Bryggeri      & Profitt                  & ${profitt_BM_etter_cournot*1000}~kr$             & ${round(profitt_BM_stack*1000,2)}~kr$           \\ \hline
+\rowcolor{{lighterblue}} Graff Brygghus  & Profitt                  & ${float(profitt_G_etter_cournot)*1000}~kr$             & ${round(profitt_G_stack*1000,2)}~kr$           \\ \hline 
+\textbf{{Total}}  & -                  & ${(profitt_BM_etter_cournot*1000)+(profitt_G_etter_cournot*1000)}~kr$             & ${round((profitt_G_stack*1000)+(profitt_BM_stack)*1000,2)}~kr$           \\ \hline
+\rowcolor{{lightblue}} Fusjonert Mack og Bryggeri      & Kvantum                  & ${kvantum_BM_etter_cournot*1000}$             & ${round(kvantum_BM_stack*1000,2)}$           \\ \hline
+\rowcolor{{lightblue}} Graff Brygghus  & Kvantum                  & ${kvantum_G_etter_cournot*1000}$             & ${round((kvantum_G_stack*1000),2)}$           \\ \hline
+\textbf{{Total}}  & -                  & ${kvantum_BM_etter_cournot*1000+kvantum_G_etter_cournot*1000}$             & ${round((kvantum_BM_stack+kvantum_G_stack)*1000,2)}$           \\ \hline
+- & \textbf{{Markedspris}} & ${round(float(markedspris_etter_cournot),2)}~kr$ & ${round(markedspris_stack,2)}~kr$ \\ \hline
+\end{{tabular}}
+\caption{{Effekten av fusjon mellom Mack og Bryggeri 13}}
+\label{{table:3}}
+\end{{table}}
+
+
+"""
+display(Latex(tbl1))
+```
+I \autoref{fig:markedsandel_etter_stackel} ser vi at å bruke Stackelberg-modellen ser ut til å løse fusjonsparadokset og at Mack Mikrobryggeri vil innta en ledende posisjon i markedet. Dette vil gi en økt profitt for de fusjonerte selskapene. Det vil også gi en økt profitt for de fusjonerte selskapene og dette ville gitt en **lavere markedspris og totalt høyere kvantum** i markedet. Vi kan uansett konkludere med at en fusjon mellom Mack Mikrobryggeri og Bryggeri 13 vil være lønnsomt for de to selskapene.
 
 
 
@@ -711,123 +776,231 @@ Sirkelen rundt Mack og Graff viser hvilke selskap som vil fusjonere.
 
 ### b) Basert på din analyse, vil du anbefale styret i Mack Mikrobrygg 13 å gjennomføre fusjon med Graff Brygghus?
 
-Det er igjen snakk om horisontal fusjon men denne gangen vil vi gå fra å ha 2 aktører til å ha en monopolist. Vi har også nå et tilfelle der vi også har en nedstrømsbedrift RGH. Jeg må da beregne hva de selger for til nedstrømsbedriften. 
-
-Med etterspørselsfunksjonen gitt som $P=175-2Q$ kan vi først beregne markedstilpasningen da de nå har like marginalkostnader og faste kostnader. Fra tidligere utregninger så vet vi at bedriftene vil forsøke å oppnå en pris som er lik marginalkostnaden. Jeg kan da starte med å sette opp ligningene som $P=175-4Q$ da vi tidligere har vist at helningen på marginalinntekt er lik dobbel helning til etterspørselskurven. 
-
-RGH står som monopol så de vil også selge til en pris lik marginalkostnaden så denne vil være lik $p=175-8Q$. 
-
-vil RGH kunne tjene inn for sine faste kostnader eller vil de gå konkurs? er dette lurt osv. 
-
-
 ```{python}
-a, b, q_G, q_BM, q_BMG, c, c_G, c_BM, c_BMG, f, f_G, f_BM, f_BMG, Q, pi_BMG = sp.symbols('a b q_G q_{BM} q_{BMG} c c_G c_{BM} c_{BMG} f f_G f_{BM} f_{BMG} Q \u03C0_{BMG}')
-
-a_num = 175
-b_num = 2
-c_G_num = 7
-c_BM_num = 7
-c_BMG_num = 7
-f_G_num = 500
-f_BM_num = 500
-f_BMG_num = 500
+import sympy as sp
+a, b, Q_O, Q_C, c, f, p, Q, r, Q_RGH, pi_M, pi_RGH, Q_M = sp.symbols('a b Q_O Q_C c f p Q r Q_RGH \u03C0_M \u03C0_{RGH} Q_M')
 
 
-
-demand = sp.Eq(p, a-b*(Q))
+demand = sp.Eq(p, a-b*(Q_O+Q_C))
 
 income = sp.Eq(p*Q, Q*(a-b*Q))
-costs = Q*c+f
+costs = Q*r-f
+
+MR = sp.Eq(sp.diff((a-b*(Q))*Q-f, Q), r)
+
+MR1 = sp.Eq(sp.diff((a-b*(Q_O+Q_C))*Q_O-f, Q_O), r)
+RF1  = sp.solve(MR1, Q_O)[0]
+
+MR2 = sp.Eq(sp.diff((a-b*(Q_C+Q_O))*Q_C-f, Q_C), r)
+RF2 = sp.solve(MR2, Q_C)[0]
+
+optimalt_kvantum1 = sp.solve(sp.Eq(RF1.subs(Q_C, RF2), Q_O))[0][Q_O]
+
+optimalt_kvantum2 = sp.solve(sp.Eq(RF2.subs(Q_O, RF1), Q_C))[0][Q_C]
 
 
-profitt_G = sp.Eq(pi_G, demand.rhs.subs(Q, q_G+q_BM)*q_G-costs.subs({Q:q_G, c:c_G, f:f_G}))
-profitt_BM = sp.Eq(pi_BM, demand.rhs.subs(Q, q_G+q_BM)*q_BM-costs.subs({Q:q_BM, c:c_BM, f:f_BM}))
+
+markedspris = demand.rhs.subs({Q_C: optimalt_kvantum1, Q_O: optimalt_kvantum2, a:175, b:2, r:7})
+
+optimalt_kvantum1_num = (round(float(optimalt_kvantum1.subs({a:175, b:2, r:7, f:500000}))))/2
+optimalt_kvantum2_num = (round(float(optimalt_kvantum2.subs({a:175, b:2, r:7, f:500000}))))/2
+
+profitt_mack = ((((markedspris-r)*optimalt_kvantum1/2)*1000)-f).subs({a:175, b:2, r:7, f:500000})
+profitt_graff = ((((markedspris-r)*optimalt_kvantum2/2)*1000)-f).subs({a:175, b:2, r:7, f:500000})
+
+#print(f'''Optimalt kvantum for Mack er {optimalt_kvantum1_num} og for Graff Brygghus er {optimalt_kvantum2_num}. \nSå det totale kvantumet blir {(optimalt_kvantum1_num+optimalt_kvantum2_num)} og markedsprisen blir {markedspris} \nProfitten for Mack blir {profitt_mack} og for Graff Brygghus blir {profitt_graff}.''')
 
 
-profitt_G_diff = sp.diff(profitt_G.rhs, q_G)
-profitt_BM_diff = sp.diff(profitt_BM.rhs, q_BM)
+tbl2 = rf"""
+\begin{{table}}[h]
+\centering
+\begin{{tabular}}{{|c|c|c|}}
+\hline
+\textbf{{Bedrift}} & \textbf{{Variabel}} & \textbf{{Pris/antall}} \\
+\hline
+Mack & Pris & {markedspris} \\
+Mack & Kvantum & {optimalt_kvantum1_num*1000} \\
+Graff Brygghus & Pris & {markedspris} \\
+Graff Brygghus & Kvantum & {optimalt_kvantum2_num*1000} \\
+\rowcolor{{lighterblue}} \textbf{{Mack Mikrobryggeri}} & \textbf{{Profitt}} & {profitt_mack}kr \\ \hline
+\rowcolor{{lighterblue}} \textbf{{Graff Brygghus}} & \textbf{{Profitt}} & {profitt_graff}kr \\ \hline
+\end{{tabular}}
+\caption{{Markedet før evt fusjon Mack og Bryggeri 13}}
+\label{{table:4}}
+\end{{table}}
+"""
 
 
+
+
+#Ettersporsel MR = sp.Eq(sp.diff((a-b*(Q))*Q-f, Q), r)
+Ettersporsel = sp.Eq(p, (a-b*(Q)))
+
+profitt = sp.Eq(pi_M, (Ettersporsel.rhs-r)*Q-f) #profitt = inntekt minus kostnader
+MR_RGH = sp.diff(profitt.rhs, Q).subs(Q, Q_RGH) # Marginalinntekt for RGH
+MR_lik_MC = sp.Eq(sp.solve(MR_RGH, r)[0], r) #Marginal inntekt lik marginal kostnad
+optimalt_kvantum_RGH = sp.solve(MR_lik_MC, Q_RGH)[0] #optimalt kvantum for RGH
+Optimal_pris_RGH = Ettersporsel.subs(Q, optimalt_kvantum_RGH) #optimal pris for RGH
+
+
+
+ettersporsel_mack = sp.Eq(r, sp.solve(sp.Eq(Q_M, optimalt_kvantum_RGH),r)[0])
+profitt_mack = sp.Eq(pi_M, (ettersporsel_mack.rhs-r)*Q_M-f) #profitt = inntekt minus kostnader
+MR_Mack = sp.diff(((ettersporsel_mack.rhs-c)*Q_M-f), Q_M)  # Marginalinntekt for mack
+MR_lik_MC_mack = sp.Eq(sp.solve(MR_Mack, c)[0], c) #Marginalinntekt lik marginal kostnad
+optimalt_kvantum_mack = sp.solve(MR_lik_MC_mack, Q_M)[0] #optimalt kvantum for mack
+optimal_pris_r = ettersporsel_mack.rhs.subs(Q_M, optimalt_kvantum_mack) #optimal pris for Mack
+
+
+
+optimalpris_sluttbruker = Optimal_pris_RGH.rhs.subs({r: optimal_pris_r})
+
+
+#deler kvantum på 2 pga dobbel helning
+profitt_mack = sp.Eq(pi_M, (optimal_pris_r-c)*optimalt_kvantum_mack - f)
+profitt_RGH = sp.Eq(pi_RGH, (Optimal_pris_RGH.rhs.subs(r, optimal_pris_r)-optimal_pris_r)*optimalt_kvantum_RGH.subs(r, optimal_pris_r)-f)
+
+pris_mack_num = optimal_pris_r.subs({a:175, c:7})
+pris_sluttbruker = Optimal_pris_RGH.rhs.subs({a:175, r:optimal_pris_r.subs({a:175, c:7})})
+kvantum_sluttbruker = sp.solve(Ettersporsel.subs({a:175, b:2, p:pris_sluttbruker}), Q)[0]
+profitt_mack_num = profitt_mack.subs({a:175, b:2, f:1000, c:7}).rhs*1000
+profitt_RGH_num = profitt_RGH.subs({a:175, b:2, f:600, c:7}).rhs*1000
+
+tbl3 = rf"""
+\begin{{table}}[h]
+\centering
+\begin{{tabular}}{{|c|c|c|}}
+\hline
+\textbf{{Bedrift}} & \textbf{{Variabel}} & \textbf{{Pris/antall}} \\ \hline
+Mack Mikrobryggeri & Pris & {pris_mack_num}kr \\ \hline
+RGH & Pris & {pris_sluttbruker}kr \\ \hline
+\rowcolor{{cornflowerblue}} \textbf{{Sluttbruker}} & \textbf{{Betaler}} & {pris_sluttbruker}kr \\ \hline
+\rowcolor{{cornflowerblue}} \textbf{{Sluttbruker}} & \textbf{{Kjøper}} & {kvantum_sluttbruker*1000} stykk \\ \hline \\ \hline
+\rowcolor{{lighterblue}} \textbf{{Mack Mikrobryggeri}} & \textbf{{Profitt}} & {profitt_mack_num}kr \\ \hline
+\rowcolor{{lighterblue}} \textbf{{RGH}} & \textbf{{Profitt}} & {profitt_RGH_num}kr \\ \hline
+\end{{tabular}}
+\caption{{Effekten av fusjon mellom Mack og Bryggeri 13 på sluttbrukere}}
+\label{{table:5}}
+\end{{table}}
+"""
 ```
+
+Det er igjen snakk om horisontal fusjon men denne gangen vil vi gå fra å ha 2 aktører til å ha en monopolist. Vi har også nå et tilfelle der vi også har en nedstrømsbedrift RGH. Jeg må da beregne hva de selger for til nedstrømsbedriften. Som vist tidligere så vil RGH selge kvantum likt $A-2B(Q)$ så etterspørselen til oppstrømsbedriftene vil være $175-4Q$.
+
+Så jeg regner reaksjonsfunksjonen til Graff og Mack. 
+
+$$
+q_M = \frac{a-c-b_{q_G}}{2b}
+$$
+Siden vi vet hva a, c og b er så kan vi regne ut dette med samme utregning som i oppgave 1.
+
+$$
+q_M = \frac{175-7-4(q_G)}{8} = \frac{168-4q_G}{8} = 21-0.5q_G
+$$
+
+Så reaksjonsfunksjonen til Mack er $21-0.5q_G$ og reaksjonsfunksjonen til Graff er $21-0.5q_M$. Så løser jeg de to likningene.
 
 ```{=tex}
 \begin{align*}
-\pi_G &= -c_G\cdot q_G - f_G + (a-b\cdot(q_G+q_BM))\cdot q_G \\
-\pi_BM &= -c_B\cdot q_BM - f_BM + (a-b\cdot(q_G+q_BM))\cdot q_BM \\
+q_M &= 21-0.5(21-0.5q_M) \\
+&= 21-10.5+0.25q_M \\
+0.75q_M &= 10.5 \\
+q_M &= 14
 \end{align*}
-```
-Derivert med hensyn på $q_G$ og $q_BM$ får vi:
-
-```{=tex}
-\begin{align*}
-a-b\cdot q_C - b(q_C + q_{BM})- c_G \\
-a-b\cdot q_{BM} - b(q_G + q_{BM})- c_{BM} 
-\end{align*}
-```
-Løst for $q_G$ og $q_{BM}$ får vi:
-
-```{python}
-solved_etterB = sp.solve([profitt_G_diff, profitt_BM_diff], [q_G, q_BM])
-
-
-cournot_etterB = sp.lambdify(
-    (a, b, c_G, c_BM), 
-    (solved_etter[q_G], solved_etter[q_BM]))
-kvantum_G_etter_B, kvantum_BM_B = cournot_etterB(a_num, b_num, c_G_num, c_BM_num)
-
-
-markedspris_B = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G_etter_B+kvantum_BM_B})
-
-
-```
-
-```{=tex}
-\begin{align*}
-q_G = \frac{a-2\cdot c_G +c_{BM}}{3b} \\
-q_BM = \frac{a +c_G - 2\cdot c_{BM}}{3b}
-\end{align*}
-```
-her starter slurvet for real
-
-```{python}
-
-profitt_G_num = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G_etter_B+kvantum_BM_B})*(kvantum_G_etter_B)-costs.subs({Q:kvantum_G_etter_B, c:c_G_num, f:f_G_num})
-profitt_bm_num = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_BM_B+ kvantum_G_etter_B})*(kvantum_BM_B)-costs.subs({Q:kvantum_BM_B, c:c_BM_num, f:f_BM_num})
-```
-
-dette gir oss kvantum på begge på 28, markedspris på 63 og profitt hver på 1068.
-
-Etter fusjonen vil vi ha en monopolist og vi kan da regne ut profitten til monopolisten.
-
-```{python}
-profitt_BMG = sp.Eq(pi_BMG, demand.rhs.subs(Q, q_BMG)*q_BMG-costs.subs({Q:q_BMG, c:c_BMG, f:f_BMG}))
-profitt_BMG_diff = sp.diff(profitt_BMG.rhs, q_BMG)
-
-solved_etterB_monopol = sp.solve(profitt_BMG_diff, q_BMG)[0]
-
-cournot_etterB_monopol = sp.lambdify(
-    (a, b, c_BMG), 
-    (solved_etterB_monopol))
-kvantum_BMG_B = cournot_etterB_monopol(a_num, b_num, c_BMG_num)
-
-markedspris_B = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_BMG_B})
-
-profitt_BMG_num = sp.Eq(pi_BMG, demand.rhs.subs({Q:kvantum_BMG_B, a:a_num, b:b_num})*kvantum_BMG_B-costs.subs({Q:kvantum_BMG_B, c:c_BMG_num, f:f_BMG_num}))
-
-
 ```
 
 $$
-\pi_BMG = -c_{BMG}\cdot q_{BMG} - f_{BMG} + q_{BMG}\cdot (a-b\cdot q_{BMG})
-$$ derivert og løst for q_BMG $$
-q_{BMG} = \frac{a-c_{BMG}}{2b}
-$$ totalt kvantum på 42, pris 91 og total profitt 3028.
+q_G = 21-0.5(14) = 14
+$$
+
+Prisen blir da
+$$
+P = 175-4(14+14) = 63
+$$
+```{=tex}
+\begin{align*}
+\pi_M &= (63-7)14 - 500 = 56 \cdot 14 - 500 = 284 \\
+\pi_G &= (63-7)14 - 500 = 56 \cdot 14 - 500 = 284
+\end{align*}
+```
+
+```{python}
+display(Latex(tbl2))
+```
+
+
+Så vi ser at begge selskapene vil tjene 284000 i profitt. 
+
+
+
+
+For å se hva som vil skje under en fusjon så kan vi se på hva som skjer med profitten til de to selskapene med samme etterspørsel fra RGH.
+
+$$
+175-8Q = 7 \\
+Q = 21
+$$
+
+Og 21 satt inn i $175-4Q$ gir oss prisen som er 91. 
+Siden det ikke vil være noen kostnadsbesparelser så vil nå faste kostnader i tusener være 1000.
+
+```{=tex}
+\begin{align*}
+\pi_{M} &= (91-7)21 - 1000 = 84 \cdot 21 - 1000 = 764 \\
+\end{align*}
+```
+
+Det fusjonerte selskapet ender da med 764 tusen i profitt.
+
+
+
+
+```{python}
+display(Latex(tbl3))
+```
+
+
+Profitten går da fra å være 284+284=568 til 764. Så det vil være en økning i profitten på 196 tusen. Så jeg vil anbefale styret i Mack Mikrobrygg 13 å gjennomføre fusjon med Graff Brygghus.
+
+
+
+
 
 \clearpage
 
 ## Samfunnsøkonomiske konsekvenser
 
 ### c) Hva blir de samfunnsøkonomiske konsekvensene av en fusjon mellom Mack Mikrobrygg 13 og Graff Brygghus?
+
+De samfunnsøkonomiske konsekvensene så kan vi se ved å sammenligne \autoref{table:4} og \autoref{table:5}. Kundene i markedet vil nå betale en høyere pris og da kjøpe et lavere kvantum. 
+
+
+
+#### Produsentoverskuddet til oppstrøm
+
+Produsentoverskuddet til Mack og Graff var 284 000 kr hver, totalt 568 000 kr. Etter fusjonen vil det fusjonerte selskapet Mack Mikrobrygg 13 ha en profitt på 764 000 kr . Dette representerer en økning i produsentoverskuddet, som nå er konsentrert til ett selskap som tjener betydelig mer enn summen av de individuelle profittnivåene før fusjonen.
+
+
+
+#### Konsumentoverskudd og Produsentoverskudd til nedstrøm
+
+For RGH og kundene derimot kan vi se at prisene øker. For RGH for de en profitt på 282 000kr etter fusjonen, de selger nå flaskene for 133kr mens de nå betaler 91kr for de istedet for 63 som de gjorde før. De har nå mistet 7000flasker fra sitt solgte kvantum.
+
+
+Konsumentoverskuddet er forskjellen mellom hva forbrukerne er villige til å betale og hva de faktisk betaler. Før fusjonen var markedsprisen 63 kr per flaske, mens den totale mengden mikroøl i markedet var 28 000 flasker. Etter fusjonen øker prisen til 133 kr per flaske og den totale mengden reduseres til 21 000 flasker . Dette betyr at konsumentene må betale mer per enhet og kjøper færre enheter totalt sett, noe som resulterer i et redusert konsumentoverskudd.
+
+
+#### Konklusjon
+
+Da det ikke var noen kostnadsbesparelser i fusjonen så kan vi anta at det samlet sett ikke har vært en samfunnsøkonomisk gevinst. Det er nå større profitt for det fusjonerte selskapet med samme mengde kostnader, hvor den økte profitten kom fra å ha markedsmakt til å øke sine priser. Istedet for å selge 28000 flasker med en samlet profitt på 568 000kr så selger de nå 21000 flasker med en samlet profitt på 764 000kr. Dette er en økning i profitt på 196 000kr. 
+
+Konsumentene har da tapt på at de nå betaler mer og det er nå introdusert ekstra ineffektivitet i markedet. Det er nå en dødvektstap på 7000 flasker som ikke blir solgt.
+
+
+
+
+
+
 
 \clearpage
 
@@ -836,7 +1009,28 @@ $$ totalt kvantum på 42, pris 91 og total profitt 3028.
 ::: {#refs}
 :::
 
-\clearpage
+
+
+\
+
+
+
+\
+
+
+
+
+\
+
+
+\
+
+
+
+
+
+
+
 
 \appendix
 
@@ -980,6 +1174,7 @@ display(RF2.subs({a:990, b:1/60, c:50}))
 
 \section {Appendix Python kode Oppgave 2 a}
 
+
 ```{python}
 #| echo: true
 a, b, q_G, q_B, q_M, q_BM, c, f, f_G, f_B, f_M, f_BM, p, Q, c_G, c_B, c_M, c_BM, pi_G, pi_B, pi_M, pi_BM = sp.symbols('a b q_G q_B q_M q_{BM} c f f_G f_B f_M f_{BM} p Q c_G c_B c_M c_{BM} \u03C0_G \u03C0_B \u03C0_M \u03C0_BM')
@@ -1024,9 +1219,15 @@ c_BM_num = 7
 cournot = sp.lambdify(
     (a, b, c_G, c_B, c_M), 
     (solved[q_G], solved[q_B], solved[q_M]))
-kvantum_G, kvantum_B, kvantum_M = cournot(a_num, b_num, c_G_num, c_B_num, c_M_num)
+kvantum_G_before_cournot, kvantum_B_before_cournot, kvantum_M_before_cournot = cournot(a_num, b_num, c_G_num, c_B_num, c_M_num)
 
-markedspris = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G+kvantum_B+kvantum_M})
+markedspris_before_cournot = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G_before_cournot+kvantum_B_before_cournot+kvantum_M_before_cournot})
+
+profitt_G_num = round(float(profitt_G.rhs.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_G:c_G_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_G:f_G_num})),2)
+profitt_B_num = round(float(profitt_B.rhs.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_B:c_B_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_B:f_B_num})),2)
+profitt_M_num = round(float(profitt_M.rhs.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_M:c_M_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_M:f_M_num})),2)
+
+
 ```
 
 ```{python}
@@ -1034,109 +1235,255 @@ markedspris = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G+kvantum_B+kvantum_M
 fig, ax = plt.subplots()
 
 labels = ['Graff Brygghus', 'Bryggeri 13', 'Mack Mikrobryggeri']
-sizes = [kvantum_G, kvantum_B, kvantum_M]
+sizes = [kvantum_G_before_cournot, kvantum_B_before_cournot, kvantum_M_before_cournot]
 
 ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#3599a4', '#24666d'])
 #plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier.png', dpi=300, bbox_inches='tight')
-plt.show();# Bare for appendix
+plt.show();
+```
+
+
+```{python}
+#| echo: true
+profitt_G_before_cournot = profitt_G.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_G:c_G_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_G:f_G_num})
+
+
+profitt_B_before_cournot = profitt_B.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_B:c_B_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_B:f_B_num})
+
+
+profitt_M_before_cournot = profitt_M.subs({q_G:kvantum_G_before_cournot, q_B:kvantum_B_before_cournot, q_M:kvantum_M_before_cournot, c_M:c_M_num, a:a_num, b:b_num, p:markedspris_before_cournot, f_M:f_M_num})
 ```
 
 ```{python}
 #| echo: true
-profitt_G_before = profitt_G.subs({q_G:kvantum_G, q_B:kvantum_B, q_M:kvantum_M, c_G:c_G_num, a:a_num, b:b_num, p:markedspris, f_G:f_G_num})
-profitt_B_before = profitt_B.subs({q_G:kvantum_G, q_B:kvantum_B, q_M:kvantum_M, c_B:c_B_num, a:a_num, b:b_num, p:markedspris, f_B:f_B_num})
-profitt_M_before = profitt_M.subs({q_G:kvantum_G, q_B:kvantum_B, q_M:kvantum_M, c_M:c_M_num, a:a_num, b:b_num, p:markedspris, f_M:f_M_num})
+profitt_G_etter_cournot = sp.Eq(pi_G, demand.rhs.subs(Q, q_G+q_BM)*q_G-costs.subs({Q:q_G, c:c_G, f:f_G}))
+profitt_MB_etter_cournot = sp.Eq(pi_BM, demand.rhs.subs(Q, q_G+q_BM)*q_BM-costs.subs({Q:q_BM, c:c_BM, f:f_BM}))
 ```
 
 ```{python}
 #| echo: true
-profitt_G_etter = sp.Eq(pi_G, demand.rhs.subs(Q, q_G+q_BM)*q_G-costs.subs({Q:q_G, c:c_G, f:f_G}))
-profitt_MB_etter = sp.Eq(pi_BM, demand.rhs.subs(Q, q_G+q_BM)*q_BM-costs.subs({Q:q_BM, c:c_BM, f:f_BM}))
+derivert_profitt_G_etter_cournot = sp.diff(profitt_G_etter_cournot.rhs, q_G)
+derivert_profitt_MB_etter_cournot = sp.diff(profitt_MB_etter_cournot.rhs, q_BM)
+
+solved_etter_cournot = sp.solve([derivert_profitt_G_etter_cournot, derivert_profitt_MB_etter_cournot], [q_G, q_BM])
 ```
 
 ```{python}
 #| echo: true
-derivert_profitt_G_etter = sp.diff(profitt_G_etter.rhs, q_G)
-derivert_profitt_MB_etter = sp.diff(profitt_MB_etter.rhs, q_BM)
-
-solved_etter = sp.solve([derivert_profitt_G_etter, derivert_profitt_MB_etter], [q_G, q_BM])
-```
-
-```{python}
-#| echo: true
-cournot_etter = sp.lambdify(
+cournot_etter_cournot = sp.lambdify(
     (a, b, c_G, c_BM), 
-    (solved_etter[q_G], solved_etter[q_BM]))
+    (solved_etter_cournot[q_G], solved_etter_cournot[q_BM]))
     
-kvantum_G_etter, kvantum_BM = cournot_etter(a_num, b_num, c_G_num, c_BM_num)
+kvantum_G_etter_cournot, kvantum_BM_etter_cournot = cournot_etter_cournot(a_num, b_num, c_G_num, c_BM_num)
+markedspris_etter_cournot = demand.rhs.subs({a:a_num, b:b_num, Q:kvantum_G_etter_cournot+kvantum_BM_etter_cournot})
+
+profitt_G_etter_cournot = round(float(profitt_G_etter_cournot.rhs.subs({q_G:kvantum_G_etter_cournot, q_BM:kvantum_BM_etter_cournot, c_G:c_G_num, a:a_num, b:b_num, f_G:f_G_num})),2)
+profitt_BM_etter_cournot = round(float(profitt_MB_etter_cournot.rhs.subs({q_G:kvantum_G_etter_cournot, q_BM:kvantum_BM_etter_cournot, c_BM:c_BM_num, a:a_num, b:b_num, f_BM:f_BM_num})),2)
 ```
+
 
 ```{python}
 #| echo: true
 fig, ax = plt.subplots()
 
 labels = ['Graff Brygghus', 'Mack Mikrobryggeri']
-sizes = [kvantum_G_etter, kvantum_BM]
+sizes = [kvantum_G_etter_cournot, kvantum_BM_etter_cournot]
 
 ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#24666d'])
 #plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon.png', dpi=300, bbox_inches='tight')
-plt.show(); # Bare for appendix
+plt.show();
 ```
-
 
 
 ```{python}
 #| echo: true
-
 q_BM, q_G, p, c, f, pi_G, pi_BM= sp.symbols('q_BM q_G p c f \u03C0_G \u03C0_BM')
 
 Invers_etterspors = sp.Eq(p, (175-(4)*(q_G+q_BM)))
 
 
-profitt_1_eq = sp.Eq(pi_BM, (Invers_etterspors.rhs-7)*q_G-500)
-profitt_2_eq = sp.Eq(pi_G, (Invers_etterspors.rhs-10)*q_BM-300)
+profitt_1_eq_stack = sp.Eq(pi_BM, (Invers_etterspors.rhs-7)*q_G-500)
+profitt_2_eq_stack = sp.Eq(pi_G, (Invers_etterspors.rhs-10)*q_BM-300)
 
 
-derivert_profitt_2 = sp.diff(profitt_2_eq.rhs, q_BM)
+derivert_profitt_2_stack = sp.diff(profitt_2_eq_stack.rhs, q_BM)
 
-reaksjon_BM = sp.solve(derivert_profitt_2, q_BM)[0]
+reaksjon_BM_stack = sp.solve(derivert_profitt_2_stack, q_BM)[0]
 
-profitt_1_eq = profitt_1_eq.subs(q_BM, reaksjon_BM)
+profitt_1_eq_stack = profitt_1_eq_stack.subs(q_BM, reaksjon_BM_stack)
 
-derivert_profitt1 = sp.diff(profitt_1_eq.rhs, q_G) #kvantum for kvantum og bryggeri
+derivert_profitt1_stack = sp.diff(profitt_1_eq_stack.rhs, q_G) #kvantum for kvantum og bryggeri
 
-kvantum_BM = sp.solve(derivert_profitt1, q_G)[0]
+kvantum_BM_stack = sp.solve(derivert_profitt1_stack, q_G)[0]
 
 #setter inn kvantum i reaksjonsfunksjonen til Dr Choice AS
-kvantum_G = reaksjon_BM.subs(q_G, kvantum_BM)#Kvantum for mack og bryggeri 13
-markedspris = Invers_etterspors.rhs.subs({q_G:kvantum_BM, q_BM:kvantum_G})
-profitt_BM = float(profitt_1_eq.rhs.subs(q_G, kvantum_BM).subs(q_BM, kvantum_G))
+kvantum_G_stack = reaksjon_BM_stack.subs(q_G, kvantum_BM_stack)#Kvantum for mack og bryggeri 13
+markedspris_stack = Invers_etterspors.rhs.subs({q_G:kvantum_BM_stack, q_BM:kvantum_G_stack})
+profitt_BM_stack = float(profitt_1_eq_stack.rhs.subs(q_G, kvantum_BM_stack).subs(q_BM, kvantum_G_stack))
 
-profitt_G = float(profitt_2_eq.rhs.subs(q_BM, kvantum_G).subs(q_G, kvantum_BM))
+profitt_G_stack = float(profitt_2_eq_stack.rhs.subs(q_BM, kvantum_G_stack).subs(q_G, kvantum_BM_stack))
 
-print(f'''Kvantum for fusjonert Mack: {round(kvantum_BM,2)} og Kvantum for Graff Brygghus: {round(kvantum_G, 2)}. \nDet totale kvantumet i markedet er {round(kvantum_BM+kvantum_G, 2)} til en Markedsprisen på {round(markedspris, 2)}.\n\nProfitten for selskapene er {round(profitt_BM, 2)} for fusjonert Mack og {round(profitt_G, 2)} for Graff Brygghus.''')
+print(f'''Kvantum for fusjonert Mack: {round(kvantum_BM_stack,2)} og Kvantum for Graff Brygghus: {round(kvantum_G_stack, 2)}. \nDet totale kvantumet i markedet er {round(kvantum_BM_stack+kvantum_G_stack, 2)} til en Markedsprisen på {round(markedspris_stack, 2)}.\n\nProfitten for selskapene er {round(profitt_BM_stack, 2)} for fusjonert Mack og {round(profitt_G_stack, 2)} for Graff Brygghus.''')
 ``` 
 ```{python}
 #| echo: true
 fig, ax = plt.subplots()
 
 labels = ['Graff Brygghus', 'Mack Mikrobryggeri']
-sizes = [kvantum_G, kvantum_BM]
+sizes = [kvantum_G_stack, kvantum_BM_stack]
 
 ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=['#def2f4', '#24666d'])
 #plt.savefig('dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stackel.png', dpi=300, bbox_inches='tight')
-plt.show();# Bare for appendix
-
+plt.show();
 ```
 
+```{python}
+#| echo: true
+tbl1 = rf"""
+\begin{{table}}[h]
+\centering
+\begin{{tabular}}{{|l|l|l|l|}}
+\hline
+\rowcolor{{cornflowerblue}} \textbf{{Bedrift}} & \textbf{{Variabel}} & \textbf{{Cournot}} & \textbf{{Stackelberg}} \\ \hline
+\rowcolor{{lighterblue}} Mack Mikrobryggeri      & Profitt                  & ${profitt_M_num*1000}~kr$             & -           \\ \hline
+\rowcolor{{lighterblue}} Bryggeri 13  & Profitt                  & ${profitt_B_num*1000}~kr$             & -           \\ \hline
+\rowcolor{{lighterblue}} Graff Brygghus  & Profitt                  & ${profitt_G_num*1000}~kr$             & -           \\ \hline 
+\textbf{{Total}}  & -                  & ${(profitt_G_num*1000) + (profitt_B_num*1000) + (profitt_M_num*1000)}~kr$             & -           \\ \hline
+\rowcolor{{lightblue}} Mack Mikrobryggeri      & Kvantum                  & ${kvantum_M_before_cournot*1000}$             & -           \\ \hline
+\rowcolor{{lightblue}} Bryggeri 13  & Kvantum                  & ${kvantum_B_before_cournot*1000}$             & -           \\ \hline
+\rowcolor{{lightblue}} Graff Brygghus  & Kvantum                  & ${kvantum_G_before_cournot*1000}$             & -           \\ \hline 
+\textbf{{Total}}  & -                  & ${(kvantum_M_before_cournot*1000)+(kvantum_B_before_cournot*1000)+(kvantum_G_before_cournot*1000)}$             & -          \\ \hline
+- & \textbf{{Markedspris}} & ${round(markedspris_before_cournot,2)}~kr$ & - \\ \hline
+\rowcolor{{cornflowerblue}} \textbf{{Bedrift etter fusjon}} & \textbf{{Variabel}} & \textbf{{Cournot}} & \textbf{{Stackelberg}} \\ \hline
+\rowcolor{{lighterblue}} Fusjonert Mack og Bryggeri      & Profitt                  & ${profitt_BM_etter_cournot*1000}~kr$             & ${round(profitt_BM_stack*1000,2)}~kr$           \\ \hline
+\rowcolor{{lighterblue}} Graff Brygghus  & Profitt                  & ${float(profitt_G_etter_cournot)*1000}~kr$             & ${round(profitt_G_stack*1000,2)}~kr$           \\ \hline 
+\textbf{{Total}}  & -                  & ${(profitt_BM_etter_cournot*1000)+(profitt_G_etter_cournot*1000)}~kr$             & ${round((profitt_G_stack*1000)+(profitt_BM_stack)*1000,2)}~kr$           \\ \hline
+\rowcolor{{lightblue}} Fusjonert Mack og Bryggeri      & Kvantum                  & ${kvantum_BM_etter_cournot*1000}$             & ${round(kvantum_BM_stack*1000,2)}$           \\ \hline
+\rowcolor{{lightblue}} Graff Brygghus  & Kvantum                  & ${kvantum_G_etter_cournot*1000}$             & ${round((kvantum_G_stack*1000),2)}$           \\ \hline
+\textbf{{Total}}  & -                  & ${kvantum_BM_etter_cournot*1000+kvantum_G_etter_cournot*1000}$             & ${round((kvantum_BM_stack+kvantum_G_stack)*1000,2)}$           \\ \hline
+- & \textbf{{Markedspris}} & ${round(float(markedspris_etter_cournot),2)}~kr$ & ${round(markedspris_stack,2)}~kr$ \\ \hline
+\end{{tabular}}
+\caption{{Effekten av fusjon mellom Mack og Bryggeri 13}}
+\label{{table:3}}
+\end{{table}}
+
+
+"""
+display(Latex(tbl1))
+```
 
 \clearpage
 
 \section {Appendix Python kode Oppgave 2 b}
 
 ```{python}
+#| echo: true
+import sympy as sp
+a, b, Q_O, Q_C, c, f, p, Q, r, Q_RGH, pi_M, pi_RGH, Q_M = sp.symbols('a b Q_O Q_C c f p Q r Q_RGH \u03C0_M \u03C0_{RGH} Q_M')
 
 
+demand = sp.Eq(p, a-b*(Q_O+Q_C))
+
+income = sp.Eq(p*Q, Q*(a-b*Q))
+costs = Q*r-f
+
+MR = sp.Eq(sp.diff((a-b*(Q))*Q-f, Q), r)
+
+MR1 = sp.Eq(sp.diff((a-b*(Q_O+Q_C))*Q_O-f, Q_O), r)
+RF1  = sp.solve(MR1, Q_O)[0]
+
+MR2 = sp.Eq(sp.diff((a-b*(Q_C+Q_O))*Q_C-f, Q_C), r)
+RF2 = sp.solve(MR2, Q_C)[0]
+
+optimalt_kvantum1 = sp.solve(sp.Eq(RF1.subs(Q_C, RF2), Q_O))[0][Q_O]
+
+optimalt_kvantum2 = sp.solve(sp.Eq(RF2.subs(Q_O, RF1), Q_C))[0][Q_C]
+
+
+
+markedspris = demand.rhs.subs({Q_C: optimalt_kvantum1, Q_O: optimalt_kvantum2, a:175, b:2, r:7})
+
+optimalt_kvantum1_num = (round(float(optimalt_kvantum1.subs({a:175, b:2, r:7, f:500000}))))/2
+optimalt_kvantum2_num = (round(float(optimalt_kvantum2.subs({a:175, b:2, r:7, f:500000}))))/2
+
+profitt_mack = ((((markedspris-r)*optimalt_kvantum1/2)*1000)-f).subs({a:175, b:2, r:7, f:500000})
+profitt_graff = ((((markedspris-r)*optimalt_kvantum2/2)*1000)-f).subs({a:175, b:2, r:7, f:500000})
+
+#print(f'''Optimalt kvantum for Mack er {optimalt_kvantum1_num} og for Graff Brygghus er {optimalt_kvantum2_num}. \nSå det totale kvantumet blir {(optimalt_kvantum1_num+optimalt_kvantum2_num)} og markedsprisen blir {markedspris} \nProfitten for Mack blir {profitt_mack} og for Graff Brygghus blir {profitt_graff}.''')
+
+
+tbl2 = rf"""
+\begin{{table}}[h]
+\centering
+\begin{{tabular}}{{|c|c|c|}}
+\hline
+\textbf{{Bedrift}} & \textbf{{Variabel}} & \textbf{{Pris/antall}} \\
+\hline
+Mack & Pris & {markedspris} \\
+Mack & Kvantum & {optimalt_kvantum1_num*1000} \\
+Graff Brygghus & Pris & {markedspris} \\
+Graff Brygghus & Kvantum & {optimalt_kvantum2_num*1000} \\
+\rowcolor{{lighterblue}} \textbf{{Mack Mikrobryggeri}} & \textbf{{Profitt}} & {profitt_mack}kr \\ \hline
+\rowcolor{{lighterblue}} \textbf{{Graff Brygghus}} & \textbf{{Profitt}} & {profitt_graff}kr \\ \hline
+\end{{tabular}}
+\caption{{Markedet før evt fusjon Mack og Bryggeri 13}}
+\label{{table:4}}
+\end{{table}}
+"""
+
+
+
+
+#Ettersporsel MR = sp.Eq(sp.diff((a-b*(Q))*Q-f, Q), r)
+Ettersporsel = sp.Eq(p, (a-b*(Q)))
+
+profitt = sp.Eq(pi_M, (Ettersporsel.rhs-r)*Q-f) #profitt = inntekt minus kostnader
+MR_RGH = sp.diff(profitt.rhs, Q).subs(Q, Q_RGH) # Marginalinntekt for RGH
+MR_lik_MC = sp.Eq(sp.solve(MR_RGH, r)[0], r) #Marginal inntekt lik marginal kostnad
+optimalt_kvantum_RGH = sp.solve(MR_lik_MC, Q_RGH)[0] #optimalt kvantum for RGH
+Optimal_pris_RGH = Ettersporsel.subs(Q, optimalt_kvantum_RGH) #optimal pris for RGH
+
+
+
+ettersporsel_mack = sp.Eq(r, sp.solve(sp.Eq(Q_M, optimalt_kvantum_RGH),r)[0])
+profitt_mack = sp.Eq(pi_M, (ettersporsel_mack.rhs-r)*Q_M-f) #profitt = inntekt minus kostnader
+MR_Mack = sp.diff(((ettersporsel_mack.rhs-c)*Q_M-f), Q_M)  # Marginalinntekt for mack
+MR_lik_MC_mack = sp.Eq(sp.solve(MR_Mack, c)[0], c) #Marginalinntekt lik marginal kostnad
+optimalt_kvantum_mack = sp.solve(MR_lik_MC_mack, Q_M)[0] #optimalt kvantum for mack
+optimal_pris_r = ettersporsel_mack.rhs.subs(Q_M, optimalt_kvantum_mack) #optimal pris for Mack
+
+
+
+optimalpris_sluttbruker = Optimal_pris_RGH.rhs.subs({r: optimal_pris_r})
+
+
+#deler kvantum på 2 pga dobbel helning
+profitt_mack = sp.Eq(pi_M, (optimal_pris_r-c)*optimalt_kvantum_mack - f)
+profitt_RGH = sp.Eq(pi_RGH, (Optimal_pris_RGH.rhs.subs(r, optimal_pris_r)-optimal_pris_r)*optimalt_kvantum_RGH.subs(r, optimal_pris_r)-f)
+
+pris_mack_num = optimal_pris_r.subs({a:175, c:7})
+pris_sluttbruker = Optimal_pris_RGH.rhs.subs({a:175, r:optimal_pris_r.subs({a:175, c:7})})
+kvantum_sluttbruker = sp.solve(Ettersporsel.subs({a:175, b:2, p:pris_sluttbruker}), Q)[0]
+profitt_mack_num = profitt_mack.subs({a:175, b:2, f:1000, c:7}).rhs*1000
+profitt_RGH_num = profitt_RGH.subs({a:175, b:2, f:600, c:7}).rhs*1000
+
+tbl3 = rf"""
+\begin{{table}}[h]
+\centering
+\begin{{tabular}}{{|c|c|c|}}
+\hline
+\textbf{{Bedrift}} & \textbf{{Variabel}} & \textbf{{Pris/antall}} \\ \hline
+Mack Mikrobryggeri & Pris & {pris_mack_num}kr \\ \hline
+RGH & Pris & {pris_sluttbruker}kr \\ \hline
+\rowcolor{{cornflowerblue}} \textbf{{Sluttbruker}} & \textbf{{Betaler}} & {pris_sluttbruker}kr \\ \hline
+\rowcolor{{cornflowerblue}} \textbf{{Sluttbruker}} & \textbf{{Kjøper}} & {kvantum_sluttbruker*1000} stykk \\ \hline \\ \hline
+\rowcolor{{lighterblue}} \textbf{{Mack Mikrobryggeri}} & \textbf{{Profitt}} & {profitt_mack_num}kr \\ \hline
+\rowcolor{{lighterblue}} \textbf{{RGH}} & \textbf{{Profitt}} & {profitt_RGH_num}kr \\ \hline
+\end{{tabular}}
+\caption{{Effekten av fusjon mellom Mack og Bryggeri 13 på sluttbrukere}}
+\label{{table:4}}
+\end{{table}}
+"""
 ```
 
 \clearpage
@@ -1144,6 +1491,71 @@ plt.show();# Bare for appendix
 \section {Appendix Python kode Oppgave 2 c}
 
 ```{python}
+#| echo: true
+
+#plotting 
+
+def demand(a, b, Q):
+    return a-b*Q
+
+
+def MR (a, b, Q):
+    return a-2*b*Q
+
+def supply(a, b, c):
+    return (a-c)/(3*b)
+
+
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+
+
+c = 7
+x = np.linspace(0, 175, 100)
+
+
+Q = np.linspace(0, optimalt_kvantum1_num*2, 100)
+
+
+# plt.plot(x, demand(175, 1, x), label='Etterspørsel', color="green")
+# plt.plot(Q, supply(x/2, 2, 7), label='Kostnader', color="blue")
+
+fig, ax = plt.subplots()
+
+ax.plot(x, demand(175, 1, x), label='Etterspørsel', color="green")
+ax.plot(x, MR(175, 2, x), label='Marginalinntekt', color="red")
+
+ax.plot(Q, supply(x/2, 2, 7), label='Kostnader', color="blue")
+
+
+
+
+#ylim
+ax.hlines(7, 0, 175, colors='r', linestyles='--')
+ax.vlines(28, 0, 175, colors='r', linestyles='--')
+
+
+
+ax.hlines(63, 0, 175, colors='b', linestyles='--', label='Pris i markedet')
+
+#showing consumers surplus
+#ax.fill_between(x, demand(175, 1, x), 63, where=(x<=28), color='lightblue', alpha=0.5, label='Konsumentoverskudd')
+ax.fill_between(x, demand(175, 1, x), 63, where=(x<=28), color='lightblue', alpha=0.5, label='Konsumentoverskudd')
+
+#producentoverskudd mack MR(175, 2, x)
+ax.fill_between(x, 63, MR(175, 2, x), where=(x<=28), color='red', alpha=0.5, label='Nedstrøm overskudd')
+ax.fill_between(x, 63, supply(x/2, 2, 7), where=(x<=28), color='orange', alpha=0.5, label='Oppstrøm overskudd')
+
+ax.legend()
+
+#hline at 
+
+ax.set_ylim(0, 175)
+
+
 
 
 ```

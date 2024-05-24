@@ -169,6 +169,11 @@
 \fancyhead[L]{\rightmark}
 \fancyhead[R]{\thepage}
 \fancyfoot[C]{\thepage}
+\usepackage{colortbl}
+\definecolor{cornflowerblue}{RGB}{100,149,237}
+\definecolor{darkblue}{RGB}{115,150,255}
+\definecolor{lighterblue}{RGB}{131, 191, 212}
+\definecolor{lightblue}{RGB}{178,211,220}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -275,12 +280,11 @@ Valg av farger i figurer er tatt fra forelesingsslides til forelesing 10 fra fig
 Vi er blitt fortalt at vi ikke trenger å referere til pensum som forelesingsslides eller boken, så dette er gjort veldig lite. Det er satt inn referanser til boken når jeg har følt at jeg har hentet lite fra forelesingene og heller særdeles mye fra boken. 
 
 
+Brukte tiden min dårlig og dermed ble det dessverre en del slurv på oppgave 2C så er ikke akkurat fornøyd med den.
 
 
-\begin{center}
-    \Large
-    \textbf{Sammendrag}
-\end{center}
+
+
 
 
 \newpage
@@ -357,16 +361,26 @@ høyest profitt gitt Dr Choice AS sin reaksjon. (Pepall et al., 2014, s.
 \hline
 \textbf{Variabel} & \textbf{Forklaring} \\
 \hline
-$\pi_i$ & Profitt hvor $i$ indikerer hvilken bedrift det tilhører I-c-f \\
+$\pi_i$ & Profitt hvor $i$ indikerer hvilken bedrift det tilhører\\
+\hline
 $I$ & Inntekt, altså pris per vare ganger kvantum solgt \\
+\hline
 $c_i$ & Marginalkostnad per vare produsert \\
-$f_i$ & Faste kostnader, her 3 millioner kroner for begge bedriftene \\
-$P$ & Pris per vare, altså per flaske av Omega-3-produktene \\
+\hline
+$f_i$ & Faste kostnader for en gitt bedrift \\
+\hline
+$P$ & Pris per vare, for en gitt bedrift \\
+\hline
 $Q$ & Kvantum i markedet som er summen av alle $q_i$ altså $\Sigma q_i$ \\
+\hline
 $q_i^*$ & Optimalt kvantum produsert av en gitt bedrift \\
+\hline
 $q_i$ & Kvantum produsert av en gitt bedrift \\
-$a$ & Representerer maksimal betalingsvillighet, her 990 \\
+\hline
+$a$ & Representerer maksimal betalingsvillighet \\
+\hline
 $b$ & Koeffisient for prisfølsomhet i markedet \\
+\hline
 $RF_i$ & Reaksjonsfunksjon for bedrift $i$ \\
 \hline
 \end{tabular}
@@ -695,8 +709,6 @@ Vi ser at Graff Brygghus har tjent mer på fusjonen enn de fusjonerte
 selskapene Mack og Bryggeri 13. Vi kan også se hvordan markedsandelene
 har endret seg i \autoref{fig:markedsandel_etter}.
 
-\newpage
-
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.7\textwidth]{dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon.png}
@@ -731,12 +743,10 @@ profitt. Før fusjonen var deres samlede profitt 173 062.5kr for Mack og
 fusjonen vil de ha en profitt på 312 250kr. De produserer nå mindre enn
 de ville gjort samlet fra samlet 21000 flasker til 14250 flasker etter.
 
-Så fusjonen vil gi økt profitt for begge bedriftene Selv om det har vært
-bedre for Graff Brygghus, vil Mack og Bryggeri 13 også tjene mer på
+Så fusjonen vil gi økt profitt for begge bedriftene. Selv om det har
+vært bedre for Graff Brygghus, vil Mack og Bryggeri 13 også tjene mer på
 fusjonen gjennom økte priser. Av den grunn vil fusjonen være en god ide
 for begge bedriftene.
-
-\clearpage
 
 \paragraph{Forklaring av Fusjonsparadokset symmetriske bedrifter
 generelt}\label{forklaring-av-fusjonsparadokset-symmetriske-bedrifter-generelt}
@@ -754,6 +764,8 @@ høyere pris. De fusjonerte selskapene, derimot, produserer nå samlet
 sett mindre enn de gjorde individuelt før fusjonen, og dermed reduseres
 deres samlede profitt.(Pepall et al., 2014, s. 388-394)
 
+\newpage
+
 \paragraph{Kostnadssynergier i asymmetriske bedrifter i
 casen}\label{kostnadssynergier-i-asymmetriske-bedrifter-i-casen}
 
@@ -761,20 +773,26 @@ I dette tilfellet ser vi at Graff Brygghus drar nytte av fusjonen mellom
 Mack Mikrobryggeri og Bryggeri 13 ved å kunne selge sitt økte kvantum
 til en høyere pris. Samtidig har det fusjonerte selskapet oppnådd
 kostnadssynergier som gir dem en økning i effektiviteten og en økt
-samlet profitt enn før fusjonen på grunn av økt markedspris.
+samlet profitt enn før fusjonen på grunn av økt markedspris. Men i
+virkeligheten så er det ikke bare en gang du velger kapasitet og med
+denne økte kapasiteten og lavere marginale kostnader med lavere faste
+kostnader enn hver for seg vil det fusjonerte selskapet kunne innta en
+lederposisjon i markedet og dermed endre dynamikken i markedet. Dette
+vil føre til at det fusjonerte selskapet vil ha en fordel i markedet og
+at det er Stackelberg-modellen som bør brukes.
 
 \paragraph{Stackelberg-modellen}\label{stackelberg-modellen}
 
-Det kan derimot være slik at fusjonen mellom Mack Mikrobryggeri og
-Bryggeri 13 med den dobble kapasiteten og lavere totale kostnader vil
-innta en leder posisjon i markedet og at det derfor er
-Stackelberg-modellen som skal brukes. Dette vil endre på dynamikken
-betydelig og vi vil se at det fusjonerte selskapet vil ha en fordel i
-markedet.
+En fusjon mellom Mack Mikrobryggeri og Bryggeri 13 der kapasiteten
+flyttes over til mack vil da gi dobbel kapasitet med den lavere
+marginalkostnaden og lavere faste kostnader enn de hadde individuelt.
+Dermed vil en fusjon føre til at det fusjonerte selskapet vil ha en
+fordel i markedet slik at de vil innta en leder posisjon i markedet.
+Derfor er det Stackelberg-modellen som bør brukes.
 
-For å beregne denne så følger jeg samme fremgangsmåte som tidligere men
-med asymmetriske bedrifter. Jeg blir ikke å vise all utregning men dette
-gjøres i python.
+For å beregne denne så følger jeg samme fremgangsmåte som i oppgave 1a
+men med asymmetriske bedrifter. Jeg blir ikke å vise all utregning for å
+spare plass men dette gjøres i python. Svarene vises i \autoref{table:3}
 
 \begin{verbatim}
 Kvantum for fusjonert Mack: 21.38 og Kvantum for Graff Brygghus: 9.94. 
@@ -785,14 +803,48 @@ Profitten for selskapene er 413.78 for fusjonert Mack og 95.02 for Graff Brygghu
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.4\textwidth]{dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stackel.png}
+\includegraphics[width=0.7\textwidth]{dokumentobjekter/figurer/markedsandel_mikrobryggerier_fusjon_stackel.png}
 \caption{Markedsandelen til mikrobryggeriene etter fusjonen under Stackelberg med ledende Mack}
 \label{fig:markedsandel_etter_stackel}
 \end{figure}
 
-Vi ser at Mack ihvertfall vil ønsker å innta en ledende posisjon i
-markedet og at dette vil gi en økt profitt for de fusjonerte selskapene
-men dette ville gitt en lavere markedspris og totalt lavere kvantum.
+\clearpage
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor{cornflowerblue} \textbf{Bedrift} & \textbf{Variabel} & \textbf{Cournot} & \textbf{Stackelberg} \\ \hline
+\rowcolor{lighterblue} Mack Mikrobryggeri      & Profitt                  & $173060.0~kr$             & -           \\ \hline
+\rowcolor{lighterblue} Bryggeri 13  & Profitt                  & $110060.0~kr$             & -           \\ \hline
+\rowcolor{lighterblue} Graff Brygghus  & Profitt                  & $110060.0~kr$             & -           \\ \hline 
+\textbf{Total}  & -                  & $393180.0~kr$             & -           \\ \hline
+\rowcolor{lightblue} Mack Mikrobryggeri      & Kvantum                  & $10875.0$             & -           \\ \hline
+\rowcolor{lightblue} Bryggeri 13  & Kvantum                  & $10125.0$             & -           \\ \hline
+\rowcolor{lightblue} Graff Brygghus  & Kvantum                  & $10125.0$             & -           \\ \hline 
+\textbf{Total}  & -                  & $31125.0$             & -          \\ \hline
+- & \textbf{Markedspris} & $50.50~kr$ & - \\ \hline
+\rowcolor{cornflowerblue} \textbf{Bedrift etter fusjon} & \textbf{Variabel} & \textbf{Cournot} & \textbf{Stackelberg} \\ \hline
+\rowcolor{lighterblue} Fusjonert Mack og Bryggeri      & Profitt                  & $312250.0~kr$             & $413781.25~kr$           \\ \hline
+\rowcolor{lighterblue} Graff Brygghus  & Profitt                  & $429000.0~kr$             & $95015.62~kr$           \\ \hline 
+\textbf{Total}  & -                  & $741250.0~kr$             & $508796.88~kr$           \\ \hline
+\rowcolor{lightblue} Fusjonert Mack og Bryggeri      & Kvantum                  & $14250.0$             & $21375$           \\ \hline
+\rowcolor{lightblue} Graff Brygghus  & Kvantum                  & $13500.0$             & $9937.50$           \\ \hline
+\textbf{Total}  & -                  & $27750.0$             & $31312.50$           \\ \hline
+- & \textbf{Markedspris} & $64.0~kr$ & $49.75~kr$ \\ \hline
+\end{tabular}
+\caption{Effekten av fusjon mellom Mack og Bryggeri 13}
+\label{table:3}
+\end{table}
+
+I \autoref{fig:markedsandel_etter_stackel} ser vi at å bruke
+Stackelberg-modellen ser ut til å løse fusjonsparadokset og at Mack
+Mikrobryggeri vil innta en ledende posisjon i markedet. Dette vil gi en
+økt profitt for de fusjonerte selskapene. Det vil også gi en økt profitt
+for de fusjonerte selskapene og dette ville gitt en \textbf{lavere
+markedspris og totalt høyere kvantum} i markedet. Vi kan uansett
+konkludere med at en fusjon mellom Mack Mikrobryggeri og Bryggeri 13 vil
+være lønnsomt for de to selskapene.
 
 \clearpage
 
@@ -847,54 +899,100 @@ Brygghus?}\label{b-basert-puxe5-din-analyse-vil-du-anbefale-styret-i-mack-mikrob
 Det er igjen snakk om horisontal fusjon men denne gangen vil vi gå fra å
 ha 2 aktører til å ha en monopolist. Vi har også nå et tilfelle der vi
 også har en nedstrømsbedrift RGH. Jeg må da beregne hva de selger for
-til nedstrømsbedriften.
+til nedstrømsbedriften. Som vist tidligere så vil RGH selge kvantum likt
+\(A-2B(Q)\) så etterspørselen til oppstrømsbedriftene vil være
+\(175-4Q\).
 
-Med etterspørselsfunksjonen gitt som \(P=175-2Q\) kan vi først beregne
-markedstilpasningen da de nå har like marginalkostnader og faste
-kostnader. Fra tidligere utregninger så vet vi at bedriftene vil forsøke
-å oppnå en pris som er lik marginalkostnaden. Jeg kan da starte med å
-sette opp ligningene som \(P=175-4Q\) da vi tidligere har vist at
-helningen på marginalinntekt er lik dobbel helning til
-etterspørselskurven.
-
-RGH står som monopol så de vil også selge til en pris lik
-marginalkostnaden så denne vil være lik \(p=175-8Q\).
-
-vil RGH kunne tjene inn for sine faste kostnader eller vil de gå
-konkurs? er dette lurt osv.
-
-\begin{align*}
-\pi_G &= -c_G\cdot q_G - f_G + (a-b\cdot(q_G+q_BM))\cdot q_G \\
-\pi_BM &= -c_B\cdot q_BM - f_BM + (a-b\cdot(q_G+q_BM))\cdot q_BM \\
-\end{align*}
-
-Derivert med hensyn på \(q_G\) og \(q_BM\) får vi:
-
-\begin{align*}
-a-b\cdot q_C - b(q_C + q_{BM})- c_G \\
-a-b\cdot q_{BM} - b(q_G + q_{BM})- c_{BM} 
-\end{align*}
-
-Løst for \(q_G\) og \(q_{BM}\) får vi:
-
-\begin{align*}
-q_G = \frac{a-2\cdot c_G +c_{BM}}{3b} \\
-q_BM = \frac{a +c_G - 2\cdot c_{BM}}{3b}
-\end{align*}
-
-her starter slurvet for real
-
-dette gir oss kvantum på begge på 28, markedspris på 63 og profitt hver
-på 1068.
-
-Etter fusjonen vil vi ha en monopolist og vi kan da regne ut profitten
-til monopolisten.
+Så jeg regner reaksjonsfunksjonen til Graff og Mack.
 
 \[
-\pi_BMG = -c_{BMG}\cdot q_{BMG} - f_{BMG} + q_{BMG}\cdot (a-b\cdot q_{BMG})
-\] derivert og løst for q\_BMG \[
-q_{BMG} = \frac{a-c_{BMG}}{2b}
-\] totalt kvantum på 42, pris 91 og total profitt 3028.
+q_M = \frac{a-c-b_{q_G}}{2b}
+\] Siden vi vet hva a, c og b er så kan vi regne ut dette med samme
+utregning som i oppgave 1.
+
+\[
+q_M = \frac{175-7-4(q_G)}{8} = \frac{168-4q_G}{8} = 21-0.5q_G
+\]
+
+Så reaksjonsfunksjonen til Mack er \(21-0.5q_G\) og reaksjonsfunksjonen
+til Graff er \(21-0.5q_M\). Så løser jeg de to likningene.
+
+\begin{align*}
+q_M &= 21-0.5(21-0.5q_M) \\
+&= 21-10.5+0.25q_M \\
+0.75q_M &= 10.5 \\
+q_M &= 14
+\end{align*}
+
+\[
+q_G = 21-0.5(14) = 14
+\]
+
+Prisen blir da \[
+P = 175-4(14+14) = 63
+\]
+
+\begin{align*}
+\pi_M &= (63-7)14 - 500 = 56 \cdot 14 - 500 = 284 \\
+\pi_G &= (63-7)14 - 500 = 56 \cdot 14 - 500 = 284
+\end{align*}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Bedrift} & \textbf{Variabel} & \textbf{Pris/antall} \\
+\hline
+Mack & Pris & 63 \\
+Mack & Kvantum & 14000.0 \\
+Graff Brygghus & Pris & 63 \\
+Graff Brygghus & Kvantum & 14000.0 \\
+\rowcolor{lighterblue} \textbf{Mack Mikrobryggeri} & \textbf{Profitt} & 284000kr \\ \hline
+\rowcolor{lighterblue} \textbf{Graff Brygghus} & \textbf{Profitt} & 284000kr \\ \hline
+\end{tabular}
+\caption{Markedet før evt fusjon Mack og Bryggeri 13}
+\label{table:4}
+\end{table}
+
+Så vi ser at begge selskapene vil tjene 284000 i profitt.
+
+For å se hva som vil skje under en fusjon så kan vi se på hva som skjer
+med profitten til de to selskapene med samme etterspørsel fra RGH.
+
+\[
+175-8Q = 7 \\
+Q = 21
+\]
+
+Og 21 satt inn i \(175-4Q\) gir oss prisen som er 91. Siden det ikke vil
+være noen kostnadsbesparelser så vil nå faste kostnader i tusener være
+1000.
+
+\begin{align*}
+\pi_{M} &= (91-7)21 - 1000 = 84 \cdot 21 - 1000 = 764 \\
+\end{align*}
+
+Det fusjonerte selskapet ender da med 764 tusen i profitt.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Bedrift} & \textbf{Variabel} & \textbf{Pris/antall} \\ \hline
+Mack Mikrobryggeri & Pris & 91kr \\ \hline
+RGH & Pris & 133kr \\ \hline
+\rowcolor{cornflowerblue} \textbf{Sluttbruker} & \textbf{Betaler} & 133kr \\ \hline
+\rowcolor{cornflowerblue} \textbf{Sluttbruker} & \textbf{Kjøper} & 21000 stykk \\ \hline \\ \hline
+\rowcolor{lighterblue} \textbf{Mack Mikrobryggeri} & \textbf{Profitt} & 764000kr \\ \hline
+\rowcolor{lighterblue} \textbf{RGH} & \textbf{Profitt} & 282000kr \\ \hline
+\end{tabular}
+\caption{Effekten av fusjon mellom Mack og Bryggeri 13 på sluttbrukere}
+\label{table:5}
+\end{table}
+
+Profitten går da fra å være 284+284=568 til 764. Så det vil være en
+økning i profitten på 196 tusen. Så jeg vil anbefale styret i Mack
+Mikrobrygg 13 å gjennomføre fusjon med Graff Brygghus.
 
 \clearpage
 
@@ -904,6 +1002,49 @@ konsekvenser}\label{samfunnsuxf8konomiske-konsekvenser}
 \subsubsection{c) Hva blir de samfunnsøkonomiske konsekvensene av en
 fusjon mellom Mack Mikrobrygg 13 og Graff
 Brygghus?}\label{c-hva-blir-de-samfunnsuxf8konomiske-konsekvensene-av-en-fusjon-mellom-mack-mikrobrygg-13-og-graff-brygghus}
+
+De samfunnsøkonomiske konsekvensene så kan vi se ved å sammenligne
+\autoref{table:4} og \autoref{table:5}. Kundene i markedet vil nå betale
+en høyere pris og da kjøpe et lavere kvantum.
+
+\paragraph{Produsentoverskuddet til
+oppstrøm}\label{produsentoverskuddet-til-oppstruxf8m}
+
+Produsentoverskuddet til Mack og Graff var 284 000 kr hver, totalt 568
+000 kr. Etter fusjonen vil det fusjonerte selskapet Mack Mikrobrygg 13
+ha en profitt på 764 000 kr . Dette representerer en økning i
+produsentoverskuddet, som nå er konsentrert til ett selskap som tjener
+betydelig mer enn summen av de individuelle profittnivåene før fusjonen.
+
+\paragraph{Konsumentoverskudd og Produsentoverskudd til
+nedstrøm}\label{konsumentoverskudd-og-produsentoverskudd-til-nedstruxf8m}
+
+For RGH og kundene derimot kan vi se at prisene øker. For RGH for de en
+profitt på 282 000kr etter fusjonen, de selger nå flaskene for 133kr
+mens de nå betaler 91kr for de istedet for 63 som de gjorde før. De har
+nå mistet 7000flasker fra sitt solgte kvantum.
+
+Konsumentoverskuddet er forskjellen mellom hva forbrukerne er villige
+til å betale og hva de faktisk betaler. Før fusjonen var markedsprisen
+63 kr per flaske, mens den totale mengden mikroøl i markedet var 28 000
+flasker. Etter fusjonen øker prisen til 133 kr per flaske og den totale
+mengden reduseres til 21 000 flasker . Dette betyr at konsumentene må
+betale mer per enhet og kjøper færre enheter totalt sett, noe som
+resulterer i et redusert konsumentoverskudd.
+
+\paragraph{Konklusjon}\label{konklusjon}
+
+Da det ikke var noen kostnadsbesparelser i fusjonen så kan vi anta at
+det samlet sett ikke har vært en samfunnsøkonomisk gevinst. Det er nå
+større profitt for det fusjonerte selskapet med samme mengde kostnader,
+hvor den økte profitten kom fra å ha markedsmakt til å øke sine priser.
+Istedet for å selge 28000 flasker med en samlet profitt på 568 000kr så
+selger de nå 21000 flasker med en samlet profitt på 764 000kr. Dette er
+en økning i profitt på 196 000kr.
+
+Konsumentene har da tapt på at de nå betaler mer og det er nå
+introdusert ekstra ineffektivitet i markedet. Det er nå en dødvektstap
+på 7000 flasker som ikke blir solgt.
 
 \clearpage
 
@@ -918,7 +1059,13 @@ edition). Wiley.
 
 \end{CSLReferences}
 
-\clearpage
+\hfill\break
+
+\hfill\break
+
+\hfill\break
+
+\hfill\break
 
 \appendix
 
@@ -1135,9 +1282,13 @@ $\displaystyle 28200.0 - 0.5 Q_{O}$
 \NormalTok{cournot }\OperatorTok{=}\NormalTok{ sp.lambdify(}
 \NormalTok{    (a, b, c\_G, c\_B, c\_M), }
 \NormalTok{    (solved[q\_G], solved[q\_B], solved[q\_M]))}
-\NormalTok{kvantum\_G, kvantum\_B, kvantum\_M }\OperatorTok{=}\NormalTok{ cournot(a\_num, b\_num, c\_G\_num, c\_B\_num, c\_M\_num)}
+\NormalTok{kvantum\_G\_before\_cournot, kvantum\_B\_before\_cournot, kvantum\_M\_before\_cournot }\OperatorTok{=}\NormalTok{ cournot(a\_num, b\_num, c\_G\_num, c\_B\_num, c\_M\_num)}
 
-\NormalTok{markedspris }\OperatorTok{=}\NormalTok{ demand.rhs.subs(\{a:a\_num, b:b\_num, Q:kvantum\_G}\OperatorTok{+}\NormalTok{kvantum\_B}\OperatorTok{+}\NormalTok{kvantum\_M\})}
+\NormalTok{markedspris\_before\_cournot }\OperatorTok{=}\NormalTok{ demand.rhs.subs(\{a:a\_num, b:b\_num, Q:kvantum\_G\_before\_cournot}\OperatorTok{+}\NormalTok{kvantum\_B\_before\_cournot}\OperatorTok{+}\NormalTok{kvantum\_M\_before\_cournot\})}
+
+\NormalTok{profitt\_G\_num }\OperatorTok{=} \BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(profitt\_G.rhs.subs(\{q\_G:kvantum\_G\_before\_cournot, q\_B:kvantum\_B\_before\_cournot, q\_M:kvantum\_M\_before\_cournot, c\_G:c\_G\_num, a:a\_num, b:b\_num, p:markedspris\_before\_cournot, f\_G:f\_G\_num\})),}\DecValTok{2}\NormalTok{)}
+\NormalTok{profitt\_B\_num }\OperatorTok{=} \BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(profitt\_B.rhs.subs(\{q\_G:kvantum\_G\_before\_cournot, q\_B:kvantum\_B\_before\_cournot, q\_M:kvantum\_M\_before\_cournot, c\_B:c\_B\_num, a:a\_num, b:b\_num, p:markedspris\_before\_cournot, f\_B:f\_B\_num\})),}\DecValTok{2}\NormalTok{)}
+\NormalTok{profitt\_M\_num }\OperatorTok{=} \BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(profitt\_M.rhs.subs(\{q\_G:kvantum\_G\_before\_cournot, q\_B:kvantum\_B\_before\_cournot, q\_M:kvantum\_M\_before\_cournot, c\_M:c\_M\_num, a:a\_num, b:b\_num, p:markedspris\_before\_cournot, f\_M:f\_M\_num\})),}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1146,11 +1297,11 @@ $\displaystyle 28200.0 - 0.5 Q_{O}$
 \NormalTok{fig, ax }\OperatorTok{=}\NormalTok{ plt.subplots()}
 
 \NormalTok{labels }\OperatorTok{=}\NormalTok{ [}\StringTok{\textquotesingle{}Graff Brygghus\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Bryggeri 13\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Mack Mikrobryggeri\textquotesingle{}}\NormalTok{]}
-\NormalTok{sizes }\OperatorTok{=}\NormalTok{ [kvantum\_G, kvantum\_B, kvantum\_M]}
+\NormalTok{sizes }\OperatorTok{=}\NormalTok{ [kvantum\_G\_before\_cournot, kvantum\_B\_before\_cournot, kvantum\_M\_before\_cournot]}
 
 \NormalTok{ax.pie(sizes, labels}\OperatorTok{=}\NormalTok{labels, autopct}\OperatorTok{=}\StringTok{\textquotesingle{}}\SpecialCharTok{\%1.1f\%\%}\StringTok{\textquotesingle{}}\NormalTok{, colors}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}\#def2f4\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#3599a4\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#24666d\textquotesingle{}}\NormalTok{])}
 \CommentTok{\#plt.savefig(\textquotesingle{}dokumentobjekter/figurer/markedsandel\_mikrobryggerier.png\textquotesingle{}, dpi=300, bbox\_inches=\textquotesingle{}tight\textquotesingle{})}
-\NormalTok{plt.show()}\OperatorTok{;}\CommentTok{\# Bare for appendix}
+\NormalTok{plt.show()}\OperatorTok{;}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1158,35 +1309,43 @@ $\displaystyle 28200.0 - 0.5 Q_{O}$
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{profitt\_G\_before }\OperatorTok{=}\NormalTok{ profitt\_G.subs(\{q\_G:kvantum\_G, q\_B:kvantum\_B, q\_M:kvantum\_M, c\_G:c\_G\_num, a:a\_num, b:b\_num, p:markedspris, f\_G:f\_G\_num\})}
-\NormalTok{profitt\_B\_before }\OperatorTok{=}\NormalTok{ profitt\_B.subs(\{q\_G:kvantum\_G, q\_B:kvantum\_B, q\_M:kvantum\_M, c\_B:c\_B\_num, a:a\_num, b:b\_num, p:markedspris, f\_B:f\_B\_num\})}
-\NormalTok{profitt\_M\_before }\OperatorTok{=}\NormalTok{ profitt\_M.subs(\{q\_G:kvantum\_G, q\_B:kvantum\_B, q\_M:kvantum\_M, c\_M:c\_M\_num, a:a\_num, b:b\_num, p:markedspris, f\_M:f\_M\_num\})}
+\NormalTok{profitt\_G\_before\_cournot }\OperatorTok{=}\NormalTok{ profitt\_G.subs(\{q\_G:kvantum\_G\_before\_cournot, q\_B:kvantum\_B\_before\_cournot, q\_M:kvantum\_M\_before\_cournot, c\_G:c\_G\_num, a:a\_num, b:b\_num, p:markedspris\_before\_cournot, f\_G:f\_G\_num\})}
+
+
+\NormalTok{profitt\_B\_before\_cournot }\OperatorTok{=}\NormalTok{ profitt\_B.subs(\{q\_G:kvantum\_G\_before\_cournot, q\_B:kvantum\_B\_before\_cournot, q\_M:kvantum\_M\_before\_cournot, c\_B:c\_B\_num, a:a\_num, b:b\_num, p:markedspris\_before\_cournot, f\_B:f\_B\_num\})}
+
+
+\NormalTok{profitt\_M\_before\_cournot }\OperatorTok{=}\NormalTok{ profitt\_M.subs(\{q\_G:kvantum\_G\_before\_cournot, q\_B:kvantum\_B\_before\_cournot, q\_M:kvantum\_M\_before\_cournot, c\_M:c\_M\_num, a:a\_num, b:b\_num, p:markedspris\_before\_cournot, f\_M:f\_M\_num\})}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{profitt\_G\_etter }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_G, demand.rhs.subs(Q, q\_G}\OperatorTok{+}\NormalTok{q\_BM)}\OperatorTok{*}\NormalTok{q\_G}\OperatorTok{{-}}\NormalTok{costs.subs(\{Q:q\_G, c:c\_G, f:f\_G\}))}
-\NormalTok{profitt\_MB\_etter }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_BM, demand.rhs.subs(Q, q\_G}\OperatorTok{+}\NormalTok{q\_BM)}\OperatorTok{*}\NormalTok{q\_BM}\OperatorTok{{-}}\NormalTok{costs.subs(\{Q:q\_BM, c:c\_BM, f:f\_BM\}))}
+\NormalTok{profitt\_G\_etter\_cournot }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_G, demand.rhs.subs(Q, q\_G}\OperatorTok{+}\NormalTok{q\_BM)}\OperatorTok{*}\NormalTok{q\_G}\OperatorTok{{-}}\NormalTok{costs.subs(\{Q:q\_G, c:c\_G, f:f\_G\}))}
+\NormalTok{profitt\_MB\_etter\_cournot }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_BM, demand.rhs.subs(Q, q\_G}\OperatorTok{+}\NormalTok{q\_BM)}\OperatorTok{*}\NormalTok{q\_BM}\OperatorTok{{-}}\NormalTok{costs.subs(\{Q:q\_BM, c:c\_BM, f:f\_BM\}))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{derivert\_profitt\_G\_etter }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_G\_etter.rhs, q\_G)}
-\NormalTok{derivert\_profitt\_MB\_etter }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_MB\_etter.rhs, q\_BM)}
+\NormalTok{derivert\_profitt\_G\_etter\_cournot }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_G\_etter\_cournot.rhs, q\_G)}
+\NormalTok{derivert\_profitt\_MB\_etter\_cournot }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_MB\_etter\_cournot.rhs, q\_BM)}
 
-\NormalTok{solved\_etter }\OperatorTok{=}\NormalTok{ sp.solve([derivert\_profitt\_G\_etter, derivert\_profitt\_MB\_etter], [q\_G, q\_BM])}
+\NormalTok{solved\_etter\_cournot }\OperatorTok{=}\NormalTok{ sp.solve([derivert\_profitt\_G\_etter\_cournot, derivert\_profitt\_MB\_etter\_cournot], [q\_G, q\_BM])}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{cournot\_etter }\OperatorTok{=}\NormalTok{ sp.lambdify(}
+\NormalTok{cournot\_etter\_cournot }\OperatorTok{=}\NormalTok{ sp.lambdify(}
 \NormalTok{    (a, b, c\_G, c\_BM), }
-\NormalTok{    (solved\_etter[q\_G], solved\_etter[q\_BM]))}
+\NormalTok{    (solved\_etter\_cournot[q\_G], solved\_etter\_cournot[q\_BM]))}
     
-\NormalTok{kvantum\_G\_etter, kvantum\_BM }\OperatorTok{=}\NormalTok{ cournot\_etter(a\_num, b\_num, c\_G\_num, c\_BM\_num)}
+\NormalTok{kvantum\_G\_etter\_cournot, kvantum\_BM\_etter\_cournot }\OperatorTok{=}\NormalTok{ cournot\_etter\_cournot(a\_num, b\_num, c\_G\_num, c\_BM\_num)}
+\NormalTok{markedspris\_etter\_cournot }\OperatorTok{=}\NormalTok{ demand.rhs.subs(\{a:a\_num, b:b\_num, Q:kvantum\_G\_etter\_cournot}\OperatorTok{+}\NormalTok{kvantum\_BM\_etter\_cournot\})}
+
+\NormalTok{profitt\_G\_etter\_cournot }\OperatorTok{=} \BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(profitt\_G\_etter\_cournot.rhs.subs(\{q\_G:kvantum\_G\_etter\_cournot, q\_BM:kvantum\_BM\_etter\_cournot, c\_G:c\_G\_num, a:a\_num, b:b\_num, f\_G:f\_G\_num\})),}\DecValTok{2}\NormalTok{)}
+\NormalTok{profitt\_BM\_etter\_cournot }\OperatorTok{=} \BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(profitt\_MB\_etter\_cournot.rhs.subs(\{q\_G:kvantum\_G\_etter\_cournot, q\_BM:kvantum\_BM\_etter\_cournot, c\_BM:c\_BM\_num, a:a\_num, b:b\_num, f\_BM:f\_BM\_num\})),}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1195,11 +1354,11 @@ $\displaystyle 28200.0 - 0.5 Q_{O}$
 \NormalTok{fig, ax }\OperatorTok{=}\NormalTok{ plt.subplots()}
 
 \NormalTok{labels }\OperatorTok{=}\NormalTok{ [}\StringTok{\textquotesingle{}Graff Brygghus\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Mack Mikrobryggeri\textquotesingle{}}\NormalTok{]}
-\NormalTok{sizes }\OperatorTok{=}\NormalTok{ [kvantum\_G\_etter, kvantum\_BM]}
+\NormalTok{sizes }\OperatorTok{=}\NormalTok{ [kvantum\_G\_etter\_cournot, kvantum\_BM\_etter\_cournot]}
 
 \NormalTok{ax.pie(sizes, labels}\OperatorTok{=}\NormalTok{labels, autopct}\OperatorTok{=}\StringTok{\textquotesingle{}}\SpecialCharTok{\%1.1f\%\%}\StringTok{\textquotesingle{}}\NormalTok{, colors}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}\#def2f4\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#24666d\textquotesingle{}}\NormalTok{])}
 \CommentTok{\#plt.savefig(\textquotesingle{}dokumentobjekter/figurer/markedsandel\_mikrobryggerier\_fusjon.png\textquotesingle{}, dpi=300, bbox\_inches=\textquotesingle{}tight\textquotesingle{})}
-\NormalTok{plt.show()}\OperatorTok{;} \CommentTok{\# Bare for appendix}
+\NormalTok{plt.show()}\OperatorTok{;}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1212,28 +1371,28 @@ $\displaystyle 28200.0 - 0.5 Q_{O}$
 \NormalTok{Invers\_etterspors }\OperatorTok{=}\NormalTok{ sp.Eq(p, (}\DecValTok{175}\OperatorTok{{-}}\NormalTok{(}\DecValTok{4}\NormalTok{)}\OperatorTok{*}\NormalTok{(q\_G}\OperatorTok{+}\NormalTok{q\_BM)))}
 
 
-\NormalTok{profitt\_1\_eq }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_BM, (Invers\_etterspors.rhs}\OperatorTok{{-}}\DecValTok{7}\NormalTok{)}\OperatorTok{*}\NormalTok{q\_G}\OperatorTok{{-}}\DecValTok{500}\NormalTok{)}
-\NormalTok{profitt\_2\_eq }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_G, (Invers\_etterspors.rhs}\OperatorTok{{-}}\DecValTok{10}\NormalTok{)}\OperatorTok{*}\NormalTok{q\_BM}\OperatorTok{{-}}\DecValTok{300}\NormalTok{)}
+\NormalTok{profitt\_1\_eq\_stack }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_BM, (Invers\_etterspors.rhs}\OperatorTok{{-}}\DecValTok{7}\NormalTok{)}\OperatorTok{*}\NormalTok{q\_G}\OperatorTok{{-}}\DecValTok{500}\NormalTok{)}
+\NormalTok{profitt\_2\_eq\_stack }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_G, (Invers\_etterspors.rhs}\OperatorTok{{-}}\DecValTok{10}\NormalTok{)}\OperatorTok{*}\NormalTok{q\_BM}\OperatorTok{{-}}\DecValTok{300}\NormalTok{)}
 
 
-\NormalTok{derivert\_profitt\_2 }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_2\_eq.rhs, q\_BM)}
+\NormalTok{derivert\_profitt\_2\_stack }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_2\_eq\_stack.rhs, q\_BM)}
 
-\NormalTok{reaksjon\_BM }\OperatorTok{=}\NormalTok{ sp.solve(derivert\_profitt\_2, q\_BM)[}\DecValTok{0}\NormalTok{]}
+\NormalTok{reaksjon\_BM\_stack }\OperatorTok{=}\NormalTok{ sp.solve(derivert\_profitt\_2\_stack, q\_BM)[}\DecValTok{0}\NormalTok{]}
 
-\NormalTok{profitt\_1\_eq }\OperatorTok{=}\NormalTok{ profitt\_1\_eq.subs(q\_BM, reaksjon\_BM)}
+\NormalTok{profitt\_1\_eq\_stack }\OperatorTok{=}\NormalTok{ profitt\_1\_eq\_stack.subs(q\_BM, reaksjon\_BM\_stack)}
 
-\NormalTok{derivert\_profitt1 }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_1\_eq.rhs, q\_G) }\CommentTok{\#kvantum for kvantum og bryggeri}
+\NormalTok{derivert\_profitt1\_stack }\OperatorTok{=}\NormalTok{ sp.diff(profitt\_1\_eq\_stack.rhs, q\_G) }\CommentTok{\#kvantum for kvantum og bryggeri}
 
-\NormalTok{kvantum\_BM }\OperatorTok{=}\NormalTok{ sp.solve(derivert\_profitt1, q\_G)[}\DecValTok{0}\NormalTok{]}
+\NormalTok{kvantum\_BM\_stack }\OperatorTok{=}\NormalTok{ sp.solve(derivert\_profitt1\_stack, q\_G)[}\DecValTok{0}\NormalTok{]}
 
 \CommentTok{\#setter inn kvantum i reaksjonsfunksjonen til Dr Choice AS}
-\NormalTok{kvantum\_G }\OperatorTok{=}\NormalTok{ reaksjon\_BM.subs(q\_G, kvantum\_BM)}\CommentTok{\#Kvantum for mack og bryggeri 13}
-\NormalTok{markedspris }\OperatorTok{=}\NormalTok{ Invers\_etterspors.rhs.subs(\{q\_G:kvantum\_BM, q\_BM:kvantum\_G\})}
-\NormalTok{profitt\_BM }\OperatorTok{=} \BuiltInTok{float}\NormalTok{(profitt\_1\_eq.rhs.subs(q\_G, kvantum\_BM).subs(q\_BM, kvantum\_G))}
+\NormalTok{kvantum\_G\_stack }\OperatorTok{=}\NormalTok{ reaksjon\_BM\_stack.subs(q\_G, kvantum\_BM\_stack)}\CommentTok{\#Kvantum for mack og bryggeri 13}
+\NormalTok{markedspris\_stack }\OperatorTok{=}\NormalTok{ Invers\_etterspors.rhs.subs(\{q\_G:kvantum\_BM\_stack, q\_BM:kvantum\_G\_stack\})}
+\NormalTok{profitt\_BM\_stack }\OperatorTok{=} \BuiltInTok{float}\NormalTok{(profitt\_1\_eq\_stack.rhs.subs(q\_G, kvantum\_BM\_stack).subs(q\_BM, kvantum\_G\_stack))}
 
-\NormalTok{profitt\_G }\OperatorTok{=} \BuiltInTok{float}\NormalTok{(profitt\_2\_eq.rhs.subs(q\_BM, kvantum\_G).subs(q\_G, kvantum\_BM))}
+\NormalTok{profitt\_G\_stack }\OperatorTok{=} \BuiltInTok{float}\NormalTok{(profitt\_2\_eq\_stack.rhs.subs(q\_BM, kvantum\_G\_stack).subs(q\_G, kvantum\_BM\_stack))}
 
-\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f\textquotesingle{}\textquotesingle{}\textquotesingle{}Kvantum for fusjonert Mack: }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_BM,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ og Kvantum for Graff Brygghus: }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_G, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{. }\CharTok{\textbackslash{}n}\SpecialStringTok{Det totale kvantumet i markedet er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_BM}\OperatorTok{+}\NormalTok{kvantum\_G, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ til en Markedsprisen på }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(markedspris, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{.}\CharTok{\textbackslash{}n\textbackslash{}n}\SpecialStringTok{Profitten for selskapene er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(profitt\_BM, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ for fusjonert Mack og }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(profitt\_G, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ for Graff Brygghus.\textquotesingle{}\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f\textquotesingle{}\textquotesingle{}\textquotesingle{}Kvantum for fusjonert Mack: }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_BM\_stack,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ og Kvantum for Graff Brygghus: }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_G\_stack, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{. }\CharTok{\textbackslash{}n}\SpecialStringTok{Det totale kvantumet i markedet er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_BM\_stack}\OperatorTok{+}\NormalTok{kvantum\_G\_stack, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ til en Markedsprisen på }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(markedspris\_stack, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{.}\CharTok{\textbackslash{}n\textbackslash{}n}\SpecialStringTok{Profitten for selskapene er }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(profitt\_BM\_stack, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ for fusjonert Mack og }\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(profitt\_G\_stack, }\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\SpecialStringTok{ for Graff Brygghus.\textquotesingle{}\textquotesingle{}\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1249,23 +1408,265 @@ Profitten for selskapene er 413.78 for fusjonert Mack og 95.02 for Graff Brygghu
 \NormalTok{fig, ax }\OperatorTok{=}\NormalTok{ plt.subplots()}
 
 \NormalTok{labels }\OperatorTok{=}\NormalTok{ [}\StringTok{\textquotesingle{}Graff Brygghus\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Mack Mikrobryggeri\textquotesingle{}}\NormalTok{]}
-\NormalTok{sizes }\OperatorTok{=}\NormalTok{ [kvantum\_G, kvantum\_BM]}
+\NormalTok{sizes }\OperatorTok{=}\NormalTok{ [kvantum\_G\_stack, kvantum\_BM\_stack]}
 
 \NormalTok{ax.pie(sizes, labels}\OperatorTok{=}\NormalTok{labels, autopct}\OperatorTok{=}\StringTok{\textquotesingle{}}\SpecialCharTok{\%1.1f\%\%}\StringTok{\textquotesingle{}}\NormalTok{, colors}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}\#def2f4\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#24666d\textquotesingle{}}\NormalTok{])}
 \CommentTok{\#plt.savefig(\textquotesingle{}dokumentobjekter/figurer/markedsandel\_mikrobryggerier\_fusjon\_stackel.png\textquotesingle{}, dpi=300, bbox\_inches=\textquotesingle{}tight\textquotesingle{})}
-\NormalTok{plt.show()}\OperatorTok{;}\CommentTok{\# Bare for appendix}
+\NormalTok{plt.show()}\OperatorTok{;}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{18_SOK2030_mappeoppgave_2_V24_files/figure-pdf/cell-40-output-1.pdf}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tbl1 }\OperatorTok{=} \VerbatimStringTok{rf"""}
+\VerbatimStringTok{\textbackslash{}begin}\CharTok{\{\{}\VerbatimStringTok{table}\CharTok{\}\}}\VerbatimStringTok{[h]}
+\VerbatimStringTok{\textbackslash{}centering}
+\VerbatimStringTok{\textbackslash{}begin}\CharTok{\{\{}\VerbatimStringTok{tabular}\CharTok{\}\}\{\{}\VerbatimStringTok{|l|l|l|l|}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{cornflowerblue}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Bedrift}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Variabel}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Cournot}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Stackelberg}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lighterblue}\CharTok{\}\}}\VerbatimStringTok{ Mack Mikrobryggeri      \& Profitt                  \& $}\SpecialCharTok{\{}\NormalTok{profitt\_M\_num}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$             \& {-}           \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lighterblue}\CharTok{\}\}}\VerbatimStringTok{ Bryggeri 13  \& Profitt                  \& $}\SpecialCharTok{\{}\NormalTok{profitt\_B\_num}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$             \& {-}           \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lighterblue}\CharTok{\}\}}\VerbatimStringTok{ Graff Brygghus  \& Profitt                  \& $}\SpecialCharTok{\{}\NormalTok{profitt\_G\_num}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$             \& {-}           \textbackslash{}\textbackslash{} \textbackslash{}hline }
+\VerbatimStringTok{\textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Total}\CharTok{\}\}}\VerbatimStringTok{  \& {-}                  \& $}\SpecialCharTok{\{}\NormalTok{(profitt\_G\_num}\OperatorTok{*}\DecValTok{1000}\NormalTok{) }\OperatorTok{+}\NormalTok{ (profitt\_B\_num}\OperatorTok{*}\DecValTok{1000}\NormalTok{) }\OperatorTok{+}\NormalTok{ (profitt\_M\_num}\OperatorTok{*}\DecValTok{1000}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$             \& {-}           \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lightblue}\CharTok{\}\}}\VerbatimStringTok{ Mack Mikrobryggeri      \& Kvantum                  \& $}\SpecialCharTok{\{}\NormalTok{kvantum\_M\_before\_cournot}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{$             \& {-}           \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lightblue}\CharTok{\}\}}\VerbatimStringTok{ Bryggeri 13  \& Kvantum                  \& $}\SpecialCharTok{\{}\NormalTok{kvantum\_B\_before\_cournot}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{$             \& {-}           \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lightblue}\CharTok{\}\}}\VerbatimStringTok{ Graff Brygghus  \& Kvantum                  \& $}\SpecialCharTok{\{}\NormalTok{kvantum\_G\_before\_cournot}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{$             \& {-}           \textbackslash{}\textbackslash{} \textbackslash{}hline }
+\VerbatimStringTok{\textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Total}\CharTok{\}\}}\VerbatimStringTok{  \& {-}                  \& $}\SpecialCharTok{\{}\NormalTok{(kvantum\_M\_before\_cournot}\OperatorTok{*}\DecValTok{1000}\NormalTok{)}\OperatorTok{+}\NormalTok{(kvantum\_B\_before\_cournot}\OperatorTok{*}\DecValTok{1000}\NormalTok{)}\OperatorTok{+}\NormalTok{(kvantum\_G\_before\_cournot}\OperatorTok{*}\DecValTok{1000}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{$             \& {-}          \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{{-} \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Markedspris}\CharTok{\}\}}\VerbatimStringTok{ \& $}\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(markedspris\_before\_cournot,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$ \& {-} \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{cornflowerblue}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Bedrift etter fusjon}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Variabel}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Cournot}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Stackelberg}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lighterblue}\CharTok{\}\}}\VerbatimStringTok{ Fusjonert Mack og Bryggeri      \& Profitt                  \& $}\SpecialCharTok{\{}\NormalTok{profitt\_BM\_etter\_cournot}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$             \& $}\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(profitt\_BM\_stack}\OperatorTok{*}\DecValTok{1000}\NormalTok{,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$           \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lighterblue}\CharTok{\}\}}\VerbatimStringTok{ Graff Brygghus  \& Profitt                  \& $}\SpecialCharTok{\{}\BuiltInTok{float}\NormalTok{(profitt\_G\_etter\_cournot)}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$             \& $}\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(profitt\_G\_stack}\OperatorTok{*}\DecValTok{1000}\NormalTok{,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$           \textbackslash{}\textbackslash{} \textbackslash{}hline }
+\VerbatimStringTok{\textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Total}\CharTok{\}\}}\VerbatimStringTok{  \& {-}                  \& $}\SpecialCharTok{\{}\NormalTok{(profitt\_BM\_etter\_cournot}\OperatorTok{*}\DecValTok{1000}\NormalTok{)}\OperatorTok{+}\NormalTok{(profitt\_G\_etter\_cournot}\OperatorTok{*}\DecValTok{1000}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$             \& $}\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{((profitt\_G\_stack}\OperatorTok{*}\DecValTok{1000}\NormalTok{)}\OperatorTok{+}\NormalTok{(profitt\_BM\_stack)}\OperatorTok{*}\DecValTok{1000}\NormalTok{,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$           \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lightblue}\CharTok{\}\}}\VerbatimStringTok{ Fusjonert Mack og Bryggeri      \& Kvantum                  \& $}\SpecialCharTok{\{}\NormalTok{kvantum\_BM\_etter\_cournot}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{$             \& $}\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(kvantum\_BM\_stack}\OperatorTok{*}\DecValTok{1000}\NormalTok{,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{$           \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lightblue}\CharTok{\}\}}\VerbatimStringTok{ Graff Brygghus  \& Kvantum                  \& $}\SpecialCharTok{\{}\NormalTok{kvantum\_G\_etter\_cournot}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{$             \& $}\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{((kvantum\_G\_stack}\OperatorTok{*}\DecValTok{1000}\NormalTok{),}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{$           \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Total}\CharTok{\}\}}\VerbatimStringTok{  \& {-}                  \& $}\SpecialCharTok{\{}\NormalTok{kvantum\_BM\_etter\_cournot}\OperatorTok{*}\DecValTok{1000}\OperatorTok{+}\NormalTok{kvantum\_G\_etter\_cournot}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{$             \& $}\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{((kvantum\_BM\_stack}\OperatorTok{+}\NormalTok{kvantum\_G\_stack)}\OperatorTok{*}\DecValTok{1000}\NormalTok{,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{$           \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{{-} \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Markedspris}\CharTok{\}\}}\VerbatimStringTok{ \& $}\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(markedspris\_etter\_cournot),}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$ \& $}\SpecialCharTok{\{}\BuiltInTok{round}\NormalTok{(markedspris\_stack,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\}}\VerbatimStringTok{\textasciitilde{}kr$ \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}end}\CharTok{\{\{}\VerbatimStringTok{tabular}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}caption}\CharTok{\{\{}\VerbatimStringTok{Effekten av fusjon mellom Mack og Bryggeri 13}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}label}\CharTok{\{\{}\VerbatimStringTok{table:3}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}end}\CharTok{\{\{}\VerbatimStringTok{table}\CharTok{\}\}}
+
+
+\VerbatimStringTok{"""}
+\NormalTok{display(Latex(tbl1))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor{cornflowerblue} \textbf{Bedrift} & \textbf{Variabel} & \textbf{Cournot} & \textbf{Stackelberg} \\ \hline
+\rowcolor{lighterblue} Mack Mikrobryggeri      & Profitt                  & $173060.0~kr$             & -           \\ \hline
+\rowcolor{lighterblue} Bryggeri 13  & Profitt                  & $110060.0~kr$             & -           \\ \hline
+\rowcolor{lighterblue} Graff Brygghus  & Profitt                  & $110060.0~kr$             & -           \\ \hline 
+\textbf{Total}  & -                  & $393180.0~kr$             & -           \\ \hline
+\rowcolor{lightblue} Mack Mikrobryggeri      & Kvantum                  & $10875.0$             & -           \\ \hline
+\rowcolor{lightblue} Bryggeri 13  & Kvantum                  & $10125.0$             & -           \\ \hline
+\rowcolor{lightblue} Graff Brygghus  & Kvantum                  & $10125.0$             & -           \\ \hline 
+\textbf{Total}  & -                  & $31125.0$             & -          \\ \hline
+- & \textbf{Markedspris} & $50.50~kr$ & - \\ \hline
+\rowcolor{cornflowerblue} \textbf{Bedrift etter fusjon} & \textbf{Variabel} & \textbf{Cournot} & \textbf{Stackelberg} \\ \hline
+\rowcolor{lighterblue} Fusjonert Mack og Bryggeri      & Profitt                  & $312250.0~kr$             & $413781.25~kr$           \\ \hline
+\rowcolor{lighterblue} Graff Brygghus  & Profitt                  & $429000.0~kr$             & $95015.62~kr$           \\ \hline 
+\textbf{Total}  & -                  & $741250.0~kr$             & $508796.88~kr$           \\ \hline
+\rowcolor{lightblue} Fusjonert Mack og Bryggeri      & Kvantum                  & $14250.0$             & $21375$           \\ \hline
+\rowcolor{lightblue} Graff Brygghus  & Kvantum                  & $13500.0$             & $9937.50$           \\ \hline
+\textbf{Total}  & -                  & $27750.0$             & $31312.50$           \\ \hline
+- & \textbf{Markedspris} & $64.0~kr$ & $49.75~kr$ \\ \hline
+\end{tabular}
+\caption{Effekten av fusjon mellom Mack og Bryggeri 13}
+\label{table:3}
+\end{table}
+
 \clearpage
 
 \section {Appendix Python kode Oppgave 2 b}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ sympy }\ImportTok{as}\NormalTok{ sp}
+\NormalTok{a, b, Q\_O, Q\_C, c, f, p, Q, r, Q\_RGH, pi\_M, pi\_RGH, Q\_M }\OperatorTok{=}\NormalTok{ sp.symbols(}\StringTok{\textquotesingle{}a b Q\_O Q\_C c f p Q r Q\_RGH }\CharTok{\textbackslash{}u03C0}\StringTok{\_M }\CharTok{\textbackslash{}u03C0}\StringTok{\_}\SpecialCharTok{\{RGH\}}\StringTok{ Q\_M\textquotesingle{}}\NormalTok{)}
+
+
+\NormalTok{demand }\OperatorTok{=}\NormalTok{ sp.Eq(p, a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{(Q\_O}\OperatorTok{+}\NormalTok{Q\_C))}
+
+\NormalTok{income }\OperatorTok{=}\NormalTok{ sp.Eq(p}\OperatorTok{*}\NormalTok{Q, Q}\OperatorTok{*}\NormalTok{(a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{Q))}
+\NormalTok{costs }\OperatorTok{=}\NormalTok{ Q}\OperatorTok{*}\NormalTok{r}\OperatorTok{{-}}\NormalTok{f}
+
+\NormalTok{MR }\OperatorTok{=}\NormalTok{ sp.Eq(sp.diff((a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{(Q))}\OperatorTok{*}\NormalTok{Q}\OperatorTok{{-}}\NormalTok{f, Q), r)}
+
+\NormalTok{MR1 }\OperatorTok{=}\NormalTok{ sp.Eq(sp.diff((a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{(Q\_O}\OperatorTok{+}\NormalTok{Q\_C))}\OperatorTok{*}\NormalTok{Q\_O}\OperatorTok{{-}}\NormalTok{f, Q\_O), r)}
+\NormalTok{RF1  }\OperatorTok{=}\NormalTok{ sp.solve(MR1, Q\_O)[}\DecValTok{0}\NormalTok{]}
+
+\NormalTok{MR2 }\OperatorTok{=}\NormalTok{ sp.Eq(sp.diff((a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{(Q\_C}\OperatorTok{+}\NormalTok{Q\_O))}\OperatorTok{*}\NormalTok{Q\_C}\OperatorTok{{-}}\NormalTok{f, Q\_C), r)}
+\NormalTok{RF2 }\OperatorTok{=}\NormalTok{ sp.solve(MR2, Q\_C)[}\DecValTok{0}\NormalTok{]}
+
+\NormalTok{optimalt\_kvantum1 }\OperatorTok{=}\NormalTok{ sp.solve(sp.Eq(RF1.subs(Q\_C, RF2), Q\_O))[}\DecValTok{0}\NormalTok{][Q\_O]}
+
+\NormalTok{optimalt\_kvantum2 }\OperatorTok{=}\NormalTok{ sp.solve(sp.Eq(RF2.subs(Q\_O, RF1), Q\_C))[}\DecValTok{0}\NormalTok{][Q\_C]}
+
+
+
+\NormalTok{markedspris }\OperatorTok{=}\NormalTok{ demand.rhs.subs(\{Q\_C: optimalt\_kvantum1, Q\_O: optimalt\_kvantum2, a:}\DecValTok{175}\NormalTok{, b:}\DecValTok{2}\NormalTok{, r:}\DecValTok{7}\NormalTok{\})}
+
+\NormalTok{optimalt\_kvantum1\_num }\OperatorTok{=}\NormalTok{ (}\BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(optimalt\_kvantum1.subs(\{a:}\DecValTok{175}\NormalTok{, b:}\DecValTok{2}\NormalTok{, r:}\DecValTok{7}\NormalTok{, f:}\DecValTok{500000}\NormalTok{\}))))}\OperatorTok{/}\DecValTok{2}
+\NormalTok{optimalt\_kvantum2\_num }\OperatorTok{=}\NormalTok{ (}\BuiltInTok{round}\NormalTok{(}\BuiltInTok{float}\NormalTok{(optimalt\_kvantum2.subs(\{a:}\DecValTok{175}\NormalTok{, b:}\DecValTok{2}\NormalTok{, r:}\DecValTok{7}\NormalTok{, f:}\DecValTok{500000}\NormalTok{\}))))}\OperatorTok{/}\DecValTok{2}
+
+\NormalTok{profitt\_mack }\OperatorTok{=}\NormalTok{ ((((markedspris}\OperatorTok{{-}}\NormalTok{r)}\OperatorTok{*}\NormalTok{optimalt\_kvantum1}\OperatorTok{/}\DecValTok{2}\NormalTok{)}\OperatorTok{*}\DecValTok{1000}\NormalTok{)}\OperatorTok{{-}}\NormalTok{f).subs(\{a:}\DecValTok{175}\NormalTok{, b:}\DecValTok{2}\NormalTok{, r:}\DecValTok{7}\NormalTok{, f:}\DecValTok{500000}\NormalTok{\})}
+\NormalTok{profitt\_graff }\OperatorTok{=}\NormalTok{ ((((markedspris}\OperatorTok{{-}}\NormalTok{r)}\OperatorTok{*}\NormalTok{optimalt\_kvantum2}\OperatorTok{/}\DecValTok{2}\NormalTok{)}\OperatorTok{*}\DecValTok{1000}\NormalTok{)}\OperatorTok{{-}}\NormalTok{f).subs(\{a:}\DecValTok{175}\NormalTok{, b:}\DecValTok{2}\NormalTok{, r:}\DecValTok{7}\NormalTok{, f:}\DecValTok{500000}\NormalTok{\})}
+
+\CommentTok{\#print(f\textquotesingle{}\textquotesingle{}\textquotesingle{}Optimalt kvantum for Mack er \{optimalt\_kvantum1\_num\} og for Graff Brygghus er \{optimalt\_kvantum2\_num\}. \textbackslash{}nSå det totale kvantumet blir \{(optimalt\_kvantum1\_num+optimalt\_kvantum2\_num)\} og markedsprisen blir \{markedspris\} \textbackslash{}nProfitten for Mack blir \{profitt\_mack\} og for Graff Brygghus blir \{profitt\_graff\}.\textquotesingle{}\textquotesingle{}\textquotesingle{})}
+
+
+\NormalTok{tbl2 }\OperatorTok{=} \VerbatimStringTok{rf"""}
+\VerbatimStringTok{\textbackslash{}begin}\CharTok{\{\{}\VerbatimStringTok{table}\CharTok{\}\}}\VerbatimStringTok{[h]}
+\VerbatimStringTok{\textbackslash{}centering}
+\VerbatimStringTok{\textbackslash{}begin}\CharTok{\{\{}\VerbatimStringTok{tabular}\CharTok{\}\}\{\{}\VerbatimStringTok{|c|c|c|}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Bedrift}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Variabel}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Pris/antall}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}\textbackslash{}}
+\VerbatimStringTok{\textbackslash{}hline}
+\VerbatimStringTok{Mack \& Pris \& }\SpecialCharTok{\{}\NormalTok{markedspris}\SpecialCharTok{\}}\VerbatimStringTok{ \textbackslash{}\textbackslash{}}
+\VerbatimStringTok{Mack \& Kvantum \& }\SpecialCharTok{\{}\NormalTok{optimalt\_kvantum1\_num}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{ \textbackslash{}\textbackslash{}}
+\VerbatimStringTok{Graff Brygghus \& Pris \& }\SpecialCharTok{\{}\NormalTok{markedspris}\SpecialCharTok{\}}\VerbatimStringTok{ \textbackslash{}\textbackslash{}}
+\VerbatimStringTok{Graff Brygghus \& Kvantum \& }\SpecialCharTok{\{}\NormalTok{optimalt\_kvantum2\_num}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{ \textbackslash{}\textbackslash{}}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lighterblue}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Mack Mikrobryggeri}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Profitt}\CharTok{\}\}}\VerbatimStringTok{ \& }\SpecialCharTok{\{}\NormalTok{profitt\_mack}\SpecialCharTok{\}}\VerbatimStringTok{kr \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lighterblue}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Graff Brygghus}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Profitt}\CharTok{\}\}}\VerbatimStringTok{ \& }\SpecialCharTok{\{}\NormalTok{profitt\_graff}\SpecialCharTok{\}}\VerbatimStringTok{kr \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}end}\CharTok{\{\{}\VerbatimStringTok{tabular}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}caption}\CharTok{\{\{}\VerbatimStringTok{Markedet før evt fusjon Mack og Bryggeri 13}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}label}\CharTok{\{\{}\VerbatimStringTok{table:4}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}end}\CharTok{\{\{}\VerbatimStringTok{table}\CharTok{\}\}}
+\VerbatimStringTok{"""}
+
+
+
+
+\CommentTok{\#Ettersporsel MR = sp.Eq(sp.diff((a{-}b*(Q))*Q{-}f, Q), r)}
+\NormalTok{Ettersporsel }\OperatorTok{=}\NormalTok{ sp.Eq(p, (a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{(Q)))}
+
+\NormalTok{profitt }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_M, (Ettersporsel.rhs}\OperatorTok{{-}}\NormalTok{r)}\OperatorTok{*}\NormalTok{Q}\OperatorTok{{-}}\NormalTok{f) }\CommentTok{\#profitt = inntekt minus kostnader}
+\NormalTok{MR\_RGH }\OperatorTok{=}\NormalTok{ sp.diff(profitt.rhs, Q).subs(Q, Q\_RGH) }\CommentTok{\# Marginalinntekt for RGH}
+\NormalTok{MR\_lik\_MC }\OperatorTok{=}\NormalTok{ sp.Eq(sp.solve(MR\_RGH, r)[}\DecValTok{0}\NormalTok{], r) }\CommentTok{\#Marginal inntekt lik marginal kostnad}
+\NormalTok{optimalt\_kvantum\_RGH }\OperatorTok{=}\NormalTok{ sp.solve(MR\_lik\_MC, Q\_RGH)[}\DecValTok{0}\NormalTok{] }\CommentTok{\#optimalt kvantum for RGH}
+\NormalTok{Optimal\_pris\_RGH }\OperatorTok{=}\NormalTok{ Ettersporsel.subs(Q, optimalt\_kvantum\_RGH) }\CommentTok{\#optimal pris for RGH}
+
+
+
+\NormalTok{ettersporsel\_mack }\OperatorTok{=}\NormalTok{ sp.Eq(r, sp.solve(sp.Eq(Q\_M, optimalt\_kvantum\_RGH),r)[}\DecValTok{0}\NormalTok{])}
+\NormalTok{profitt\_mack }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_M, (ettersporsel\_mack.rhs}\OperatorTok{{-}}\NormalTok{r)}\OperatorTok{*}\NormalTok{Q\_M}\OperatorTok{{-}}\NormalTok{f) }\CommentTok{\#profitt = inntekt minus kostnader}
+\NormalTok{MR\_Mack }\OperatorTok{=}\NormalTok{ sp.diff(((ettersporsel\_mack.rhs}\OperatorTok{{-}}\NormalTok{c)}\OperatorTok{*}\NormalTok{Q\_M}\OperatorTok{{-}}\NormalTok{f), Q\_M)  }\CommentTok{\# Marginalinntekt for mack}
+\NormalTok{MR\_lik\_MC\_mack }\OperatorTok{=}\NormalTok{ sp.Eq(sp.solve(MR\_Mack, c)[}\DecValTok{0}\NormalTok{], c) }\CommentTok{\#Marginalinntekt lik marginal kostnad}
+\NormalTok{optimalt\_kvantum\_mack }\OperatorTok{=}\NormalTok{ sp.solve(MR\_lik\_MC\_mack, Q\_M)[}\DecValTok{0}\NormalTok{] }\CommentTok{\#optimalt kvantum for mack}
+\NormalTok{optimal\_pris\_r }\OperatorTok{=}\NormalTok{ ettersporsel\_mack.rhs.subs(Q\_M, optimalt\_kvantum\_mack) }\CommentTok{\#optimal pris for Mack}
+
+
+
+\NormalTok{optimalpris\_sluttbruker }\OperatorTok{=}\NormalTok{ Optimal\_pris\_RGH.rhs.subs(\{r: optimal\_pris\_r\})}
+
+
+\CommentTok{\#deler kvantum på 2 pga dobbel helning}
+\NormalTok{profitt\_mack }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_M, (optimal\_pris\_r}\OperatorTok{{-}}\NormalTok{c)}\OperatorTok{*}\NormalTok{optimalt\_kvantum\_mack }\OperatorTok{{-}}\NormalTok{ f)}
+\NormalTok{profitt\_RGH }\OperatorTok{=}\NormalTok{ sp.Eq(pi\_RGH, (Optimal\_pris\_RGH.rhs.subs(r, optimal\_pris\_r)}\OperatorTok{{-}}\NormalTok{optimal\_pris\_r)}\OperatorTok{*}\NormalTok{optimalt\_kvantum\_RGH.subs(r, optimal\_pris\_r)}\OperatorTok{{-}}\NormalTok{f)}
+
+\NormalTok{pris\_mack\_num }\OperatorTok{=}\NormalTok{ optimal\_pris\_r.subs(\{a:}\DecValTok{175}\NormalTok{, c:}\DecValTok{7}\NormalTok{\})}
+\NormalTok{pris\_sluttbruker }\OperatorTok{=}\NormalTok{ Optimal\_pris\_RGH.rhs.subs(\{a:}\DecValTok{175}\NormalTok{, r:optimal\_pris\_r.subs(\{a:}\DecValTok{175}\NormalTok{, c:}\DecValTok{7}\NormalTok{\})\})}
+\NormalTok{kvantum\_sluttbruker }\OperatorTok{=}\NormalTok{ sp.solve(Ettersporsel.subs(\{a:}\DecValTok{175}\NormalTok{, b:}\DecValTok{2}\NormalTok{, p:pris\_sluttbruker\}), Q)[}\DecValTok{0}\NormalTok{]}
+\NormalTok{profitt\_mack\_num }\OperatorTok{=}\NormalTok{ profitt\_mack.subs(\{a:}\DecValTok{175}\NormalTok{, b:}\DecValTok{2}\NormalTok{, f:}\DecValTok{1000}\NormalTok{, c:}\DecValTok{7}\NormalTok{\}).rhs}\OperatorTok{*}\DecValTok{1000}
+\NormalTok{profitt\_RGH\_num }\OperatorTok{=}\NormalTok{ profitt\_RGH.subs(\{a:}\DecValTok{175}\NormalTok{, b:}\DecValTok{2}\NormalTok{, f:}\DecValTok{600}\NormalTok{, c:}\DecValTok{7}\NormalTok{\}).rhs}\OperatorTok{*}\DecValTok{1000}
+
+\NormalTok{tbl3 }\OperatorTok{=} \VerbatimStringTok{rf"""}
+\VerbatimStringTok{\textbackslash{}begin}\CharTok{\{\{}\VerbatimStringTok{table}\CharTok{\}\}}\VerbatimStringTok{[h]}
+\VerbatimStringTok{\textbackslash{}centering}
+\VerbatimStringTok{\textbackslash{}begin}\CharTok{\{\{}\VerbatimStringTok{tabular}\CharTok{\}\}\{\{}\VerbatimStringTok{|c|c|c|}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Bedrift}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Variabel}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Pris/antall}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{Mack Mikrobryggeri \& Pris \& }\SpecialCharTok{\{}\NormalTok{pris\_mack\_num}\SpecialCharTok{\}}\VerbatimStringTok{kr \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{RGH \& Pris \& }\SpecialCharTok{\{}\NormalTok{pris\_sluttbruker}\SpecialCharTok{\}}\VerbatimStringTok{kr \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{cornflowerblue}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Sluttbruker}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Betaler}\CharTok{\}\}}\VerbatimStringTok{ \& }\SpecialCharTok{\{}\NormalTok{pris\_sluttbruker}\SpecialCharTok{\}}\VerbatimStringTok{kr \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{cornflowerblue}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Sluttbruker}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Kjøper}\CharTok{\}\}}\VerbatimStringTok{ \& }\SpecialCharTok{\{}\NormalTok{kvantum\_sluttbruker}\OperatorTok{*}\DecValTok{1000}\SpecialCharTok{\}}\VerbatimStringTok{ stykk \textbackslash{}\textbackslash{} \textbackslash{}hline \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lighterblue}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Mack Mikrobryggeri}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Profitt}\CharTok{\}\}}\VerbatimStringTok{ \& }\SpecialCharTok{\{}\NormalTok{profitt\_mack\_num}\SpecialCharTok{\}}\VerbatimStringTok{kr \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}rowcolor}\CharTok{\{\{}\VerbatimStringTok{lighterblue}\CharTok{\}\}}\VerbatimStringTok{ \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{RGH}\CharTok{\}\}}\VerbatimStringTok{ \& \textbackslash{}textbf}\CharTok{\{\{}\VerbatimStringTok{Profitt}\CharTok{\}\}}\VerbatimStringTok{ \& }\SpecialCharTok{\{}\NormalTok{profitt\_RGH\_num}\SpecialCharTok{\}}\VerbatimStringTok{kr \textbackslash{}\textbackslash{} \textbackslash{}hline}
+\VerbatimStringTok{\textbackslash{}end}\CharTok{\{\{}\VerbatimStringTok{tabular}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}caption}\CharTok{\{\{}\VerbatimStringTok{Effekten av fusjon mellom Mack og Bryggeri 13 på sluttbrukere}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}label}\CharTok{\{\{}\VerbatimStringTok{table:4}\CharTok{\}\}}
+\VerbatimStringTok{\textbackslash{}end}\CharTok{\{\{}\VerbatimStringTok{table}\CharTok{\}\}}
+\VerbatimStringTok{"""}
+\end{Highlighting}
+\end{Shaded}
+
 \clearpage
 
 \section {Appendix Python kode Oppgave 2 c}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#plotting }
+
+\KeywordTok{def}\NormalTok{ demand(a, b, Q):}
+    \ControlFlowTok{return}\NormalTok{ a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{Q}
+
+
+\KeywordTok{def}\NormalTok{ MR (a, b, Q):}
+    \ControlFlowTok{return}\NormalTok{ a}\OperatorTok{{-}}\DecValTok{2}\OperatorTok{*}\NormalTok{b}\OperatorTok{*}\NormalTok{Q}
+
+\KeywordTok{def}\NormalTok{ supply(a, b, c):}
+    \ControlFlowTok{return}\NormalTok{ (a}\OperatorTok{{-}}\NormalTok{c)}\OperatorTok{/}\NormalTok{(}\DecValTok{3}\OperatorTok{*}\NormalTok{b)}
+
+
+
+\ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+
+
+
+
+\NormalTok{c }\OperatorTok{=} \DecValTok{7}
+\NormalTok{x }\OperatorTok{=}\NormalTok{ np.linspace(}\DecValTok{0}\NormalTok{, }\DecValTok{175}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+
+
+\NormalTok{Q }\OperatorTok{=}\NormalTok{ np.linspace(}\DecValTok{0}\NormalTok{, optimalt\_kvantum1\_num}\OperatorTok{*}\DecValTok{2}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+
+
+\CommentTok{\# plt.plot(x, demand(175, 1, x), label=\textquotesingle{}Etterspørsel\textquotesingle{}, color="green")}
+\CommentTok{\# plt.plot(Q, supply(x/2, 2, 7), label=\textquotesingle{}Kostnader\textquotesingle{}, color="blue")}
+
+\NormalTok{fig, ax }\OperatorTok{=}\NormalTok{ plt.subplots()}
+
+\NormalTok{ax.plot(x, demand(}\DecValTok{175}\NormalTok{, }\DecValTok{1}\NormalTok{, x), label}\OperatorTok{=}\StringTok{\textquotesingle{}Etterspørsel\textquotesingle{}}\NormalTok{, color}\OperatorTok{=}\StringTok{"green"}\NormalTok{)}
+\NormalTok{ax.plot(x, MR(}\DecValTok{175}\NormalTok{, }\DecValTok{2}\NormalTok{, x), label}\OperatorTok{=}\StringTok{\textquotesingle{}Marginalinntekt\textquotesingle{}}\NormalTok{, color}\OperatorTok{=}\StringTok{"red"}\NormalTok{)}
+
+\NormalTok{ax.plot(Q, supply(x}\OperatorTok{/}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{7}\NormalTok{), label}\OperatorTok{=}\StringTok{\textquotesingle{}Kostnader\textquotesingle{}}\NormalTok{, color}\OperatorTok{=}\StringTok{"blue"}\NormalTok{)}
+
+
+
+
+\CommentTok{\#ylim}
+\NormalTok{ax.hlines(}\DecValTok{7}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{175}\NormalTok{, colors}\OperatorTok{=}\StringTok{\textquotesingle{}r\textquotesingle{}}\NormalTok{, linestyles}\OperatorTok{=}\StringTok{\textquotesingle{}{-}{-}\textquotesingle{}}\NormalTok{)}
+\NormalTok{ax.vlines(}\DecValTok{28}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{175}\NormalTok{, colors}\OperatorTok{=}\StringTok{\textquotesingle{}r\textquotesingle{}}\NormalTok{, linestyles}\OperatorTok{=}\StringTok{\textquotesingle{}{-}{-}\textquotesingle{}}\NormalTok{)}
+
+
+
+\NormalTok{ax.hlines(}\DecValTok{63}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{175}\NormalTok{, colors}\OperatorTok{=}\StringTok{\textquotesingle{}b\textquotesingle{}}\NormalTok{, linestyles}\OperatorTok{=}\StringTok{\textquotesingle{}{-}{-}\textquotesingle{}}\NormalTok{, label}\OperatorTok{=}\StringTok{\textquotesingle{}Pris i markedet\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\#showing consumers surplus}
+\CommentTok{\#ax.fill\_between(x, demand(175, 1, x), 63, where=(x\textless{}=28), color=\textquotesingle{}lightblue\textquotesingle{}, alpha=0.5, label=\textquotesingle{}Konsumentoverskudd\textquotesingle{})}
+\NormalTok{ax.fill\_between(x, demand(}\DecValTok{175}\NormalTok{, }\DecValTok{1}\NormalTok{, x), }\DecValTok{63}\NormalTok{, where}\OperatorTok{=}\NormalTok{(x}\OperatorTok{\textless{}=}\DecValTok{28}\NormalTok{), color}\OperatorTok{=}\StringTok{\textquotesingle{}lightblue\textquotesingle{}}\NormalTok{, alpha}\OperatorTok{=}\FloatTok{0.5}\NormalTok{, label}\OperatorTok{=}\StringTok{\textquotesingle{}Konsumentoverskudd\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\#producentoverskudd mack MR(175, 2, x)}
+\NormalTok{ax.fill\_between(x, }\DecValTok{63}\NormalTok{, MR(}\DecValTok{175}\NormalTok{, }\DecValTok{2}\NormalTok{, x), where}\OperatorTok{=}\NormalTok{(x}\OperatorTok{\textless{}=}\DecValTok{28}\NormalTok{), color}\OperatorTok{=}\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{, alpha}\OperatorTok{=}\FloatTok{0.5}\NormalTok{, label}\OperatorTok{=}\StringTok{\textquotesingle{}Nedstrøm overskudd\textquotesingle{}}\NormalTok{)}
+\NormalTok{ax.fill\_between(x, }\DecValTok{63}\NormalTok{, supply(x}\OperatorTok{/}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{7}\NormalTok{), where}\OperatorTok{=}\NormalTok{(x}\OperatorTok{\textless{}=}\DecValTok{28}\NormalTok{), color}\OperatorTok{=}\StringTok{\textquotesingle{}orange\textquotesingle{}}\NormalTok{, alpha}\OperatorTok{=}\FloatTok{0.5}\NormalTok{, label}\OperatorTok{=}\StringTok{\textquotesingle{}Oppstrøm overskudd\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{ax.legend()}
+
+\CommentTok{\#hline at }
+
+\NormalTok{ax.set\_ylim(}\DecValTok{0}\NormalTok{, }\DecValTok{175}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{18_SOK2030_mappeoppgave_2_V24_files/figure-pdf/cell-43-output-1.pdf}
 
 
 

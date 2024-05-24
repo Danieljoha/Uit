@@ -1,0 +1,62 @@
+---
+title: "Sok-1005"
+description: |
+      Data science Spring 2023.  
+date: last-modified
+author:
+  - name: Candidate number 3 
+    affiliation: UiT The Arctic University of Norway <br> Faculty of Biosciences, Fisheries and Economics.
+title-block-banner: "#012643"
+format:
+  html: 
+    code-fold: true
+    self-contained: true
+    df-print: kable
+    output-file: "index"
+    output-ext:  "html"
+editor: visual
+warning: false
+toc: true
+tof: true
+---
+
+# Sok-1005
+
+Datavitenskap for økonomer.
+
+Tasks and assignments can be found in under assignments
+
+The projects are under Project
+
+```{=html}
+<div class="center">On the left are my graded assignments that are delivered in R, on the Right is my Data Science project</div>
+<div class="center" style="display: flex; justify-content: space-between; margin-top: 20px;">
+      <div style="width: 45%; position: relative;">
+        <div class="content-overlay">
+          <div class="text-overlay">Assignments</div>
+            <a href="/Sok-1005/Assignments/Assignment_1.html" class="larger">Assignment 1</a>
+            <br>
+            <a href="/Sok-1005/Assignments/Assignment_2.html" class="larger">Assignment 2</a>
+            <br>
+            <a href="/Sok-1005/Assignments/Assignment_3.html" class="larger">Assignment 3</a>
+            <br>
+            <a href="/Sok-1005/Assignments/Assignment_4.html" class="larger">Assignment 4</a>
+        </div>
+    </div>
+    <div style="width: 45%; position: relative;">
+        <div class="content-overlay">
+          <div class="text-overlay">Project</div>
+            <a href="/Sok-1005/Project/index.html" class="larger">Full project</a>
+            <br>
+            <a href="/Sok-1005/Project/3_11_Task1_SOK1005_Project_V23.html" class="larger">Task 1</a>
+            <br>
+            <a href="/Sok-1005/Project/3_11_Task2_3_4_SOK1005_Project_V23.html" class="larger">Tasks 2, 3 and 4</a>
+        </div>
+    </div>
+</div>
+```
+## References
+
+These assignments and the project has been made with the help of the resources from the courseplan in SOK-1005 including the lectures given by Dejene Gizaw Kidane. Any and all errors are mine.
+
+The lectures are found here <https://github.com/uit-sok-1005-v23/uit-sok-1005-v23.github.io>
