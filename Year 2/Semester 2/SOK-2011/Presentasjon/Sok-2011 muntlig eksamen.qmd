@@ -3,7 +3,6 @@ title: "SOK-2011 muntlig eksamen presentasjon"
 subtitle: "Handelshøgskolen"
 date: last-modified
 date-format: "DD-MM-YYYY"
-editor: visual
 echo: false
 warning: false
 format: 
@@ -16,7 +15,6 @@ format:
     parallax-background-vertical: 0
 ---
 
-
 # Intro
 
 Tema for presentasjonen er Bærekraftig utvikling
@@ -24,7 +22,6 @@ Tema for presentasjonen er Bærekraftig utvikling
 ::: notes
 notater her
 :::
-
 
 ## mål med presentasjonen
 
@@ -34,52 +31,45 @@ definerer formålet med presentasjonen. Presentasjonen her er da for å vise kun
 notater her
 :::
 
-
-# Hoveddel. 
+# Hoveddel.
 
 Jeg blir å gå igjennom
 
-:::: {.columns}
+::: columns
+::: {.column width="50%"}
+::: incremental
+-   Hva er bærekraftig utvikling og hvorfor skal vi bry oss om bærekraft?
+
+-   Hvordan kan vi oppnå det
+
+-   Predikerte effekter av klimaendringer
+:::
+:::
 
 ::: {.column width="50%"}
-:::incremental
-- Hva er bærekraftig utvikling og hvorfor skal vi bry oss om bærekraft?
+::: incremental
+-   Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling?
 
-- Hvordan kan vi oppnå det
+-   Eksempel på inngrep som reduserer problem
 
-- Predikerte effekter av klimaendringer
-
+-   Utfordringer for politikk for økt bærekraft
 :::
 :::
-::: {.column width="50%"}
-:::incremental
-- Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling?
-
-- Eksempel på inngrep som reduserer problem
-
-- Utfordringer for politikk for økt bærekraft
 :::
-:::
-
-::::
-
-
 
 ::: notes
 notater her
 :::
 
-
 ## Hva er bærekraftig utvikling og hvorfor skal vi bry oss om bærekraft?
 
-- Definisjon
+-   Definisjon
 
-- hvorfor skal vi bry oss om bærekraft
+-   hvorfor skal vi bry oss om bærekraft
 
 ::: notes
 Bærekraftig utvikling er en utvikling som imøtekommer dagens behov uten å ødelegge mulighetene for at kommende generasjoner skal kunne dekke sine behov.
 :::
-
 
 ## Hvordan kan vi oppnå det
 
@@ -87,43 +77,39 @@ Bærekraftig utvikling er en utvikling som imøtekommer dagens behov uten å ød
 notater her
 :::
 
-
 ## Predikerte effekter av klimaendringer
 
-- Hva er de predikerte effektene
+-   Hva er de predikerte effektene
 
 ::: notes
 notater her
 :::
 
-
 ## Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling?
 
-- Hvorfor klarer ikke det private markedet å oppnå det
+-   Hvorfor klarer ikke det private markedet å oppnå det
 
-- Hva er de viktigste utfordringene
-
+-   Hva er de viktigste utfordringene
 
 ::: notes
 notater her
 :::
 
-
 ## Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling?
+
 ### Hvorfor klarer ikke det private markedet å oppnå det
 
 ::: notes
 notater her
 :::
 
-
 ## Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling?
+
 ### Hva er de viktigste utfordringene
 
 ::: notes
 notater her
 :::
-
 
 ## Eksempel på inngrep som reduserer problem
 
@@ -137,17 +123,14 @@ notater her
 notater her
 :::
 
-
 # Avslutning
 
-- Oppsummering
+-   Oppsummering
 
-- Konklusjon
+-   Konklusjon
 
-- Spørsmål. sett opp alle "slides" på siden her så det kan trykkes tilbake lett
+-   Spørsmål. sett opp alle "slides" på siden her så det kan trykkes tilbake lett
 
 ::: notes
 notater her
 :::
-
-
