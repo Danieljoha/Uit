@@ -24,14 +24,16 @@ veldig upopulært med bompenger.
 
 ## slide 3
 
-FN's definisjon av bærekraftig utvikling
+FN's definisjon. Brundtland-rapporten Vår felles framtid.
+
+
 Bærekraftig utvikling er en utvikling som imøtekommer dagens behov uten å ødelegge mulighetene for at kommende generasjoner skal kunne dekke sine behov. 
 
 Hva vil det si?
 
 
 
-Det vil si at det innebærer en balanse mellom økonomisk vekst, sosial rettferdighet og miljøvern.
+Det vil si at det innebærer en balanse mellom økonomisk vekst, sosiale forhold og miljø og klima.
 
 Så for å gå igjennom hvordan vi kan oppnå det så starter jeg med å gå igjennom Venn diagrammet
 
@@ -66,62 +68,56 @@ Hvordan kan vi oppnå det
 
 
 
+-   **Miljø og klima**
 
-Redusere klimagassutslipp gjennom overgang til fornybar energi.
-
-Beskytte og gjenopprette økosystemer og biodiversitet.
-
-
-Implementere bærekraftig jordbruk og fiskeripraksis.
-
-Redusere avfall og forurensning.
-
--   Energiproduksjon
 Vi må løse klimakrisen for å oppnå bærekraftig utvikling.
 
 Klimagassutslipp forsterker drivhuseffekten, som fører til global oppvarming og klimaendringer.
 
+-   Energiproduksjon
 
--   Økosystemer
+Overgang til fornybare energikilder som sol, vind og vannkraft er nødvendig for å redusere klimagassutslipp.
 
-Dersom vi ikke tar vare på naturen, kan vi få en fullstendig kollaps av økosystemene som støtter livet for mennesker og andre arter.
+Investeringer i ren energi kan også skape nye arbeidsplasser og økonomisk vekst.
+
+
+Beskytte og gjenopprette økosystemer og biodiversitet.
+
+
+
+-   **Økosystemer**
+
+
+Dersom vi ikke tar vare på naturen, kan vi få en fullstendig kollaps av økosystemene som støtter livet for mennesker og andre arter. 
+
+For eksempel har vi stor reduksjon i insekter som med bier som driver med pollinering av avlinger. 
+
 
 Forsuring av havet for eksempel kan føre til at korallrev dør ut og dyr med ytre skjelett får problemer med å bygge skjelettet sitt som plankton og skjell. Småfisk som har de som næringskilde vil jo slite som da går videre oppover i næringskjeden.
 
--   Fiskeri og Jordbruk.
-
-Med overfiske og intensivt jordbruk kan vi ødelegge matforsyningen vår 
 
 
--   Avfall og forurensning.
+-   **Fiskeri og Jordbruk.**
+
+
+Med overfiske så har vi jo sett at fiskebestandene har gått ned. Spesielt fiskebåter fra Kina ser vi drar til andre land for å fiske.
+
+Et for intensivt jordbruk kan gjøre at jorden mister fruktbarheten sin.
+
+
+-   **Avfall og forurensning.**
+
+
+Avfall og forurensning
+
+Reduksjon av avfall gjennom resirkulering, gjenbruk og redusert forbruk er viktig.
+
 
 Plast i havet, luftforurensning og giftige kjemikalier er eksempler på forurensning som skader miljøet og helsen vår.
 
 Som mikroplast, og hvor går all el avfallet?
 
-
-
-Energiproduksjon
-
-Overgangen til fornybare energikilder som sol, vind og vannkraft er essensiell for å redusere karbonutslipp og bekjempe klimaendringer. Investeringer i ren energi kan også skape nye arbeidsplasser og økonomisk vekst.
-
-
-Økosystemer
-
-Bevaring og gjenoppretting av økosystemer er avgjørende for å opprettholde biodiversitet og økologiske tjenester som rent vann og luft, pollinering av avlinger, og klimaregulerende prosesser. Bærekraftig forvaltning av skog, hav og jordbruk er sentrale tiltak.
-
-
-Fiskeri og Jordbruk
-
-Bærekraftige praksiser i fiskeri og jordbruk innebærer bruk av metoder som bevarer jordens fruktbarhet, reduserer bruk av kjemikalier, og forhindrer overfiske. Dette sikrer både matsikkerhet og bevaring av naturressurser.
-
-
-Avfall og forurensning
-
-Reduksjon av avfall gjennom resirkulering, gjenbruk og redusert forbruk er viktige steg. Å bekjempe forurensning krever strengere reguleringer og innovative teknologier for å minimere utslipp fra industri og transport.
-
-
-
+Det å bekjempe forurensning krever strengere reguleringer og innovative teknologier for å minimere utslipp fra industri og transport.
 
 
 
@@ -129,35 +125,33 @@ Reduksjon av avfall gjennom resirkulering, gjenbruk og redusert forbruk er vikti
 ### 2. Sosiale forhold
 
 
-Omhandler de sosiale aspektene av bærekraft.
-
--   Fattigdom, utdanning og likestilling.
-
-Utdanning til kvinner bidrar til redusert befolkningsvekst og fattigdom.
-
--   Arbeidsforhold og lønn.
-
-
--   Sosial rettferdighet og inkludering.
-
-Sikre at alle mennesker får et godt og rettferdig grunnlag for et anstendig liv.
-
-
 Inkluderer sosial tillit, rettferdighet, menneskerettigheter og samfunnets velferd.
 
 
-Utdanning, anstendig arbeid, likestilling og helse er sentrale faktorer.
+Omhandler de sosiale aspektene av bærekraft.
+
+-   **Fattigdom, utdanning og likestilling.**
+
+Reduksjon av fattigdom gjør at flere får muligheten til å delta i samfunnet og bidra til økonomisk vekst.
+
+Utdanning er en av de viktigste faktorene for å bekjempe fattigdom.
+
+Og istedet for at bare halve befolkningen får delta så trenger vi likestilling slik at kvinner også får muligheten til å bidra til samfunnet. Det vil samtidig også føre til at befolkningen får færre barn.
 
 
-Fattigdom, utdanning og likestilling
 
-Å redusere fattigdom og sikre tilgang til kvalitetsutdanning og likestilling er grunnleggende for sosial bærekraft. Dette fremmer økonomisk vekst, sosial stabilitet og rettferdighet.
-Arbeidsforhold og lønn
 
-Bærekraftige arbeidsforhold innebærer rettferdig lønn, trygge arbeidsmiljøer og arbeidstakerrettigheter. Dette bidrar til sosial rettferdighet og økonomisk stabilitet.
-Sosial rettferdighet og inkludering
+-   **Arbeidsforhold og lønn.**
 
-Sosiale tiltak som fremmer likestilling, bekjemper diskriminering og sikrer inkludering for alle samfunnsgrupper er avgjørende. Dette skaper et samfunn der alle har muligheten til å bidra og dra nytte av utviklingen.
+Gode arbeidsforhold og lønn er viktige for å sikre at alle har en anstendig levestandard.
+
+
+-   **Sosial rettferdighet og inkludering.**
+
+Dette gir oss da sosial rettferdighet og inkludering for alle samfunnsgrupper. Der alle har muligheten til å bidra og dra nytte av utviklingen.
+
+
+
 
 
 
@@ -166,46 +160,43 @@ Sosiale tiltak som fremmer likestilling, bekjemper diskriminering og sikrer inkl
 
 ### 3.  Økonomisk utvikling
 
-Fremme grønn økonomisk vekst og utvikling av bærekraftige næringer.
-
-Investere i forskning og utvikling av miljøvennlig teknologi.
-
-Sikre rettferdig økonomisk vekst som som afrika osv.
 
 
 Vektlegger vekst, økonomisk stabilitet og ansvarlig bruk av ressurser for å sikre langsiktig økonomisk helse.
 
-Økonomisk vekst kan skape arbeidsplasser og skatteinntekter
 
--   Utvikling av bærekraftige næringer.
 
-Grønn vekst og økonomisk trygghet er essensielt for bærekraftig utvikling.
+-   **Utvikling av bærekraftige næringer.**
 
--   Investeringer i forskning og teknologi.
+Utvikling av bærekraftige næringer vil gjøre at vi kan skape arbeidsplasser og økonomisk vekst samtidig som vi reduserer miljøpåvirkningen.
 
-Innovasjon og teknologisk utvikling er nødvendig for å for eksempel redusere klimagassutslipp og øke energieffektiviteten.
 
--   Rettferdig økonomisk vekst.
+Men for dette trenger vi
+
+
+
+-   **Investeringer i forskning og teknologi.**
+
+Vi trenger forskning og innovasjon for å utvikle de nye teknologiene og metodene som trengs for å oppnå bærekraftig utvikling. Dette kan være ting som for eksempel CO2 fangst og lagring, eller effektivisering av energiproduksjon.
+
+
+
+-   **Rettferdig økonomisk vekst.**
+
+
+Økonomisk vekst må være inkluderende og rettferdig, slik at fordelene fordeles jevnt i samfunnet. 
+
+Dette innebærer politikk som støtter små bedrifter, sikrer arbeidsplasser, og fremmer økonomisk deltakelse for alle.
+
 
 Reduksjon av fattigdom og økonomisk ulikhet er viktig for å unngå uro og konflikt. 
 
 
-Utvikling av bærekraftige næringer
-
-Investering i grønne teknologier og bærekraftige næringer kan drive økonomisk vekst samtidig som det reduserer miljøpåvirkningen. Dette inkluderer støtte til forskning og utvikling av nye løsninger.
-Investeringer i forskning og teknologi
-
-Forskning og innovasjon er nøkkelen til å utvikle nye metoder og teknologier som kan fremme bærekraftig utvikling. Offentlig og privat sektor må samarbeide for å støtte forskning og implementering av bærekraftige løsninger.
+Sikre rettferdig økonomisk vekst som som afrika osv. Og da trenger vi.... 
 
 
-Rettferdig økonomisk vekst
 
-Økonomisk vekst må være inkluderende og rettferdig, slik at fordelene fordeles jevnt i samfunnet. Dette innebærer politikk som støtter små bedrifter, sikrer arbeidsplasser, og fremmer økonomisk deltakelse for alle.
-Internasjonalt samarbeid
 
-Globale utfordringer krever globale løsninger. Internasjonalt samarbeid er nødvendig for å dele kunnskap, teknologi og ressurser for å oppnå bærekraftige utviklingsmål. Samarbeid mellom land kan også bidra til å løse konflikter og fremme fred og sikkerhet.
-
-Bærekraftig utvikling krever en helhetlig tilnærming som integrerer økonomiske, miljømessige og sosiale hensyn i alle beslutningsprosesser. Ved å jobbe sammen på tvers av sektorer og grenser kan vi bygge en bærekraftig fremtid for alle.
 
 
 
@@ -217,6 +208,167 @@ Bærekraftig utvikling krever en helhetlig tilnærming som integrerer økonomisk
 -   **Internasjonalt samarbeid**:
     -   Implementere og oppfylle FNs bærekraftsmål.
     -   Dele kunnskap og teknologi på tvers av landegrenser.
+
+
+Globale utfordringer krever globale løsninger. Internasjonalt samarbeid er nødvendig for å dele kunnskap, teknologi og ressurser for å oppnå bærekraftige utviklingsmål. Samarbeid mellom land kan også bidra til å løse konflikter og fremme fred og sikkerhet.
+
+
+
+
+
+Skal ikke gå inn på alle men dette gir oss mulighet til å samarbeide på tvers av landegrenser for å løse globale utfordringer som klimaendringer, fattigdom og ulikhet.
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Totalt samlet 
+
+
+
+### Bærekraftig sosialt og miljømessig
+
+
+
+
+
+- Krysningspunktet mellom Miljø og klima og Sosiale forhold. 
+
+
+Bærekraftig sosialt og miljømessig utvikling representerer krysningen mellom miljø og klima, og sosiale forhold. 
+
+Dette fokuserer på å beskytte miljøet samtidig som man forbedrer sosial velferd og rettferdighet. En viktig faktor er at fattige land er mer sårbare for klimaendringer og ofte rammes hardere av ekstremvær. 
+
+For å takle dette, må vi utvikle politikk som integrerer miljøhensyn med sosiale tiltak. Dette kan innebære å sikre tilgang til rent vann og ren energi, samt å fremme klimatilpasningstiltak som er sosialt inkluderende. 
+
+For eksempel, ved å investere i infrastruktur som både beskytter mot flom og gir samfunnsøkonomiske fordeler, kan vi adressere både sosiale og miljømessige utfordringer samtidig. 
+
+Dette krever samarbeid på tvers av sektorer og internasjonale grenser, da miljøproblemer ofte er globale. Videre bør man fremme utdanning og bevisstgjøring om hvordan bærekraftige praksiser kan forbedre livskvaliteten. 
+
+
+Vi må altså kunne fremdeles bygge hus men kanskje ikke bygge gigantiske byer midt i regnskogen. må balanseres.
+
+
+
+
+
+
+
+-   **Rettferdighet**
+
+- Krysningspunktet mellom Sosiale forhold og Økonomisk utvikling. 
+
+
+Rettferdighet i bærekraftig utvikling finner sted i krysningen mellom sosiale forhold og økonomisk utvikling.
+
+
+
+
+Dette fokuset legger vekt på likhet og rettferdig fordeling av økonomiske fordeler og muligheter. For å oppnå rettferdighet må økonomisk vekst komme alle samfunnsgrupper til gode, ikke bare de privilegerte. 
+
+
+Viktig å adressere strukturelle ulikheter som hindrer visse grupper i å oppnå økonomisk uavhengighet og sosial mobilitet. 
+
+
+
+Dette kan innebære å implementere tiltak som sikrer rettferdig lønn, gode arbeidsforhold og tilgang til grunnleggende tjenester som utdanning og helsetjenester.
+
+
+
+Rettferdighet krever også at marginaliserte grupper får en stemme i beslutningsprosesser, slik at deres behov og interesser blir tatt hensyn til. 
+
+
+Investeringer i sosiale sikkerhetsnett kan også spille en kritisk rolle i å beskytte de mest sårbare i samfunnet. 
+
+Rettferdighet i bærekraftig utvikling handler derfor om å sikre at alle mennesker har like muligheter til å dra nytte av økonomisk fremgang, og at denne fremgangen skjer på en måte som er sosialt rettferdig og inkluderende.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-   **Levedyktig**
+
+
+- Krysningspunktet mellom Miljø og klima og Økonomisk utvikling. 
+
+- Balanserer miljøbevaring med økonomisk vekst, og sikrer at økonomiske aktiviteter ikke skader miljøet.
+
+Levedyktig utvikling befinner seg i krysningen mellom miljø og klima, og økonomisk utvikling. 
+
+Dette innebærer å balansere behovet for økonomisk vekst med nødvendigheten av å bevare miljøet. 
+
+Økonomiske aktiviteter må struktureres slik at de ikke skader miljøet, men i stedet bidrar til bærekraftig praksis. Dette kan oppnås gjennom investeringer i grønn teknologi, som fornybar energi, og fremme av en sirkulær økonomi hvor ressurser gjenbrukes og resirkuleres. 
+
+Videre må det utvikles bærekraftige forretningsmodeller som reduserer karbonavtrykket og forurensning, samtidig som de skaper økonomiske verdier. 
+
+En levedyktig tilnærming sikrer også at økonomisk utvikling skjer innenfor planetens bæreevne, slik at vi ikke utarmer naturressursene våre. 
+
+Dette krever en helhetlig tilnærming som inkluderer reguleringer og insentiver for å oppmuntre bedrifter til å ta miljøansvar. 
+
+
+Ved å sikre at økonomisk vekst er miljøvennlig, kan vi skape en mer levedyktig fremtid der både økonomien og miljøet trives.
+
+
+
+
+
+
+
+-   **Bærekraftig utvikling**
+
+
+- Det sentrale krysningspunktet av alle tre kategorier: Miljø og klima, Sosiale forhold og Økonomisk utvikling. 
+
+- Representerer en helhetlig tilnærming til bærekraft som integrerer miljømessige, sosiale og økonomiske dimensjoner for å fremme generell velferd og motstandskraft.
+
+Bærekraftig utvikling krever en helhetlig tilnærming som integrerer økonomiske, miljømessige og sosiale hensyn i alle beslutningsprosesser. Ved å jobbe sammen på tvers av sektorer og grenser kan vi bygge en bærekraftig fremtid for alle.
+
+
+
+Bærekraftig utvikling er krysningen av alle tre kategorier: miljø og klima, sosiale forhold og økonomisk utvikling. 
+
+Dette representerer en helhetlig tilnærming som integrerer alle dimensjoner for å fremme generell velferd og motstandskraft. 
+
+Bærekraftig utvikling innebærer å sikre at økonomisk vekst er miljømessig bærekraftig og sosialt rettferdig. Dette kan oppnås gjennom politikk og tiltak som fremmer grønn økonomi, sosial inkludering og rettferdig fordeling av ressurser. 
+
+Eksempler inkluderer utvikling av grønne jobber, investering i utdanning og helse, og implementering av klimaløsninger som reduserer utslipp samtidig som de skaper økonomiske muligheter. 
+
+En helhetlig tilnærming sikrer også at alle aspekter av utvikling vurderes i sammenheng, slik at vi kan oppnå langsiktige og helhetlige løsninger på globale utfordringer. 
+
+
+Bærekraftig utvikling er dermed en omfattende strategi for å sikre at vi møter dagens behov uten å kompromittere fremtidige generasjoners evne til å møte sine egne behov, og skaper en balansert fremtid der både mennesker og natur kan trives.
+
+
+
+
+
+
+
+
+
+
+
+Bærekraftsmålene er:
+
 
 
 
@@ -275,65 +427,6 @@ Styrke gjennomføringsmidlene og fornye globale partnerskap for bærekraftig utv
 
 
 
-
-
-
-
-
-
-
-
-### Totalt samlet 
-
-
-
-### Bærekraftig sosialt og miljømessig
-
-Bærekraftig sosialt og miljømessig utvikling representerer krysningen mellom miljø og klima, og sosiale forhold. Dette fokuserer på å beskytte miljøet samtidig som man forbedrer sosial velferd og rettferdighet. En viktig faktor er at fattige land er mer sårbare for klimaendringer og ofte rammes hardere av ekstremvær. For å takle dette, må vi utvikle politikk som integrerer miljøhensyn med sosiale tiltak. Dette kan innebære å sikre tilgang til rent vann og ren energi, samt å fremme klimatilpasningstiltak som er sosialt inkluderende. For eksempel, ved å investere i infrastruktur som både beskytter mot flom og gir samfunnsøkonomiske fordeler, kan vi adressere både sosiale og miljømessige utfordringer samtidig. Dette krever samarbeid på tvers av sektorer og internasjonale grenser, da miljøproblemer ofte er globale. Videre bør man fremme utdanning og bevisstgjøring om hvordan bærekraftige praksiser kan forbedre livskvaliteten. Samlet sett handler bærekraftig sosialt og miljømessig utvikling om å skape en verden der både mennesker og natur kan trives.
-
-**Bærekraftig sosialt og miljømessig** 
-- Krysningspunktet mellom Miljø og klima og Sosiale forhold. 
-- Kombinerer innsatsen for å beskytte miljøet med initiativer for å forbedre sosial velferd og rettferdighet. Fattige land er mer sårbare for klimaendringer og rammes ofte hardere av ekstremvær.
-
-
-
-
-
-
-
-### Rettferdighet
-
-Rettferdighet i bærekraftig utvikling finner sted i krysningen mellom sosiale forhold og økonomisk utvikling. Dette fokuset legger vekt på likhet og rettferdig fordeling av økonomiske fordeler og muligheter. For å oppnå rettferdighet må økonomisk vekst komme alle samfunnsgrupper til gode, ikke bare de privilegerte. Dette kan innebære å implementere tiltak som sikrer rettferdig lønn, gode arbeidsforhold og tilgang til grunnleggende tjenester som utdanning og helsetjenester. Rettferdighet krever også at marginaliserte grupper får en stemme i beslutningsprosesser, slik at deres behov og interesser blir tatt hensyn til. I tillegg er det viktig å adressere strukturelle ulikheter som hindrer visse grupper i å oppnå økonomisk uavhengighet og sosial mobilitet. Investeringer i sosiale sikkerhetsnett kan også spille en kritisk rolle i å beskytte de mest sårbare i samfunnet. Rettferdighet i bærekraftig utvikling handler derfor om å sikre at alle mennesker har like muligheter til å dra nytte av økonomisk fremgang, og at denne fremgangen skjer på en måte som er sosialt rettferdig og inkluderende.
-
-
-**Rettferdighet** - Krysningspunktet mellom Sosiale forhold og Økonomisk utvikling. - Fokuserer på rettferdighet, likhet og rettferdig fordeling av økonomiske fordeler og muligheter.
-
-
-
-
-
-
-
-
-
-### Levedyktig
-
-Levedyktig utvikling befinner seg i krysningen mellom miljø og klima, og økonomisk utvikling. Dette innebærer å balansere behovet for økonomisk vekst med nødvendigheten av å bevare miljøet. Økonomiske aktiviteter må struktureres slik at de ikke skader miljøet, men i stedet bidrar til bærekraftig praksis. Dette kan oppnås gjennom investeringer i grønn teknologi, som fornybar energi, og fremme av en sirkulær økonomi hvor ressurser gjenbrukes og resirkuleres. Videre må det utvikles bærekraftige forretningsmodeller som reduserer karbonavtrykket og forurensning, samtidig som de skaper økonomiske verdier. En levedyktig tilnærming sikrer også at økonomisk utvikling skjer innenfor planetens bæreevne, slik at vi ikke utarmer naturressursene våre. Dette krever en helhetlig tilnærming som inkluderer reguleringer og insentiver for å oppmuntre bedrifter til å ta miljøansvar. Ved å sikre at økonomisk vekst er miljøvennlig, kan vi skape en mer levedyktig fremtid der både økonomien og miljøet trives.
-
-
-**Levedyktig** - Krysningspunktet mellom Miljø og klima og Økonomisk utvikling. - Balanserer miljøbevaring med økonomisk vekst, og sikrer at økonomiske aktiviteter ikke skader miljøet.
-
-
-
-
-### Bærekraftig utvikling
-
-Bærekraftig utvikling er krysningen av alle tre kategorier: miljø og klima, sosiale forhold og økonomisk utvikling. Dette representerer en helhetlig tilnærming som integrerer alle dimensjoner for å fremme generell velferd og motstandskraft. Bærekraftig utvikling innebærer å sikre at økonomisk vekst er miljømessig bærekraftig og sosialt rettferdig. Dette kan oppnås gjennom politikk og tiltak som fremmer grønn økonomi, sosial inkludering og rettferdig fordeling av ressurser. Eksempler inkluderer utvikling av grønne jobber, investering i utdanning og helse, og implementering av klimaløsninger som reduserer utslipp samtidig som de skaper økonomiske muligheter. En helhetlig tilnærming sikrer også at alle aspekter av utvikling vurderes i sammenheng, slik at vi kan oppnå langsiktige og helhetlige løsninger på globale utfordringer. Bærekraftig utvikling er dermed en omfattende strategi for å sikre at vi møter dagens behov uten å kompromittere fremtidige generasjoners evne til å møte sine egne behov, og skaper en balansert fremtid der både mennesker og natur kan trives.
-
-
-
-
-**Bærekraftig utvikling** - Det sentrale krysningspunktet av alle tre kategorier: Miljø og klima, Sosiale forhold og Økonomisk utvikling. - Representerer en helhetlig tilnærming til bærekraft som integrerer miljømessige, sosiale og økonomiske dimensjoner for å fremme generell velferd og motstandskraft.
 
 
 
