@@ -721,7 +721,6 @@ Vi trenger altså koordinering på tvers av sektorer, regioner og nasjoner for �
 
 Private aktører kan mangle de nødvendige insentivene for å samarbeide om felles mål. Offentlige myndigheter kan tilrettelegge for koordinering gjennom politiske tiltak, reguleringer og økonomiske insentiver.
 
-
 :::
 
 ## Eksempel på inngrep med mål å fremme bærekraftig utvikling {data-timing="120"}
@@ -731,7 +730,7 @@ Private aktører kan mangle de nødvendige insentivene for å samarbeide om fell
 :::
 
 ::: {.fragment .fade-in fragment-index="3"}
--   CO2 avgift som gir økt pris kjøring
+-   CO2 avgift som gir økt pris på kjøring
 -   Bompenger reduserte bilkjøring på Tromsøya
 :::
 
