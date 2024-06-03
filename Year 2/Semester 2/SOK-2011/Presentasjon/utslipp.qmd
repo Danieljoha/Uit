@@ -1,0 +1,196 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+```{r}
+rm(list = ls())
+library(tidyverse)
+library(httr)
+library(rjstat)
+library(jsonlite)
+library(lubridate)
+
+url <- "https://data.ssb.no/api/v0/no/table/13931/"
+
+query <- '{
+  "query": [
+    {
+      "code": "UtslpTilLuft",
+      "selection": {
+        "filter": "vs:UtslpKildeA02",
+        "values": [
+          "0.0",
+          "5.1"
+        ]
+      }
+    },
+    {
+      "code": "UtslpEnergivare",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "VT0"
+        ]
+      }
+    },
+    {
+      "code": "UtslpKomp",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "A10"
+        ]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "UtslippCO2ekvival"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+df <- url %>%
+  POST(body = query, encode = "json")
+
+df <-  df %>%
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble() 
+
+
+```
+
+```{r}
+library(scales)
+library(lubridate)
+
+df <-  df %>%
+  select(1, 5, 6) %>% 
+  rename(kilde = `kilde (aktivitet)`) %>% 
+  mutate(kilde = fct_relevel(kilde, "Alle kilder", "Personbiler")) %>% 
+  rename(year = år) %>% 
+  mutate(year = as.integer(year))
+  
+# 
+# fig_7_5 <- df_SAM01601_total %>% 
+#   filter(Citizenship %in% c("Total", "Iceland"), Region == "Total") %>%
+#   filter(Year < as.integer(year(Sys.yearmon())),#oppdateres automatisk for nye år
+#          Unity == "Overnight stays") %>% 
+#   select(-Region, -Month, -har_na, -Unity) %>% 
+#   mutate(Citizenship = fct_relevel(Citizenship, "Total", "Iceland")) %>% 
+#   filter(Year >= 2008)
+  
+
+
+
+fig <- df %>% 
+  ggplot(aes(x=year, y=value, fill=kilde))+
+  geom_line(aes(color = kilde), linewidth=1.2)+
+  geom_ribbon(aes(ymin=0, ymax=value, fill=kilde), alpha=1)  +
+  scale_y_continuous(labels = format_format(big.mark = " ", scientific = FALSE), limits = c(0, 60000), expand=c(0,0), breaks = seq(0, 60000, 10000)) +
+  scale_x_continuous(limits = c(1990, 2023), breaks = seq(1990, 2023, 2), expand = c(0.025,0.025)) +
+  scale_fill_manual(values = c("#1b79ac", "#10405c"))+
+  scale_color_manual(values = c("#1b79ac", "#10405c"))+
+  labs(title = "Utslipp til luft (1 000 tonn CO2-ekvivalenter, AR5)", y="1 000 tonn CO2", x="", caption="Source: SSB. Tabell:13931", color="", fill="")+
+  theme_bw()+
+  theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(), panel.border=element_rect(linetype="solid",fill=NA, color="grey", alpha(0.2)),
+        plot.title = element_text(size=25, vjust=7,face = "bold", hjust=0.3, margin = margin(t=35)),
+        plot.title.position = "plot",
+        axis.text.y = element_text(size=15),
+        axis.text.x = element_text(size=15),
+        legend.position = "bottom", 
+        legend.margin = margin(t=-16, l=-1,r=1, b=-1),
+        legend.key = element_rect(fill = "white", colour = "white"),  
+        legend.key.height = unit(1.5, "lines"),
+        legend.key.width = unit(1.5, "lines"),
+        legend.box.margin = margin(2, 2, 2, 2),
+        legend.text = element_text(size=10),
+        plot.caption = element_text(size=12, hjust=1, vjust=10))
+ggsave("utslipp.png", width = 10, height = 6, units = "in", dpi = 300)
+```
+
+```{r}
+library(tidyverse) #We load in packages
+library(lubridate)
+library(zoo)
+
+
+lower <- read_table("http://vortex.nsstc.uah.edu/data/msu/v6.0/tlt/uahncdc_lt_6.0.txt") #We collect our data and save it into datasets
+mid <- read_table("http://vortex.nsstc.uah.edu/data/msu/v6.0/tmt/uahncdc_mt_6.0.txt")
+tropopause <- read_table("http://vortex.nsstc.uah.edu/data/msu/v6.0/ttp/uahncdc_tp_6.0.txt")
+stratosphere <- read_table("http://vortex.nsstc.uah.edu/data/msu/v6.0/tls/uahncdc_ls_6.0.txt")
+
+
+lower <- lower[1:which(lower$Year %in% "Year")-1, ]
+mid <- mid[1:which(mid$Year %in% "Year")-1, ]
+tropopause <- tropopause[1:which(tropopause$Year %in% "Year")-1, ]
+stratosphere <- stratosphere[1:which(stratosphere$Year %in% "Year")-1, ] #We remove all rows below the second "Year" in the table.
+
+
+lower <- lower %>% 
+  mutate(Date = ym(paste(Year, Mo))) %>% #Creating a Date variable
+  select(Date , Year, Mo, Globe) %>%  #selecting and arranging the data we want
+  rename(lower_globe = Globe) #At the end we rename our variables
+  
+mid <- mid %>% 
+  mutate(Date = ym(paste(Year, Mo))) %>% 
+  select(Date ,Year, Mo, Globe) %>% 
+  rename(mid_globe = Globe)
+
+stratosphere <- stratosphere %>% 
+  mutate(Date = ym(paste(Year, Mo))) %>% 
+  select(Date, Year, Mo, Globe) %>% 
+  rename(stratosphere_globe = Globe)
+
+tropopause <- tropopause %>% 
+  mutate(Date = ym(paste(Year, Mo))) %>% 
+  select(Date, Year, Mo, Globe) %>% 
+  rename(tropopause_globe = Globe)
+
+
+df <- lower %>% 
+  cbind(mid_globe = mid$mid_globe) %>% #Cbind is binding the columns from the other dataset into this dataset we work with
+  cbind(stratosphere_globe = stratosphere$stratosphere_globe) %>% 
+  cbind(tropopause_globe = tropopause$tropopause_globe) %>% 
+  mutate_if(is.character, ~as.numeric(.)) #finally we convert characters to numeric
+
+rolling <- df %>% 
+  mutate(rolling_lower = rollmean(lower_globe, 12,  fill=NA, align="right")) %>% #I creating a new variable for the rolling average. 
+  mutate(rolling_mid = rollmean(mid_globe, 12, fill=NA, align="right")) %>% 
+  mutate(rolling_strato = rollmean(stratosphere_globe, 12, fill=NA, align="right")) %>% 
+  mutate(rolling_tropo = rollmean(tropopause_globe, 12, fill=NA, align="right")) 
+
+
+rolling <- rolling %>% 
+  mutate(average = (rolling_lower + rolling_mid + rolling_strato + rolling_tropo)/4) #Here i create a new variable for the average by combining all 4 datasets and dividing by 4
+
+
+fig <- rolling %>% 
+  filter(Year >= 1980) %>% #filtering for years from and including 1980
+  ggplot(aes(x=Date))+ #we set our x axis to date
+  geom_line(aes(y=rolling_lower, color="Troposfæren"), linewidth = 1.2)+ 
+  labs(title="Temperatur avvik fra 1991-2020 gjennomsnitt temperatur.",#Setting title
+  color="", #Changing legend name to location
+  y="Temperatur avvik i C", #Setting Y axis name
+  x= "",  #Setting X axis name
+  subtitle="12mnd rullende gjennomsnitt", #Setting subtitle
+  caption="Source: www.drroyspencer.com/latest-global-temperatures/")+ #Setting caption
+  theme_bw() + #we set the theme to black and white instead of default 
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 1),
+        legend.position = "bottom"
+        )#Setting caption location
+
+ggsave("temperatur.png", width = 10, height = 6, units = "in", dpi = 300)
+
+```

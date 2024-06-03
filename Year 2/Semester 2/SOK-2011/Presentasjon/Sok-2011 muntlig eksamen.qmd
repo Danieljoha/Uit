@@ -1,5 +1,5 @@
 ---
-title: "SOK-2011 muntlig eksamen presentasjon"
+title: "SOK-2011 muntlig eksamen"
 subtitle: "Handelshøgskolen"
 date: last-modified
 date-format: "DD-MM-YYYY"
@@ -7,37 +7,21 @@ echo: false
 warning: false
 format: 
   revealjs:
+    self-contained: true
     auto-stretch: false
-    theme: black
-    parallaxBackgroundImage: 'Figurer/dog.png'
-    parallax-background-size: "1920px 1080px"
-    parallax-background-horizontal: 0
-    parallax-background-vertical: 0
+    theme: moon
+    view-distance: 10
+    slide-number: c/t
+    defaultTiming: 10
+    width: 1280
+    height: 720
 ---
 
-# Intro
-
-Tema for presentasjonen er Bærekraftig utvikling
-
-::: notes
-notater her
-:::
-
-## mål med presentasjonen
-
-definerer formålet med presentasjonen. Presentasjonen her er da for å vise kunnskap men ikke for å overbevise noen om noe.
-
-::: notes
-notater her
-:::
-
-# Hoveddel.
-
-Jeg blir å gå igjennom
+## Struktur {data-timing="30"}
 
 ::: columns
 ::: {.column width="50%"}
-::: incremental
+::: {.fragment .fade-in autoslide="2000" fragment-index="1"}
 -   Hva er bærekraftig utvikling og hvorfor skal vi bry oss om bærekraft?
 
 -   Hvordan kan vi oppnå det
@@ -47,10 +31,10 @@ Jeg blir å gå igjennom
 :::
 
 ::: {.column width="50%"}
-::: incremental
+::: {.fragment .fade-in fragment-index="2" autoslide="0"}
 -   Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling?
 
--   Eksempel på inngrep som reduserer problem
+-   Eksempel på inngrep med mål å fremme bærekraftig utvikling
 
 -   Utfordringer for politikk for økt bærekraft
 :::
@@ -58,79 +42,345 @@ Jeg blir å gå igjennom
 :::
 
 ::: notes
-notater her
+Starter med strukturen av presentasjonen.
+
+Raskt igjennom hva Bærekraftig utvikling er. og fortsetter med litt om hvordan det kan oppnås
+
+Avslutter første delen av presentasjonen med å snakke om effekter av klimaendringer
+
+Videre går jeg over til hvorfor det offentlige må involveres for å få til bærekraftig utvikling. og eksempel på inngrep med mål å fremme bærekraftig utvikling. Spesielt bilkjøring og CO2 utslipp.
+
+veldig upopulært med bompenger.
 :::
 
-## Hva er bærekraftig utvikling og hvorfor skal vi bry oss om bærekraft?
+## Hva er bærekraftig utvikling og hvorfor skal vi bry oss om bærekraft? {data-timing="40"  transition="fade" transition-speed="fast"}
 
--   Definisjon
+::: {.fragment fragment-index="1" autoslide="3000"}
+Bærekraftig utvikling er en utvikling som imøtekommer dagens behov [uten å ødelegge mulighetene for at kommende generasjoner skal kunne dekke sine behov.]{.fragment .fade-in fragment-index="2" style="color: red;" autoslide="3000"}
+:::
 
--   hvorfor skal vi bry oss om bærekraft
+::: {.fragment fragment-index="3"}
+-   Hva vil det si?
+:::
+
+![](Bærekraftig_utvikling_tom.png){.absolute .fragment width="750" top="100" left="20" fragment-index="4"}
+
+## Hvordan kan vi oppnå det {data-timing="180"}
+
+
+::: {.fragment .semi-fade-out fragment-index="2"}
+::: {.fragment .fade-out fragment-index="4"}
+![](Bærekraftig_utvikling1.png){width="750" .absolute top="100" left="5"}
+:::
+:::
+
+
+::: {.fragment .fade-in .absolute fragment-index="1" top="50" right="10"}
+::: {.fragment .fade-out fragment-index="2"}
+-   [Energiproduksjon]{style="color: #4CAF50;"}
+-   [Økosystemer]{style="color: #4CAF50;"}
+-   [Fiskeri og Jordbruk.]{style="color: #4CAF50;"}
+-   [Avfall og forurensning.]{style="color: #4CAF50;"}
+:::
+:::
+
+::: {.fragment fragment-index="2"}
+::: {.fragment .semi-fade-out fragment-index="3"}
+::: {.fragment .fade-out fragment-index="4"}
+![](Bærekraftig_utvikling2.png){width="750" .absolute top="100" left="5"}
+:::
+:::
+:::
+
+::: {.fragment .fade-in .absolute fragment-index="2" top="50" right="10"}
+::: {.fragment .fade-out fragment-index="3"}
+-   [Fattigdom, utdanning og likestilling.]{style="color: #fdd554;"}
+-   [Arbeidsforhold og lønn.]{style="color: #fdd554;"}
+-   [Sosial rettferdighet og inkludering.]{style="color: #fdd554;"}
+:::
+:::
+
+::: {.fragment fragment-index="3"}
+::: {.fragment .semi-fade-out fragment-index="4"}
+::: {.fragment .fade-out fragment-index="4"}
+![](Bærekraftig_utvikling3.png){width="750" .absolute top="100" left="5"}
+:::
+:::
+:::
+
+::: {.fragment .fade-in .absolute fragment-index="3" top="50" right="20"}
+::: {.fragment .fade-out fragment-index="4"}
+-   [Utvikling av bærekraftige næringer.]{style="color: #136ba7;"}
+-   [Investeringer i forskning og teknologi.]{style="color: #136ba7;"}
+-   [Rettferdig økonomisk vekst.]{style="color: #136ba7;"}
+:::
+:::
+
+::: {.fragment fragment-index="5"}
+![](Bærekraftig_utvikling.png){width="750" .absolute top="100" left="5"}
+:::
+
+::: {.fragment .fade-in .absolute fragment-index="4" top="50" right="20"}
+::: {.fragment .fade-out fragment-index="5"}
+### Internasjonalt samarbeid:
+
+:::
+:::
+
+::: {.fragment .fade-in fragment-index="4"}
+::: {.fragment .fade-out fragment-index="5"}
+![](IaUNgQBn.svg){.absolute top="150" left="1" style="background-color:#C1CBCE;"}
+:::
+:::
+
 
 ::: notes
-Bærekraftig utvikling er en utvikling som imøtekommer dagens behov uten å ødelegge mulighetene for at kommende generasjoner skal kunne dekke sine behov.
+
 :::
 
-## Hvordan kan vi oppnå det
+## Predikerte effekter av klimaendringer {data-timing="20"}
+
+::: {.fragment fragment-index="1"}
+::: {.fragment .fade-out fragment-index="2"}
+### [2044]{.absolute top="5" right="250"}
+:::
+:::
+
+::: {.fragment fragment-index="2"}
+### [2045]{.absolute top="5" right="250"}
+:::
+
+::: {.fragment .fade-in fragment-index="1"}
+![](doomed.png){.absolute width="650" top="55" left="20"}
+:::
+
+::: {.fragment .fade-in fragment-index="1"}
+::: {.fragment .fade-out fragment-index="2"}
+![](jorden.png){.absolute width="650" top="55" right="20"}
+:::
+:::
+
+::: {.fragment .fade-in fragment-index="2"}
+![](jordenetter.png){.absolute width="650" top="55" right="20"}
+:::
 
 ::: notes
-notater her
+Som vi ser, om 20 år i 2044 så vil jorden være doomed. som vi ser i 2045
 :::
 
-## Predikerte effekter av klimaendringer
 
--   Hva er de predikerte effektene
+
+## Predikerte effekter av klimaendringer {data-timing="80"}
+
+::: columns
+::: {.column width="50%"}
+-   Global oppvarming
+
+::: {.fragment .fade-in fragment-index="4"}
+-   Ekstremvær
+:::
+
+::: {.fragment .fade-in fragment-index="5"}
+-   Tap av biologisk mangfold
+:::
+
+::: {.fragment .fade-in fragment-index="5"}
+-   Sosiale konsekvenser
+:::
+:::
+
+::: {.column width="50%"}
+-   Havnivåstigning og Golfstrømmen
+
+::: {.fragment .fade-in fragment-index="4"}
+-   Helsekonsekvenser
+:::
+
+::: {.fragment .fade-in fragment-index="5"}
+-   Tap av Mat og vannressurser
+:::
+
+::: {.fragment .fade-in fragment-index="5"}
+-   CO2 fangst og lagring
+:::
+:::
+:::
+
+
+
+::: {.fragment fragment-index="6"}
+![](notgreat_notterrible.png){width="750" .absolute bottom="5" left="5"}
+:::
+
+::: {.fragment fragment-index="7"}
+![](cumulative-co2-fuel.png){width="750" .absolute bottom="5" right="5"}
+:::
+
+
+
+
+
+
+::: {.fragment .fade-in fragment-index="1"}
+::: {.fragment .fade-out fragment-index="2"}
+![](temperatur.png){.absolute width="550" top="150" left="20"}
+:::
+:::
+
+
+::: {.fragment .fade-in fragment-index="2"}
+::: {.fragment .fade-out fragment-index="4"}
+![](temperatur_tid.png){.absolute width="550" top="150" left="20"}
+:::
+:::
+
+::: {.fragment .fade-in fragment-index="3"}
+::: {.fragment .fade-out fragment-index="4"}
+![](dimming.png){.absolute width="750" top="100" right="70"}
+:::
+:::
+
+
+::: {.fragment .fade-in fragment-index="1"}
+::: {.fragment .fade-out fragment-index="2"}
+![](havnivå_nasa.png){.absolute width="550" top="150" right="40"}
+:::
+:::
+
+::: {.fragment .fade-in fragment-index="4"}
+::: {.fragment .fade-out fragment-index="5"}
+![](nrkhans.png){.absolute width="550" top="250" left="20"}
+:::
+:::
+
+::: {.fragment .fade-in fragment-index="4"}
+::: {.fragment .fade-out fragment-index="5"}
+![](nrkvarmespania.png){.absolute width="550" top="250" right="20"}
+:::
+:::
 
 ::: notes
-notater her
+MANGLERNOTATER
 :::
 
-## Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling?
+
+## Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling? {data-timing="120"}
+
 
 -   Hvorfor klarer ikke det private markedet å oppnå det
 
--   Hva er de viktigste utfordringene
+-   Eksternaliteter
 
-::: notes
-notater her
+-   [Markedssvikt]{.fragment .fade-in fragment-index="3"}
+
+-   [Koordineringsproblemer]{.fragment .fade-in fragment-index="5"}
+
+
+::: {.fragment fragment-index="1"}
+::: {.fragment .fade-out fragment-index="5"}
+![](dødvektstap1.png){.absolute top="30" right="50"}
+:::
 :::
 
-## Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling?
-
-### Hvorfor klarer ikke det private markedet å oppnå det
-
-::: notes
-notater her
+::: {.fragment fragment-index="2"}
+::: {.fragment .fade-out fragment-index="3"}
+![](dødvektstap2.png){.absolute top="30" right="50"}
+:::
 :::
 
-## Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling?
-
-### Hva er de viktigste utfordringene
-
-::: notes
-notater her
+::: {.fragment fragment-index="3"}
+::: {.fragment .fade-out fragment-index="4"}
+![](dødvektstap3.png){.absolute top="30" right="50"}
+:::
 :::
 
-## Eksempel på inngrep som reduserer problem
-
-::: notes
-notater her
+::: {.fragment fragment-index="4"}
+::: {.fragment .fade-out fragment-index="5"}
+![](dødvektstap4.png){.absolute top="30" right="50"}
+:::
 :::
 
-## Utfordringer for politikk for økt bærekraft
+
+
+
 
 ::: notes
-notater her
+MANGLERNOTATER
 :::
 
-# Avslutning
+## Eksempel på inngrep med mål å fremme bærekraftig utvikling {data-timing="120"}
 
--   Oppsummering
+::: {.fragment .fade-in fragment-index="1"}
+-   Gjør det billigere og bedre å kjøpe elbil.
+:::
 
--   Konklusjon
+::: {.fragment .fade-in fragment-index="3"}
+-   CO2 avgift som gir økt pris kjøring
+-   Bompenger reduserte bilkjøring på Tromsøya
+:::
 
--   Spørsmål. sett opp alle "slides" på siden her så det kan trykkes tilbake lett
+::: {.fragment fragment-index="2"}
+::: {.fragment .fade-out fragment-index="3"}
+![](utslipp.png){.absolute top="2" left="100"}
+:::
+:::
+
+::: {.fragment fragment-index="4"}
+![](lm_bil_daglig_bompenger.png){.absolute top="2" left="100"}
+:::
+
+::: {.fragment fragment-index="5"}
+![](lm_bil_daglig_bompenger_utenom.png){.absolute top="2" left="100"}
+:::
 
 ::: notes
-notater her
+Billigere med Elbil og bedre kollektivtilbud
+
+Dyrere å kjøre fører til mindre kjøring
+:::
+
+## Utfordringer for politikk for økt bærekraft {data-timing="90"}
+
+-   Eksternaliteter 
+
+-   Upopulært
+
+-   Internasjonalt samarbeid
+
+
+::: {.fragment fragment-index="1"}
+::: {.fragment .fade-out fragment-index="2"}
+### [innen generasjoner]{.absolute top="80" right="450"}
+![](camping.png){.absolute bottom="5" right="50"}
+:::
+:::
+
+::: {.fragment fragment-index="3"}
+::: {.fragment .fade-out fragment-index="4"}
+![](Bærekraftig_utvikling.png){width="750" .absolute bottom="5" right="5"}
+:::
+:::
+
+
+::: notes
+MANGLERNOTATER
+:::
+
+## Oppsummert {data-timing="10"}
+
+-   Klimaendringene er en av de største utfordringene vi står ovenfor
+
+
+-   Spørsmål
+
+
+-   Slide 3: Hva er bærekraftig utvikling og hvorfor skal vi bry oss om bærekraft?
+-   Slide 4: Hvordan kan vi oppnå det?
+-   Slide 5/6: Predikerte effekter av klimaendringer
+-   Slide 7: Hvorfor kan det være nødvendig med offentlige inngrep for å få til bærekraftig utvikling? 
+-   Slide 8: Eksempel på inngrep med mål å fremme bærekraftig utvikling
+-   Slide 9: Utfordringer for politikk for økt bærekraft
+
+::: notes
+husk å trykk O for å vise alle slides
 :::
