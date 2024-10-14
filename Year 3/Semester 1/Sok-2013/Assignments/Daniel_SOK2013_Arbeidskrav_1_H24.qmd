@@ -1,0 +1,536 @@
+---
+format: 
+  pdf:
+    include-before-body:
+      - dokumentobjekter/texstuff/forsidesok2013.tex  
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+    toc-title: "Innholdsfortegnelse"
+    toccolor: black
+echo: false
+bibliography: dokumentobjekter/texstuff/references-sok2013.bib
+csl: dokumentobjekter/texstuff/norsk-apa-manual.csl
+crossref: 
+  lof-title: "Figurliste"
+  fig-title: "Figur"
+  lot-title: "Tabelliste"
+  tbl-title: "Tabell"
+header-includes:
+  - \usepackage{wrapfig}
+  - \usepackage{subcaption}
+  - \usepackage{amsmath}
+  - \usepackage{cancel}
+  - \usepackage{hyperref}
+  - \usepackage{tikz}
+  - \usetikzlibrary{shapes.geometric, arrows, arrows.meta, positioning, calc}
+  - \usepackage{tabularx}
+  - \renewcommand{\maketitle}{}
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancyhf{} 
+  - \fancyhead[L]{\rightmark}
+  - \fancyhead[R]{\thepage}
+  - \fancyfoot[C]{\thepage}
+  - \usepackage{colortbl}
+  - \definecolor{cornflowerblue}{RGB}{100,149,237}
+  - \definecolor{darkblue}{RGB}{115,150,255}
+  - \definecolor{lighterblue}{RGB}{131, 191, 212} 
+  - \definecolor{lightblue}{RGB}{178,211,220}
+keep-tex: false
+nocite: |
+  @*
+---
+
+```{=tex}
+
+\thispagestyle{plain}
+\begin{center}
+    \Large
+    \textbf{Forord}
+\end{center}
+
+
+Tekst i \textit{italics} er tekst som er hentet fra boken "The Spatial Economy: Cities, Regions, and International Trade" av Masahisa Fujita, Paul Krugman og Anthony J. Venables.
+
+
+
+
+Det er brukt kode lagd av Stipendiat Chris Andersen til å simulere modellen.
+
+\
+\
+\
+\
+\
+
+Jeg har også delt kode med andre studenter. 
+\begin{verbatim}
+intersect <- which(benchmark_ratios > 0.9999 & benchmark_ratios < 1.0001)
+
+print(lambda_values[intersect[1]])
+#finding max when ratio is 1
+print(max(lambda_values[intersect]))
+\end{verbatim}
+
+\newpage
+\hypersetup{linkcolor=black}
+\renewcommand{\contentsname}{Innholdsfortegnelse}
+\renewcommand*{\figureautorefname}{Figur}
+\renewcommand*{\tableautorefname}{Tabell}
+\tableofcontents
+\hypersetup{linkcolor=blue}
+\newpage
+```
+
+
+
+
+# Publisert i Canvas 25.09.2024 kl 12:30 / Innlevering i Canvas innen 1.10.2024 kl 12:00
+
+Oppgave 2 og 3 innebærer bruk av simulering. Kode for simulering ved bruk av R er lagt ved på
+bunnen av oppgavesettet.
+
+## Oppgave 1: Modellen inneholder en rekke med parametere. Definer disse parameterne under:
+
+- Lambda $\lambda$ 
+- Epsilon $\epsilon$
+- Rho $\rho$
+- Delta $\delta$
+- Phi $\phi$
+- Gamma $\gamma$
+- Beta $\beta$
+- T
+
+
+
+### Lambda $\lambda$ 
+
+
+\textit{We let $\lambda$ be the share of manufacturing in one of the regions, with $1 - \lambda$ the share in the other; we suppose that the rate of change of $\lambda$ depends on its level; and we assume that there is no inherent difference between the regions, so that the curve showing $\frac{\partial \lambda}{\partial t}$ is symmetric around $\lambda$ = $\frac{1}{2}$ and passes through $0$ at $\lambda = \frac{1}{2}$} s.34 
+
+
+
+$\lambda$ representerer andelen av industriarbeidere som befinner seg i region r. Siden industriarbeidere kan flytte seg så kan denne andelen variere over tid.
+
+
+
+### Epsilon $\epsilon$
+
+Pris elasisiteten til etterspørsel
+
+### Rho $\rho$
+
+
+\textit{The parameter $\rho$ represents the intensity of the preference for variety in manufactured goods. When $\rho$ is close to 1, differentiated goods are nearly perfect substitutes for each other; as $\rho$ decreases toward 0, the desire to consume a greater variety of manufactured goods increases. If we set $\sigma = \frac{1}{(1 - p)}$, then $\sigma$ represents the elasticity of substitution between any two varieties. Given income $\gamma$ and a set of prices $p^A$ for the agricultural good and $p_i$ for each manufactured good, the consumer’s problem is to maximize utility (4.1) subject to the budget constraint}. s.46 under ligning 4.2
+
+$\rho$ er preferanse for variasjon av industrivarer gitt at M er definert med konsistant elasisitet av substisjon. (side 46 ligning 4.2) 
+
+Det vil si at når $\rho$ nærmer seg 1 så vil forskjellige varer være nesten perfekte substitutter for hverandre, så forbrukere "bryr" seg ikke om å ha mange forskjellige varer. 
+
+Når $\rho$ går mot 0 vil preferansen for å konsumere en større variasjon av varer øke. De vil kanskje ikke bytte pizza og brus med vann og brød, men bare det å ha valget gir de nytte.
+
+
+
+
+
+
+### Delta $\delta$
+
+En type overbelastningskostnad på transport som er definert $0<\delta<1$. Når populasjonen i en region da øker så vil real lønnen i region synke gitt alt annet likt. s335
+
+Når populasjonen er veldig lav så vil mye av jordbruk skje nært byen, og når populasjonen øker så vil mer å mer jordbruk skje lengere og lengere unna byen og det jordbruksområdet blir jo mindre verdt når det er i gokk. 
+
+
+
+
+### Phi $\phi$
+
+
+\textit{$\phi$ Let there be R regions. The world has $L^A$ farmers, and each region is endowed with an exogenous share of this world agricultural labor force denoted $\phi_r$. The manufacturing labor force, by contrast, is mobile over time; at any point in time we denote the share of region r in the world worker supply $L^M$ by $\lambda_r$. It is convenient to choose units so that $L^M = p$, $L^A = 1 - \mu$.
+Transport costs among regions take a very special form. Manufactured goods are subject to iceberg transport costs of the form introduced in chapter 4; if one unit of a good is shipped from r to s, only $\frac{1}{T_{rs}}$ units arrive.} Under antagelser på s.61 og s.62
+
+
+
+$\phi$ er altså jordbruksarbeidere som er fast bundet til regionene sine. Hver region har da en fast andel av jordbruksarbeidere og det er arbeid som ikke kan flyttes mellom regioner.
+
+
+
+$\mu$  er andel av forbruk som går til industri varer sammenlignet med $(1-\mu)$ som går til jordbruksvarer
+
+### T
+
+T er en transport som er isbergsformet. Kostnaden er da en ressurslekasje der varen du sender blir mindre og mindre verdt jo lengere det er transportert. Så når når du sender en vare fra region r så kommer $\frac{1}{T_{rs}}$ enheter frem til region s. s.49 over ligning 4.14
+
+
+### Gamma $\gamma$
+
+Gamma representerer inntekten for en region. s63, ligning 5.3. 
+Inntekten avhenger av hvor stor andel av flyttbar arbeidskraft som er i regionen da jordbruksarbeidere har samme lønn uansett hvor de er.
+
+
+
+### Beta $\beta$
+
+
+$\beta$ er andel av arbeidskraft. Som for eksempel andel av arbeidskraft i en industri sin påvirkning på pris. 
+
+
+
+
+\clearpage
+
+
+
+
+## Oppgave 2: Ved hjelp av koden på bunnen av oppgaven, simuler modellen ved bruk av benchmark-verdiene:
+
+Benchmark-verdier: 
+$\delta = 0.4$          $\epsilon = 5$         $T = 1.7$           $\phi_1 = \phi_2 = 0.5$    $\beta = 0.8$       $\rho = 1 - \frac{1}{\epsilon}$              $\gamma = 0.4$            $L = 1$              $\alpha = \frac{\gamma \cdot L}{\epsilon}$
+
+
+
+### a) Print raten $\frac{w1}{w2}$ for alle lambda (0,1). Forklar kort hva disse verdiene forteller oss, og lag en graf som viser dette forholdet.
+
+
+
+```{r}
+
+
+delta = 0.4
+epsilon = 5
+T = 1.7
+phi1 = phi2 = 0.5
+beta = 0.8
+rho = 1 - (1 / epsilon)
+gamma = 0.4
+L = 1
+alpha = gamma * (L / epsilon)
+LIMIT <- 1e-6
+
+
+
+# Kode for modell simulering
+#Funksjon for å kalkulere w1/w2 raten
+calculate_w_ratio <- function(lambda) {
+lmbda1 <- lambda
+lmbda2 <- 1 - lmbda1
+calc_Y <- function(lmbda, W) {
+return(lmbda * gamma * L * W + phi1 * (1 - gamma) * L)
+}
+calc_I <- function(lmbdar, Wr, lmbdan, Wn) {
+const <- (beta / rho) * ((gamma * L) / (alpha * epsilon))^(1 / (1 - epsilon))
+return(const * (lmbdar * Wr^(1 - epsilon) + lmbdan * T^(1 - epsilon) * Wn^(1 - epsilon))^(1 / (1 -
+epsilon)))
+}
+calc_W <- function(Yr, Ir, Yn, In) {
+const <- (rho * beta^(-rho)) * (delta / ((epsilon - 1) * alpha))^(1 / epsilon)
+return(const * (Yr * Ir^(epsilon - 1) + Yn * T^(1 - epsilon) * In^(epsilon - 1))^(1 / epsilon))
+}
+W1 <- 1
+W2 <- 1
+iterations <- 0
+
+
+while (TRUE) {
+Y1 <- calc_Y(lmbda1, W1)
+Y2 <- calc_Y(lmbda2, W2)
+I1 <- calc_I(lmbda1, W1, lmbda2, W2)
+I2 <- calc_I(lmbda2, W2, lmbda1, W1)
+new_W1 <- calc_W(Y1, I1, Y2, I2)
+new_W2 <- calc_W(Y2, I2, Y1, I1)
+w1 <- new_W1 * I1^(-delta)
+w2 <- new_W2 * I2^(-delta)
+criterion1 <- abs((new_W1 - W1) / W1)
+criterion2 <- abs((new_W2 - W2) / W2)
+if (criterion1 < LIMIT && criterion2 < LIMIT) {
+break
+}
+W1 <- new_W1
+W2 <- new_W2
+iterations <- iterations + 1
+}
+return(w1 / w2)
+}
+
+
+
+#Funksjon for å simulere modellen
+simulate_model <- function(lambda_values) {
+w_ratios <- numeric(length(lambda_values))
+for (i in seq_along(lambda_values)) {
+lambda <- lambda_values[i]
+w_ratios[i] <- calculate_w_ratio(lambda)
+}
+
+return(w_ratios)
+}
+#Simulering for benchmark verdier
+lambda_values <- seq(0, 1, by = 0.1)
+benchmark_ratios <- simulate_model(lambda_values)
+
+```
+```{r}
+
+print(benchmark_ratios)
+```
+
+
+
+$\frac{w_1}{w_2}$ viser forholdet mellom lønnen i region 1 og region 2.
+
+
+Kan nokk ikke printe alle lambda verdiene, men printer $\lambda$ for verdiene 0, 0.1, 0.2, ..., 1. Det vi ser er at når $\lambda$ er 0 så er $\frac{w_1}{w_2}$ = 0.98 som vil si at lønnen i region 1 98% av lønnen i region 2, og når $\lambda$ er 1 så er $\frac{w_1}{w_2}$ = 1.02 som vil si at lønnen i region 1 er 102% av lønnen i region 2.
+
+```{r warning=FALSE, message=FALSE}
+
+library(tidyverse)
+
+lambda_values <- seq(0, 1, by = 0.001)
+benchmark_ratios <- simulate_model(lambda_values)
+
+
+ggplot(data = data.frame(lambda = lambda_values, ratio = benchmark_ratios), aes(x = lambda, y = ratio)) +
+geom_line(color = "blue") +
+labs(x = "Lambda", y = "w1/w2 ratio", title = "w1/w2 ratio for all lambda values")+
+  theme_bw()+
+  scale_x_continuous(breaks = seq(0, 1, by = 0.1), expand=c(0,0))+
+  #geom_vline(xintercept = 0.5, linetype = "dashed", color = "red")+#hline untill lambda 1
+  
+  geom_segment(aes(x = 0, y = 1, xend = 0.5, yend = 1), linetype = "dashed", color = "red")+
+  geom_segment(aes(x = 0.5, y = min(benchmark_ratios)-0.005, xend = 0.5, yend = 1), linetype = "dashed", color = "red")+
+  scale_y_continuous(breaks=seq(0,1.02, by=0.005))
+
+#for what values of lambda is w1/w2 =1
+intersect <- which(benchmark_ratios > 0.9999 & benchmark_ratios < 1.0001)
+#intersect <- which(benchmark_ratios ==1)
+
+#which ratios are 1
+print(lambda_values[intersect])
+```
+
+Som vi kan se vil vi få en svak likevekt mellom regionene når $\lambda$ er 0.164 og 0.836, med en sterk likevekt når lambda er 0.5. 
+
+
+
+### b) Forklar hvorfor $\frac{w1}{w2} = 1$ når $\lambda = 0.5$
+
+Når $\lambda$ er 0.5 så blir lønnen i region 1 og region 2 like fordi det er ingen forskjell på regionene. Siden det er ingen forskjell på regionene så vil det ikke være noen grunn til at lønnen skal være forskjellig.
+
+\newpage
+
+
+
+# Oppgave 3: I deloppgavene må du variere parameterne. Hver underoppgave løses i et vakuum, så for eksempel etter oppgave a) er fullført så settes T tilbake til 1.7 før neste oppgave løses. Vis gjerne grafisk.
+
+### a) T endres fra 1.7 til 1.2, hvordan endrer w1/w2 raten seg? For hvilke verdier av $\lambda$ vil bedriftene agglomerere i region 1?
+
+```{r}
+
+delta = 0.4
+epsilon = 5
+T = 1.2
+phi1 = phi2 = 0.5
+beta = 0.8
+rho = 1 - (1 / epsilon)
+gamma = 0.4
+L = 1
+alpha = gamma * (L / epsilon)
+LIMIT <- 1e-6
+
+
+#Simulering for benchmark verdier
+lambda_values <- seq(0, 1, by = 0.1)
+benchmark_ratios <- simulate_model(lambda_values)
+
+
+print(benchmark_ratios)
+```
+w1/w2 ratioen endrer seg når T endres fra 1.7 til 1.2 så senker transportkostnadene og det vi ser er at lønnsforskjellen går fra (0.97, 1.03) til (0.92, 1.09) men nær lineær endring av lamda som tilsir at det ikke er noe sterk likevekt når $0< \lambda <1$, men at du fremdeles har en svak likevekt når $\lambda$ er 0.5.
+
+
+
+
+```{r}
+ggplot(data = data.frame(lambda = lambda_values, ratio = benchmark_ratios), aes(x = lambda, y = ratio)) +
+  geom_line(color = "blue") +
+  theme_bw()+
+  labs(x = "Lambda", y = "w1/w2 ratio", title = "Oppgave 3a")
+
+
+```
+
+
+Som vi ser vil produksjonen flytte til region 1 for alle lambda verdier under 0.5 og til region 2 for alle lambda verdier over 0.5.
+Så når transportkostaden økte så vil $\lambda$ ha en stor innvirkning på lønnen i regionene. 
+
+
+
+\newpage
+
+### b) Andel bønder i region 2 øker fra 0.5 til 0.7? Hva skjer med w1/w2 raten?
+
+
+```{r}
+
+delta = 0.4
+epsilon = 5
+T = 1.7
+phi1 = 0.3
+phi2 = 0.7
+beta = 0.8
+rho = 1 - (1 / epsilon)
+gamma = 0.4
+L = 1
+alpha = gamma * (L / epsilon)
+LIMIT <- 1e-6
+
+
+#Simulering for benchmark verdier
+lambda_values <- seq(0, 1, by = 0.1)
+benchmark_ratios <- simulate_model(lambda_values)
+
+
+print(benchmark_ratios)
+```
+Forskjellen mellom lønnene var tilnærmet likt mellom phi 0.5 og 0.7. Så det er ingen stor endring i lønnsforskjellen mellom regionene. På 6 desimal punkt var det endring så man kan si at fast arbeidskraft ikke har stor innvirkning på lønnen, men at det heller påvirkes av andre faktorer som flyttbar arbeidskraft.
+
+Verdien for lambda 0.1 og ingen phi endring er 0.9782766 og med phi endring 0.9782760 som egentlig ikke gir mening da det ikke skal ha påvirkning på lønn. Men forskjellen er på 0.0000006 og hadde dette vært kilometermål så ser jeg på forskjellen på 0.6mm av en kilometer
+
+
+
+```{r}
+lambda_values <- seq(0, 1, by = 0.01)
+benchmark_ratios <- simulate_model(lambda_values)
+ggplot(data = data.frame(lambda = lambda_values, ratio = benchmark_ratios), aes(x = lambda, y = ratio)) +
+  geom_line(color = "blue") +
+  theme_bw()+
+  labs(x = "Lambda", y = "w1/w2 ratio", title = "Oppgave 3b")
+
+```
+
+\newpage
+
+### c) Dersom benchmark verdiene holdes, for hvilke lambda vil den langsiktige likevekten være fullstendig agglomerering i en region?
+
+```{r}
+
+delta = 0.4
+epsilon = 5
+T = 1.7
+phi1 = 0.5
+phi2 = 0.5
+beta = 0.8
+rho = 1 - (1 / epsilon)
+gamma = 0.4
+L = 1
+alpha = gamma * (L / epsilon)
+LIMIT <- 1e-6
+
+
+#Simulering for benchmark verdier
+lambda_values <- seq(0, 1, by = 0.1)
+benchmark_ratios <- simulate_model(lambda_values)
+
+#for what values of lambda is w1/w2 =1
+intersect <- which(benchmark_ratios > 0.9999 & benchmark_ratios < 1.0001)
+intersect <- which(benchmark_ratios ==1)
+
+#which ratios are 1
+#print(lambda_values[intersect])
+
+#print(benchmark_ratios)
+```
+
+
+```{r}
+lambda_values <- seq(0, 1, by = 0.01)
+benchmark_ratios <- simulate_model(lambda_values)
+ggplot(data = data.frame(lambda = lambda_values, ratio = benchmark_ratios), aes(x = lambda, y = ratio)) +
+  geom_line(color = "blue") +
+  theme_bw()+
+  labs(x = "Lambda", y = "w1/w2 ratio", title = "Oppgave 3c")+
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red")
+
+```
+
+
+```{r}
+#Simulering for benchmark verdier
+lambda_values <- seq(0, 1, by = 0.0001)
+benchmark_ratios <- simulate_model(lambda_values)
+
+intersect <- which(benchmark_ratios > 0.9999 & benchmark_ratios < 1.0001)
+
+print(lambda_values[intersect[1]])
+#finding max when ratio is 1
+print(max(lambda_values[intersect]))
+```
+Når lambda verdiene er under 0.164 så vil alle dra til region 1, og når lambda er over 0.836 så vil alle dra til region 2. 
+
+\newpage
+
+### d) Dersom $\epsilon = 2$, for hvilke verdier av lambda vil den langsiktige likevekten være fullstendig agglomerering i en region?
+
+
+```{r}
+
+delta = 0.4
+epsilon = 2
+T = 1.7
+phi1 = 0.5
+phi2 = 0.5
+beta = 0.8
+rho = 1 - (1 / epsilon)
+gamma = 0.4
+L = 1
+alpha = gamma * (L / epsilon)
+LIMIT <- 1e-6
+
+
+#Simulering for benchmark verdier
+lambda_values <- seq(0, 1, by = 0.1)
+benchmark_ratios <- simulate_model(lambda_values)
+
+
+print(benchmark_ratios)
+```
+Her vil alle verdier under eller over 0.5 føre til fullstendig agglomerering i en region da lambda går mot 0 eller 1. 
+
+```{r}
+lambda_values <- seq(0, 1, by = 0.01)
+benchmark_ratios <- simulate_model(lambda_values)
+ggplot(data = data.frame(lambda = lambda_values, ratio = benchmark_ratios), aes(x = lambda, y = ratio)) +
+  geom_line(color = "blue") +
+  theme_bw()+
+  labs(x = "Lambda", y = "w1/w2 ratio", title = "Oppgave 3d")
+
+```
+
+
+
+
+\clearpage
+
+
+# Referanser
+
+::: {#refs}
+:::
+
+
+\clearpage
+
+
+
+\appendix
+
+\section {Appendix Generell KI bruk}
+
+I løpet av koden så kan det ses mange \# kommentarer der det er skrevet for eks "#fillbetween q1 and q2". Når vi skriver kode i Visual Studio Code og Rstudio så er det en plugin som heter Github Copilot. Når vi skriver slike kommentarer eller bare skriver kode så kan den foresøke å fullføre kodelinjene mens vi skriver de. Noen ganger klarer den det, men andre ikke. Det er vanskelig å dokumentere hvert bruk der den er brukt siden det "går veldig fort" men siden vi ikke har fått på plass en slik dokumentasjon så kan all kode der det er brukt kommentarer antas som at det er brukt Github Copilot. Nærmere info om dette KI verktøyet kan ses på <https://github.com/features/copilot>
+
+\clearpage
