@@ -1,0 +1,277 @@
+---
+title: "🎓 Year 3: Specialization & Research Excellence"
+subtitle: "Independent Research & Advanced Economic Analysis"
+description: |
+  Final year capstone experience featuring specialized coursework, independent research,
+  and a comprehensive Bachelor's thesis demonstrating mastery of economic analysis.
+date: last-modified
+author:
+  - name: Daniel Johannessen
+    affiliation: UiT The Arctic University of Norway
+title-block-banner: "#012643"
+title-block-banner-color: white
+format:
+  html: 
+    theme: [cosmo, ../custom.scss]
+    css: ../styles.css
+    toc: true
+    toc-depth: 3
+    page-layout: article
+---
+
+::: {.hero-banner}
+# 🎓 Year 3: Research Excellence & Specialization
+## Capstone Experience in Economic Analysis
+
+> **Culminating three years of study with independent research and advanced specialization**
+
+The final year represents the synthesis of all previous learning through specialized coursework, independent research projects, and a comprehensive Bachelor's thesis demonstrating mastery of economic analysis.
+:::
+
+## 🗓️ Academic Year Overview
+
+### 📅 Semester 1 (Fall 2024)
+**Advanced Specialization**
+
+| Course Code | Course Name | Focus Area | Advanced Skills |
+|-------------|-------------|------------|-----------------|
+| **SOK-2013** | Econometrics | Advanced Methods | Time series, panel data, causal inference |
+| **SOK-2014** | Economic Analysis | Research Methods | Independent research, methodology design |
+
+### 📅 Semester 2 (Spring 2025)
+**Independent Research & Thesis**
+
+| Project | Type | Focus Area | Outcome |
+|---------|------|------------|---------|
+| **[SOK-2209](Semester%202/28_35_SOK2209_Bacheloroppgave_V25.pdf)** | Bachelor Thesis | Original Research | Comprehensive economic analysis |
+| **Additional Projects** | Applied Work | Specialized Topics | [Portfolio expansion](Semester%202/Arbeidskrav%20og%20ekstra/) |
+
+## 🎯 Capstone Achievements
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### 📊 Advanced Econometrics
+**SOK-2013: Methodological Mastery**
+
+Developed expertise in sophisticated econometric techniques essential for modern economic research and policy analysis.
+
+**Technical Mastery:**
+- Advanced time series analysis
+- Panel data econometrics
+- Causal inference methods
+- Model specification and testing
+
+**Applications:**
+- Economic forecasting models
+- Policy impact evaluation
+- Market analysis techniques
+- Research methodology design
+
+[📈 View Econometric Work](Semester%201/SOK-2013/)
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### 🔬 Independent Research
+**SOK-2014: Research Excellence**
+
+Conducted independent economic analysis projects demonstrating ability to design, execute, and communicate original research.
+
+**Research Capabilities:**
+- Literature review and synthesis
+- Methodology development
+- Data collection and analysis
+- Academic writing and presentation
+
+**Project Focus:**
+- Contemporary economic challenges
+- Policy-relevant research questions
+- Theoretical and empirical integration
+- Professional communication
+
+[🔍 Explore Research Projects](Semester%201/SOK-2014/)
+:::
+
+:::
+
+## 🏆 Bachelor Thesis: Capstone Achievement
+
+### 📖 SOK-2209: Bachelor's Thesis in Economics
+**Original Research Contribution**
+
+The culmination of the undergraduate program, this comprehensive thesis demonstrates mastery of economic theory, research methodology, and analytical capabilities.
+
+::: {.project-showcase}
+::: {.project-item}
+### 🎓 Thesis Highlights
+
+**Research Excellence:**
+- **Original Contribution**: Novel analysis of contemporary economic issues
+- **Methodological Rigor**: Advanced econometric and theoretical approaches
+- **Policy Relevance**: Findings applicable to real-world challenges
+- **Academic Quality**: Professional standard research and presentation
+
+**Technical Achievement:**
+- **LaTeX Typesetting**: Professional academic document formatting
+- **Advanced Analysis**: Sophisticated statistical and economic modeling
+- **Literature Integration**: Comprehensive review of relevant research
+- **Data Management**: Complex dataset analysis and visualization
+
+**Professional Skills:**
+- **Independent Work**: Self-directed research project management
+- **Academic Writing**: Clear, persuasive, and professional communication
+- **Critical Analysis**: Deep evaluation of economic theory and evidence
+- **Research Ethics**: Proper methodology and citation practices
+
+[📚 View Full Thesis (PDF)](Semester%202/28_35_SOK2209_Bacheloroppgave_V25.pdf){.btn .btn-primary}
+[📝 LaTeX Source](Semester%202/28_35_SOK2209_Bacheloroppgave_V25.tex){.btn .btn-outline-primary}
+:::
+:::
+
+## 📈 Specialized Projects Portfolio
+
+### 🔬 Additional Research Work
+**Expanding Analytical Capabilities**
+
+Beyond the formal thesis requirement, Year 3 included specialized projects and advanced coursework demonstrating breadth of capabilities.
+
+**Project Categories:**
+- **Advanced Economic Analysis**: Specialized topic exploration
+- **Methodological Applications**: Advanced technique implementation
+- **Policy Research**: Contemporary economic challenge analysis
+- **Professional Development**: Industry-relevant skill building
+
+[📁 View Additional Projects](Semester%202/Arbeidskrav%20og%20ekstra/){.btn .btn-outline-success}
+
+## 🌟 Three-Year Learning Integration
+
+```mermaid
+flowchart TD
+    A[Year 1: Foundation] --> B[Year 2: Application]
+    B --> C[Year 3: Mastery]
+    
+    A1[Economic Theory] --> B1[Advanced Theory]
+    A2[Statistical Methods] --> B2[Applied Econometrics]
+    A3[Programming Skills] --> B3[Professional Tools]
+    
+    B1 --> C1[Independent Research]
+    B2 --> C1
+    B3 --> C1
+    
+    C1 --> D[Bachelor Thesis]
+    C1 --> E[Career Readiness]
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#012643,stroke:#fff,stroke-width:3px,color:#fff
+    style E fill:#e8f5e8
+```
+
+## 💡 Mastery-Level Competencies
+
+::: {.outcomes-grid}
+::: {.outcome-card}
+**🔬 Research Excellence**
+- Independent research design
+- Advanced methodology application
+- Original contribution capability
+- Academic writing proficiency
+:::
+
+::: {.outcome-card}
+**📊 Econometric Mastery**
+- Advanced statistical techniques
+- Causal inference methods
+- Model specification and testing
+- Professional software proficiency
+:::
+
+::: {.outcome-card}
+**💼 Professional Readiness**
+- Policy analysis capabilities
+- Business economics applications
+- Communication and presentation
+- Project management skills
+:::
+
+::: {.outcome-card}
+**🎯 Specialized Expertise**
+- Environmental economics focus
+- Applied economics proficiency
+- Data science applications
+- Contemporary issue analysis
+:::
+:::
+
+## 🛠️ Advanced Professional Tools
+
+| Category | Expert-Level Tools | Professional Applications |
+|----------|-------------------|--------------------------|
+| **Research** | LaTeX, Reference Management | Academic writing, thesis preparation |
+| **Analysis** | Advanced R, Specialized packages | Econometric modeling, data analysis |
+| **Presentation** | Professional Quarto, RevealJS | Academic conferences, policy briefs |
+| **Collaboration** | Git/GitHub, Project management | Team research, version control |
+
+## 🏅 Academic Excellence Recognition
+
+### 📊 Performance Indicators
+- **Thesis Quality**: Demonstrates mastery of economic analysis
+- **Research Capability**: Independent contribution to economic knowledge
+- **Technical Proficiency**: Advanced econometric and analytical skills
+- **Professional Communication**: Academic and policy-relevant writing
+
+### 🎯 Career Preparation
+- **Graduate Study Readiness**: Prepared for advanced economics programs
+- **Industry Capabilities**: Ready for economic analysis roles
+- **Research Skills**: Qualified for policy and research positions
+- **Technical Expertise**: Advanced quantitative analysis capabilities
+
+## 🌐 Future Pathways
+
+### 📚 Graduate Study Preparation
+The comprehensive training and demonstrated research capability provide excellent preparation for:
+- **Master's in Economics**: Advanced economic theory and research
+- **Applied Economics Programs**: Policy analysis and applied research
+- **Data Science**: Quantitative analysis and statistical modeling
+- **Business Analytics**: Corporate and market analysis
+
+### 💼 Professional Opportunities
+The demonstrated skills and competencies align with careers in:
+- **Economic Research**: Government agencies, think tanks, consulting
+- **Policy Analysis**: Public sector, international organizations
+- **Business Analysis**: Corporate strategy, market research, finance
+- **Data Analytics**: Technology, consulting, financial services
+
+---
+
+::: {.footer-section}
+## 🎓 Degree Completion Impact
+
+**Academic Excellence**: Successfully completed a rigorous economics program with distinction across all three years
+
+**Research Mastery**: Demonstrated capability for independent economic research through comprehensive thesis work
+
+**Professional Readiness**: Developed advanced analytical, communication, and technical skills essential for economics careers
+
+**Specialized Expertise**: Established strong competencies in environmental economics, applied econometrics, and data science applications
+
+*Bachelor's degree completed with high distinction, representing three years of sustained academic excellence and professional skill development.*
+
+---
+
+## 🏆 Program Summary
+
+**Degree**: Bachelor of Economics  
+**Institution**: UiT - The Arctic University of Norway  
+**Faculty**: Biosciences, Fisheries and Economics  
+**Specialization**: Applied Economics with Data Science Focus  
+**Thesis**: Independent research demonstrating mastery of economic analysis  
+**Portfolio**: Comprehensive collection of coursework, projects, and research
+
+This portfolio represents a complete academic journey from foundational knowledge through advanced specialization, culminating in independent research capability and professional readiness for economics careers.
+:::
+
+[⬅️ Back to Year 2](../Year%202/index.html){.btn .btn-outline-primary}
+[🏠 Portfolio Home](../index.html){.btn .btn-outline-primary}
+[📚 View Complete Portfolio](../README.md){.btn .btn-success}
