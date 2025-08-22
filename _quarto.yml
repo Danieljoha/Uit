@@ -1,0 +1,90 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "UiT Bachelor Portfolio"
+  description: "Academic Portfolio - Economics & Data Science"
+  
+  navbar:
+    title: "🎓 UiT Portfolio"
+    background: "#012643"
+    foreground: white
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Year 1"
+        menu:
+          - text: "SOK-1005 (Data Science)"
+            href: "Year 1/Semester 2/Sok-1005/index.qmd"
+          - text: "SOK-1016 (Mathematics)"
+            href: "Year 1/Semester 2/SOK-1016/"
+          - text: "SOK-1006 (Statistics)"
+            href: "Year 1/Semester 2/Sok-1006/"
+      - text: "Year 2"
+        menu:
+          - text: "SOK-2030 (Applied Economics)"
+            href: "Year 2/Semester 2/SOK-2030/"
+          - text: "SOK-2011 (Environmental)"
+            href: "Year 2/Semester 2/SOK-2011/"
+      - text: "Year 3"
+        menu:
+          - text: "Bachelor Thesis"
+            href: "Year 3/Semester 2/28_35_SOK2209_Bacheloroppgave_V25.pdf"
+          - text: "Additional Projects"
+            href: "Year 3/Semester 2/Arbeidskrav og ekstra/"
+    right:
+      - icon: github
+        href: https://github.com/Danieljoha/Uit-Bachelor-Portfolio
+        aria-label: GitHub
+
+  sidebar:
+    - title: "Academic Years"
+      style: "docked"
+      background: light
+      contents:
+        - section: "Year 1 - Foundation"
+          contents:
+            - "Year 1/Semester 2/Sok-1005/index.qmd"
+            - text: "SOK-1016 Mathematics"
+              href: "Year 1/Semester 2/SOK-1016/"
+            - text: "SOK-1006 Statistics" 
+              href: "Year 1/Semester 2/Sok-1006/"
+        - section: "Year 2 - Advanced"
+          contents:
+            - text: "SOK-2030 Applied Economics"
+              href: "Year 2/Semester 2/SOK-2030/"
+            - text: "SOK-2011 Environmental"
+              href: "Year 2/Semester 2/SOK-2011/"
+        - section: "Year 3 - Specialization"
+          contents:
+            - text: "Bachelor Thesis"
+              href: "Year 3/Semester 2/28_35_SOK2209_Bacheloroppgave_V25.pdf"
+
+  page-footer:
+    background: "#012643"
+    foreground: white
+    center: |
+      UiT - The Arctic University of Norway | Faculty of Biosciences, Fisheries and Economics
+    right: |
+      Built with [Quarto](https://quarto.org)
+
+format:
+  html:
+    theme: 
+      - cosmo
+      - custom.scss
+    css: styles.css
+    toc: true
+    code-fold: true
+    code-summary: "Show code"
+    smooth-scroll: true
+    page-layout: article
+    grid:
+      sidebar-width: 250px
+      body-width: 900px
+      margin-width: 200px
+
+execute:
+  freeze: auto
+  cache: true

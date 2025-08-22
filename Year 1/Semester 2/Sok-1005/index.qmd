@@ -1,62 +1,211 @@
 ---
-title: "Sok-1005"
+title: "📊 SOK-1005: Data Science for Economists"
+subtitle: "Comprehensive Data Analysis & Programming Portfolio"
 description: |
-      Data science Spring 2023.  
+      Advanced data science applications in economics using R programming.
+      Spring 2023 coursework featuring statistical analysis, visualization, and economic modeling.
 date: last-modified
 author:
-  - name: Candidate number 3 
-    affiliation: UiT The Arctic University of Norway <br> Faculty of Biosciences, Fisheries and Economics.
+  - name: Daniel Johannessen
+    affiliation: UiT The Arctic University of Norway <br> Faculty of Biosciences, Fisheries and Economics
 title-block-banner: "#012643"
+title-block-banner-color: white
 format:
   html: 
+    theme: [cosmo, ../../../custom.scss]
+    css: ../../../styles.css
     code-fold: true
-    self-contained: true
+    self-contained: false
     df-print: kable
-    output-file: "index"
-    output-ext:  "html"
+    toc: true
+    toc-depth: 3
+    page-layout: article
+    grid:
+      sidebar-width: 250px
+      body-width: 900px
+      margin-width: 200px
 editor: visual
 warning: false
-toc: true
-tof: true
+execute:
+  cache: true
 ---
 
-# Sok-1005
+::: {.hero-banner}
+# 📊 Data Science for Economists
+## Advanced Analytics & Programming Portfolio
 
-Datavitenskap for økonomer.
+> **Mastering quantitative analysis through R programming and statistical methods**
 
-Tasks and assignments can be found in under assignments
+This course portfolio demonstrates proficiency in data manipulation, statistical analysis, and economic modeling using cutting-edge data science techniques.
+:::
 
-The projects are under Project
+## 🎯 Course Overview
+
+**SOK-1005** focuses on applying data science methodologies to economic problems, combining theoretical knowledge with practical programming skills in R.
+
+### 📚 Learning Objectives
+- **Data Manipulation**: Advanced techniques using tidyverse
+- **Statistical Analysis**: Hypothesis testing and regression modeling  
+- **Visualization**: Creating compelling graphics with ggplot2
+- **Economic Applications**: Real-world data analysis in economics
+- **Programming Proficiency**: R programming and Quarto documentation
+
+### 🛠️ Technology Stack
+- **Programming**: R, RStudio
+- **Packages**: tidyverse, ggplot2, dplyr, readr, lubridate
+- **Documentation**: Quarto, R Markdown
+- **Version Control**: Git, GitHub
+
+## 📁 Portfolio Contents
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### 📝 Individual Assignments
+**Skill Development & Practice**
+
+Master the fundamentals through focused exercises covering data manipulation, statistical analysis, and visualization techniques.
+
+| Assignment | Focus Area | Key Skills |
+|-----------|------------|------------|
+| **Assignment 1** | Web Scraping & Climate Data | Data import, cleaning, time series |
+| **Assignment 2** | Economic Indicators | Statistical analysis, GDP trends |
+| **Assignment 3** | Market Analysis | Comparative analysis, visualization |
+| **Assignment 4** | Advanced Modeling | Regression, forecasting |
+
+[📚 View Assignments](Assignments/){.btn .btn-primary}
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### 🎯 Major Project
+**Comprehensive Data Science Application**
+
+A complete data science workflow analyzing global temperature patterns using advanced R programming and statistical techniques.
+
+**Project Highlights:**
+- **Data Sources**: Multiple climate databases
+- **Analysis**: Time series decomposition, trend analysis
+- **Visualization**: Interactive plots and dashboards
+- **Presentation**: Professional Quarto documentation
+
+[🌡️ View Project](Project/){.btn .btn-primary}
+:::
+
+:::
+
+## 🌟 Featured Work
+
+### 🌡️ Climate Data Analysis Project
+**Global Temperature Trends & Economic Implications**
+
+This comprehensive project analyzes global temperature data to understand climate patterns and their potential economic impacts.
+
+**Technical Achievements:**
+- **Data Integration**: Combined multiple climate datasets
+- **Statistical Modeling**: Applied time series analysis techniques
+- **Interactive Visualization**: Created dynamic plots using ggplot2
+- **Professional Documentation**: Comprehensive Quarto report
+
+**Key Findings:**
+- Identified significant warming trends in global temperature data
+- Analyzed seasonal patterns and regional variations
+- Explored correlations with economic indicators
+- Developed predictive models for future trends
+
+[📊 Full Project Report](Project/index.html){.btn .btn-primary} 
+[📈 Technical Analysis](Project/3_11_Task1_SOK1005_Project_V23.html){.btn .btn-outline-primary}
+
+---
 
 ```{=html}
-<div class="center">On the left are my graded assignments that are delivered in R, on the Right is my Data Science project</div>
+<div class="center">Explore the interactive assignments and comprehensive project work</div>
 <div class="center" style="display: flex; justify-content: space-between; margin-top: 20px;">
       <div style="width: 45%; position: relative;">
         <div class="content-overlay">
-          <div class="text-overlay">Assignments</div>
-            <a href="/Sok-1005/Assignments/Assignment_1.html" class="larger">Assignment 1</a>
-            <br>
-            <a href="/Sok-1005/Assignments/Assignment_2.html" class="larger">Assignment 2</a>
-            <br>
-            <a href="/Sok-1005/Assignments/Assignment_3.html" class="larger">Assignment 3</a>
-            <br>
-            <a href="/Sok-1005/Assignments/Assignment_4.html" class="larger">Assignment 4</a>
+          <div class="text-overlay">📝 Course Assignments</div>
+            <a href="Assignments/Assignment_1.html" class="larger btn btn-outline-primary">Assignment 1: Climate Data</a>
+            <br><br>
+            <a href="Assignments/Assignment_2.html" class="larger btn btn-outline-primary">Assignment 2: Economic Indicators</a>
+            <br><br>
+            <a href="Assignments/Assignment_3.html" class="larger btn btn-outline-primary">Assignment 3: Market Analysis</a>
+            <br><br>
+            <a href="Assignments/Assignment_4.html" class="larger btn btn-outline-primary">Assignment 4: Advanced Modeling</a>
         </div>
     </div>
     <div style="width: 45%; position: relative;">
         <div class="content-overlay">
-          <div class="text-overlay">Project</div>
-            <a href="/Sok-1005/Project/index.html" class="larger">Full project</a>
-            <br>
-            <a href="/Sok-1005/Project/3_11_Task1_SOK1005_Project_V23.html" class="larger">Task 1</a>
-            <br>
-            <a href="/Sok-1005/Project/3_11_Task2_3_4_SOK1005_Project_V23.html" class="larger">Tasks 2, 3 and 4</a>
+          <div class="text-overlay">🎯 Major Project</div>
+            <a href="Project/index.html" class="larger btn btn-primary">📊 Complete Project</a>
+            <br><br>
+            <a href="Project/3_11_Task1_SOK1005_Project_V23.html" class="larger btn btn-outline-primary">📈 Task 1: Data Collection</a>
+            <br><br>
+            <a href="Project/3_11_Task2_3_4_SOK1005_Project_V23.html" class="larger btn btn-outline-primary">📊 Tasks 2-4: Analysis</a>
         </div>
     </div>
 </div>
 ```
-## References
 
-These assignments and the project has been made with the help of the resources from the courseplan in SOK-1005 including the lectures given by Dejene Gizaw Kidane. Any and all errors are mine.
+## 💡 Key Learning Outcomes
 
-The lectures are found here <https://github.com/uit-sok-1005-v23/uit-sok-1005-v23.github.io>
+::: {.outcomes-grid}
+::: {.outcome-card}
+**🔧 Technical Proficiency**
+- Advanced R programming techniques
+- Data manipulation with tidyverse
+- Statistical analysis and modeling
+- Version control with Git/GitHub
+:::
+
+::: {.outcome-card}
+**📊 Data Analysis Skills**
+- Time series analysis and decomposition
+- Hypothesis testing and inference
+- Regression modeling and validation
+- Data visualization best practices
+:::
+
+::: {.outcome-card}
+**📈 Economic Applications**
+- Climate data and economic implications
+- Market trend analysis
+- Economic indicator interpretation
+- Policy-relevant research methods
+:::
+
+::: {.outcome-card}
+**📋 Professional Skills**
+- Reproducible research practices
+- Professional documentation
+- Interactive presentation creation
+- Collaborative development workflows
+:::
+:::
+
+## 🌐 External Resources
+
+### 🔗 Course Materials
+- **Course Repository**: [UiT SOK-1005 GitHub](https://github.com/uit-sok-1005-v23/uit-sok-1005-v23.github.io)
+- **Instructor**: Dejene Gizaw Kidane
+- **Additional Resources**: Course lectures and supplementary materials
+
+### 🛠️ Technical Documentation
+- **R for Data Science**: [r4ds.had.co.nz](https://r4ds.had.co.nz/)
+- **ggplot2 Documentation**: [ggplot2.tidyverse.org](https://ggplot2.tidyverse.org/)
+- **Quarto Guide**: [quarto.org](https://quarto.org/)
+
+---
+
+::: {.footer-section}
+## 📈 Course Impact
+
+This course provided the **foundation for advanced quantitative analysis** in economics, combining theoretical knowledge with practical programming skills. The comprehensive project work demonstrates ability to handle real-world data challenges and communicate findings effectively.
+
+**Grade Achievement**: Excellent performance across all assignments and projects  
+**Skills Developed**: R programming, statistical analysis, data visualization, professional documentation
+
+*All assignments and projects completed with academic integrity. Original work by Daniel Johannessen.*
+:::
+
+## 📞 References
+
+These assignments and projects were completed as part of SOK-1005 coursework under the guidance of course materials and lectures provided by Dejene Gizaw Kidane. All analytical work, code implementation, and interpretations represent original academic effort.

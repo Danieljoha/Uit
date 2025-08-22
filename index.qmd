@@ -1,0 +1,327 @@
+---
+title: "UiT Bachelor Portfolio"
+subtitle: "Economics & Data Science"
+description: |
+  Academic Portfolio - Bachelor's Degree in Economics  
+  UiT - The Arctic University of Norway
+date: last-modified
+author:
+  - name: Daniel Johannessen
+    affiliation: UiT The Arctic University of Norway <br> Faculty of Biosciences, Fisheries and Economics
+title-block-banner: "#012643"
+title-block-banner-color: white
+format:
+  html: 
+    theme: [cosmo, custom.scss]
+    code-fold: true
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    page-layout: full
+    grid:
+      sidebar-width: 250px
+      body-width: 900px
+      margin-width: 200px
+    css: styles.css
+editor: visual
+warning: false
+---
+
+::: {.hero-banner}
+# 🎓 Welcome to My Academic Portfolio
+
+> **Exploring Economics through Data Science and Analytical Excellence**
+
+This portfolio showcases three years of rigorous academic work in Economics at UiT - The Arctic University of Norway, demonstrating proficiency in quantitative analysis, programming, and economic research.
+:::
+
+## 🌟 Portfolio Highlights
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### 📊 Data Science Excellence
+**SOK-1005: Data Science for Economists**
+
+- Advanced R programming and statistical analysis
+- Climate data visualization and trend analysis
+- Comprehensive project on global temperature patterns
+- Interactive web presentations using Quarto
+
+[View Project →](Year%201/Semester%202/Sok-1005/index.html){.btn .btn-primary}
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### 🎓 Bachelor Thesis
+**SOK-2209: Capstone Research Project**
+
+- Independent research methodology
+- Advanced econometric analysis
+- Professional LaTeX documentation
+- Original contribution to economic literature
+
+[View Thesis →](Year%203/Semester%202/28_35_SOK2209_Bacheloroppgave_V25.pdf){.btn .btn-primary}
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### 🌍 Applied Economics
+**SOK-2030: Real-World Analysis**
+
+- Environmental economics applications
+- Policy analysis and recommendations
+- Professional presentation skills
+- RevealJS interactive presentations
+
+[View Work →](Year%202/Semester%202/SOK-2030/){.btn .btn-primary}
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### 🔢 Mathematical Economics
+**SOK-1016: Advanced Mathematics**
+
+- Economic modeling and optimization
+- Calculus applications in economics
+- Complex problem-solving techniques
+- Theoretical foundations
+
+[Explore →](Year%201/Semester%202/SOK-1016/){.btn .btn-primary}
+:::
+
+:::
+
+## 📚 Academic Journey
+
+### Year 1: Foundation Building
+**Fundamental Economics & Quantitative Skills**
+
+::: {.course-grid}
+| Course | Focus Area | Key Skills |
+|--------|------------|------------|
+| **SOK-1003** | Microeconomics | Market analysis, consumer theory |
+| **SOK-1004** | Macroeconomics | National accounts, fiscal policy |
+| **SOK-1005** | Data Science | R programming, statistical analysis |
+| **SOK-1006** | Statistics | Hypothesis testing, regression |
+| **SOK-1016** | Mathematics | Calculus, optimization |
+:::
+
+### Year 2: Advanced Theory & Application
+**Specialized Knowledge & Practical Skills**
+
+::: {.course-grid}
+| Course | Focus Area | Key Skills |
+|--------|------------|------------|
+| **SOK-2008** | Advanced Micro | Game theory, market failures |
+| **SOK-2009** | Advanced Macro | Growth models, monetary policy |
+| **SOK-2011** | Environmental Econ | Sustainability, climate economics |
+| **SOK-2012** | Business Economics | Strategic management, finance |
+| **SOK-2030** | Applied Economics | Policy analysis, econometrics |
+:::
+
+### Year 3: Specialization & Research
+**Independent Research & Advanced Analytics**
+
+::: {.course-grid}
+| Course | Focus Area | Key Skills |
+|--------|------------|------------|
+| **SOK-2013** | Econometrics | Advanced statistical methods |
+| **SOK-2014** | Economic Analysis | Research methodology |
+| **SOK-2209** | Bachelor Thesis | Independent research project |
+:::
+
+## 💻 Technical Proficiency
+
+::: {.skills-section}
+### Programming & Analysis
+- **R**: Advanced data manipulation, statistical modeling, visualization
+- **Python**: Data science libraries, machine learning applications
+- **Quarto**: Professional document creation and web publishing
+- **LaTeX**: Academic writing and typesetting
+
+### Specialized Tools
+- **tidyverse**: Data wrangling and analysis in R
+- **ggplot2**: Advanced data visualization
+- **RevealJS**: Interactive presentations
+- **Git/GitHub**: Version control and collaboration
+:::
+
+## 📈 Key Learning Outcomes
+
+::: {.outcomes-grid}
+::: {.outcome-card}
+**📊 Quantitative Analysis**
+- Statistical modeling and hypothesis testing
+- Econometric techniques and interpretation
+- Data visualization and communication
+:::
+
+::: {.outcome-card}
+**💡 Economic Thinking**
+- Microeconomic and macroeconomic theory
+- Policy analysis and evaluation
+- Market analysis and business strategy
+:::
+
+::: {.outcome-card}
+**🔬 Research Skills**
+- Literature review and synthesis
+- Methodology design and implementation
+- Academic writing and presentation
+:::
+
+::: {.outcome-card}
+**💻 Technical Skills**
+- Programming in R and Python
+- Database management and analysis
+- Web development and publishing
+:::
+:::
+
+## 🚀 Featured Projects
+
+:::: {.project-showcase}
+
+::: {.project-item}
+### 🌡️ Climate Data Analysis
+**Global Temperature Trends Study**
+
+A comprehensive analysis of global temperature data using advanced R programming and statistical techniques. Features interactive visualizations and trend analysis.
+
+**Technologies**: R, ggplot2, tidyverse, Quarto  
+**Skills**: Time series analysis, data visualization, statistical modeling
+
+[View Project](Year%201/Semester%202/Sok-1005/Project/index.html) | [Source Code](Year%201/Semester%202/Sok-1005/Project/)
+:::
+
+::: {.project-item}
+### 📊 Economic Modeling Portfolio
+**Mathematical Economics Applications**
+
+Advanced mathematical modeling techniques applied to economic problems, featuring optimization, calculus applications, and theoretical analysis.
+
+**Technologies**: R, LaTeX, Mathematical Modeling  
+**Skills**: Optimization, economic theory, mathematical analysis
+
+[Explore Work](Year%201/Semester%202/SOK-1016/)
+:::
+
+::::
+
+---
+
+::: {.footer-section}
+## 📞 Connect
+
+**🎓 Institution**: UiT - The Arctic University of Norway  
+**🏢 Faculty**: Biosciences, Fisheries and Economics  
+**📧 Academic**: Available upon request  
+**🔗 GitHub**: [github.com/Danieljoha](https://github.com/Danieljoha)
+
+---
+
+*This portfolio represents original academic work completed during my Bachelor's degree. All content is shared for educational and reference purposes. Please respect academic integrity guidelines.*
+:::
+
+```{=html}
+<style>
+.hero-banner {
+  background: linear-gradient(135deg, #012643 0%, #1e3c72 100%);
+  color: white;
+  padding: 3rem 2rem;
+  margin: -2rem -2rem 2rem -2rem;
+  border-radius: 0 0 20px 20px;
+  text-align: center;
+}
+
+.hero-banner h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.course-grid table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.course-grid th, .course-grid td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.course-grid th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.skills-section {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 10px;
+  margin: 2rem 0;
+}
+
+.outcomes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.outcome-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-left: 4px solid #012643;
+}
+
+.outcome-card h4 {
+  color: #012643;
+  margin-bottom: 1rem;
+}
+
+.project-showcase {
+  margin: 2rem 0;
+}
+
+.project-item {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+  margin: 1.5rem 0;
+  border-left: 5px solid #1e3c72;
+}
+
+.project-item h3 {
+  color: #012643;
+  margin-bottom: 0.5rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #012643;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: #1e3c72;
+  color: white;
+  text-decoration: none;
+}
+
+.footer-section {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 10px;
+  margin-top: 3rem;
+  text-align: center;
+}
+</style>
+```

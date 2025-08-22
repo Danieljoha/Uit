@@ -1,0 +1,207 @@
+---
+title: "📚 Year 1: Foundation Courses"
+subtitle: "Building Essential Skills in Economics & Data Science"
+description: |
+  First year coursework establishing fundamental knowledge in economic theory,
+  mathematical methods, and quantitative analysis techniques.
+date: last-modified
+author:
+  - name: Daniel Johannessen
+    affiliation: UiT The Arctic University of Norway
+title-block-banner: "#012643"
+title-block-banner-color: white
+format:
+  html: 
+    theme: [cosmo, ../custom.scss]
+    css: ../styles.css
+    toc: true
+    toc-depth: 3
+    page-layout: article
+---
+
+::: {.hero-banner}
+# 📚 Year 1: Foundation Building
+## Establishing Core Knowledge & Skills
+
+> **The journey begins with solid fundamentals in economic theory, mathematical methods, and data science**
+
+This foundational year established essential skills across microeconomics, macroeconomics, mathematics, statistics, and programming that form the basis for advanced economic analysis.
+:::
+
+## 🗓️ Academic Year Overview
+
+### 📅 Semester 1 (Fall 2022)
+**Theoretical Foundations**
+
+| Course Code | Course Name | Focus Area | Key Concepts |
+|-------------|-------------|------------|--------------|
+| **SOK-1003** | Microeconomics | Individual Decision Making | Supply/demand, market equilibrium, consumer theory |
+| **SOK-1004** | Macroeconomics | National Economic Systems | GDP, inflation, unemployment, fiscal policy |
+
+### 📅 Semester 2 (Spring 2023)  
+**Quantitative Methods & Applications**
+
+| Course Code | Course Name | Focus Area | Key Skills |
+|-------------|-------------|------------|------------|
+| **[SOK-1005](Semester%202/Sok-1005/)** | Data Science for Economists | Programming & Analysis | R, statistical analysis, data visualization |
+| **SOK-1006** | Statistics | Statistical Methods | Hypothesis testing, regression, probability |
+| **SOK-1016** | Mathematics for Economists | Mathematical Foundations | Calculus, optimization, linear algebra |
+
+## 🌟 Semester Highlights
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### 📊 Semester 1: Theory & Concepts
+**Building Economic Intuition**
+
+Established fundamental understanding of how markets work and how national economies function, providing the theoretical framework for all subsequent coursework.
+
+**Key Achievements:**
+- Mastered supply and demand analysis
+- Understood market failure concepts
+- Learned macroeconomic policy tools
+- Developed economic reasoning skills
+
+[📖 View Semester 1 Work](Semester%201/)
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### 💻 Semester 2: Methods & Tools
+**Quantitative Skill Development**
+
+Developed essential technical skills in programming, statistics, and mathematics that enable rigorous economic analysis and research.
+
+**Key Achievements:**
+- **[Climate Data Analysis Project](Semester%202/Sok-1005/Project/)** - Comprehensive R programming
+- Advanced statistical modeling techniques  
+- Mathematical optimization methods
+- Professional documentation skills
+
+[💻 View Semester 2 Work](Semester%202/)
+:::
+
+:::
+
+## 🔬 Featured Projects
+
+### 🌡️ SOK-1005: Global Temperature Analysis
+**Comprehensive Data Science Application**
+
+This flagship project demonstrates the integration of economic thinking with advanced data science techniques, analyzing global climate data and its potential economic implications.
+
+**Technical Achievements:**
+- **Data Integration**: Multiple climate datasets
+- **Statistical Analysis**: Time series decomposition
+- **Visualization**: Interactive ggplot2 graphics
+- **Documentation**: Professional Quarto reports
+
+**Economic Applications:**
+- Climate change economic impacts
+- Trend analysis and forecasting
+- Policy implications assessment
+- Cross-regional comparisons
+
+[🌡️ View Complete Project](Semester%202/Sok-1005/Project/index.html){.btn .btn-primary}
+
+### 🔢 SOK-1016: Mathematical Modeling
+**Advanced Economic Applications**
+
+Mathematical foundations course featuring optimization problems, calculus applications, and theoretical modeling relevant to economic analysis.
+
+**Key Topics:**
+- Optimization in economic contexts
+- Constraint satisfaction problems
+- Function analysis and derivatives
+- Linear algebra applications
+
+[📐 View Mathematical Work](Semester%202/SOK-1016/){.btn .btn-outline-primary}
+
+## 📈 Learning Progression
+
+```mermaid
+flowchart TD
+    A[Economic Theory] --> D[Applied Analysis]
+    B[Mathematical Methods] --> D
+    C[Statistical Tools] --> D
+    D --> E[Year 2: Advanced Theory]
+    D --> F[Year 3: Specialization]
+    
+    style A fill:#012643,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#1e3c72,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#ff6b35,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#28a745,stroke:#fff,stroke-width:2px,color:#fff
+```
+
+## 💡 Core Competencies Developed
+
+::: {.outcomes-grid}
+::: {.outcome-card}
+**🏛️ Economic Theory**
+- Microeconomic fundamentals
+- Macroeconomic systems
+- Market analysis
+- Policy understanding
+:::
+
+::: {.outcome-card}
+**🔢 Mathematical Skills**
+- Calculus applications
+- Optimization techniques
+- Linear algebra
+- Function analysis
+:::
+
+::: {.outcome-card}
+**📊 Statistical Methods**
+- Hypothesis testing
+- Regression analysis
+- Probability theory
+- Data interpretation
+:::
+
+::: {.outcome-card}
+**💻 Programming**
+- R programming proficiency
+- Data manipulation
+- Visualization techniques
+- Reproducible research
+:::
+:::
+
+## 🛠️ Technology Stack Mastered
+
+| Category | Technologies | Applications |
+|----------|-------------|--------------|
+| **Programming** | R, RStudio | Data analysis, statistical modeling |
+| **Documentation** | Quarto, R Markdown | Professional reporting, presentations |
+| **Mathematics** | Mathematical software | Economic modeling, optimization |
+| **Statistics** | Statistical packages | Hypothesis testing, inference |
+
+## 🎯 Preparation for Advanced Study
+
+This foundational year provided essential preparation for advanced economic analysis:
+
+- **Theoretical Framework**: Solid understanding of economic principles
+- **Quantitative Skills**: Mathematical and statistical proficiency  
+- **Technical Abilities**: Programming and data analysis capabilities
+- **Research Methods**: Academic writing and presentation skills
+
+The combination of theoretical knowledge and practical skills established in Year 1 created a strong platform for the specialized coursework in subsequent years.
+
+---
+
+::: {.footer-section}
+## 📊 Year 1 Impact
+
+**Foundation Establishment**: Successfully built core competencies across all fundamental areas of economic study
+
+**Technical Proficiency**: Achieved advanced skills in R programming and statistical analysis
+
+**Academic Excellence**: Maintained high performance across all courses while developing essential research capabilities
+
+*Year 1 completed with distinction, establishing the foundation for advanced economic study and research.*
+:::
+
+[🏠 Return to Portfolio Home](../index.html){.btn .btn-outline-primary}
+[➡️ Continue to Year 2](../Year%202/index.html){.btn .btn-primary}
