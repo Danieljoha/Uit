@@ -1,0 +1,1614 @@
+---
+format: 
+  pdf:
+    include-before-body:
+      - dokumentobjekter/texstuff/forsidesok2014.tex  
+    geometry:
+      - top=20mm
+      - left=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+    toc-title: "Innholdsfortegnelse"
+    toccolor: black
+echo: false
+message: false
+warning: false
+bibliography: dokumentobjekter/texstuff/references-sok2014.bib
+csl: dokumentobjekter/texstuff/norsk-apa-manual.csl
+crossref: 
+  lof-title: "Figurliste"
+  fig-title: "Figur"
+  lot-title: "Tabelliste"
+  tbl-title: "Tabell"
+header-includes:
+  - \usepackage{wrapfig}
+  - \usepackage{subcaption}
+  - \usepackage{amsmath}
+  - \usepackage{cancel}
+  - \usepackage{hyperref}
+  - \usepackage{tikz}
+  - \usetikzlibrary{shapes.geometric, arrows, arrows.meta, positioning, calc}
+  - \usepackage{tabularx}
+  - \renewcommand{\maketitle}{}
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancyhf{} 
+  - \fancyhead[L]{\rightmark}
+  - \fancyhead[R]{\thepage}
+  - \fancyfoot[C]{\thepage}
+  - \usepackage{colortbl}
+  - \definecolor{cornflowerblue}{RGB}{100,149,237}
+  - \definecolor{darkblue}{RGB}{115,150,255}
+  - \definecolor{lighterblue}{RGB}{131, 191, 212} 
+  - \definecolor{lightblue}{RGB}{178,211,220}
+keep-tex: false
+nocite: |
+  @*
+---
+
+```{=tex}
+
+\thispagestyle{plain}
+\begin{center}
+    \Large
+    \textbf{Sammendrag}
+\end{center}
+
+
+I denne oppgaven ser vi på elektrifisering av 37 plattformer på norsk sokkel som i dag ikke er elektrifisert for å se om dette er et lønnsomt tiltak. Vi ser på kostnader knyttet til strømbruk, ombygging og kabling og behandler frafall i betaling av CO2 avgifter som inntekter. Vi finner at elektrifisering ikke er lønnsomt med dagens forutsetninger. Vi finner at med mindre kvotepriser øker mye samtidig som strømpriser faller mer enn forventet så er det mer lønnsomt å fortsette med dagens løsning fremfor en fullskala elektrifisering av de identifiserte plattformene.
+Dette dokumentet tar for seg elektrifisering av norsk sokkel som et virkemiddel for å kutte klimagassutslipp og møte internasjonale klimaforpliktelser. Elektrifisering innebærer å erstatte gasskraft og dieselkraft fra offshore installasjoner med landbasert strøm, noe som på sikt kan redusere samfunnets kostnader knyttet til CO2 utslipp i form av betaling av CO2 kvoter. Tiltaket vil kunne bidra til å senke Norges samlede utslipp, men vår analyse viser at de høye investeringskostnadene knyttet til kabling, ombygging og kontinuerlig strømforsyning gjør prosjektet til et samfunnsøkonomisk tapsprosjekt.
+
+
+
+
+
+
+
+\newpage
+\hypersetup{linkcolor=black}
+\renewcommand{\contentsname}{Innholdsfortegnelse}
+\renewcommand*{\figureautorefname}{Figur}
+\renewcommand*{\tableautorefname}{Tabell}
+\tableofcontents
+\listoffigures
+\listoftables
+\hypersetup{linkcolor=blue}
+\newpage
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+rm(list = ls())
+library(tidyverse)
+library(zoo)
+library(scales)
+library(ggrepel)
+library(readxl)
+library(httr)
+library(jsonlite)
+library(rjstat)
+library(readr)
+library(janitor)
+
+
+
+tryCatch({karbonpriser <- read_csv(file.path("platform_data", "karbonpriser.csv"), show_col_types = FALSE)}, error = function(err) {
+  
+  download.file("https://www.regjeringen.no/contentassets/3e0dbc79cda04eb1aeceea1dfe058dd8/karbonpriser2024.xlsx", file.path("platform_data", "karbonpriser.xlsx"), mode= "wb")
+  
+  karbonpriser <- read_xlsx(file.path("platform_data", "karbonpriser.xlsx"), sheet = 1, skip=5)
+  
+  #drop last 3 rows
+  karbonpriser <- karbonpriser %>% 
+    filter(row_number() <= n()-3) #lå nokka drit i bunnen
+  
+  
+  
+  karbonpriser <- karbonpriser %>% #renaming the first column to Year
+    rename(Year = 1) %>% 
+    mutate(Year = as.numeric(format(as.Date(as.numeric(Year), origin = "1899-12-30"), "%Y"))) %>%  #jævla excel drit år
+  select(-7)
+
+  karbonpriser <<- karbonpriser
+  
+  
+
+
+  
+  
+  
+  
+  write_csv(karbonpriser, file.path("platform_data", "karbonpriser.csv"))
+})
+
+
+
+
+
+
+
+
+
+
+
+
+tryCatch({anslag_perspektiv <- read_csv(file.path("platform_data", "anslag_perspektiv.csv"), show_col_types = FALSE)}, error = function(err) {
+  
+  download.file("https://www.regjeringen.no/globalassets/departementene/fin/2024/tallene-bak-figurene_kapittel_1.xlsx", file.path("platform_data", "anslag_perspektiv.xlsx"), mode= "wb")
+  
+  anslag_perspektiv <- read_xlsx(file.path("platform_data", "anslag_perspektiv.xlsx"), 
+    sheet = "Fig1-7", skip = 2)
+  
+  anslag_perspektiv <- anslag_perspektiv %>% 
+    rename(Year = 1) 
+
+  
+
+  anslag_perspektiv <<- anslag_perspektiv 
+  
+  
+  write_csv(anslag_perspektiv, file.path("platform_data", "anslag_perspektiv.csv"))
+})
+
+
+
+
+
+
+#co2 utslipp
+
+
+tryCatch({df_13931 <- read_csv(file.path("platform_data", "df_13931.csv"), show_col_types = FALSE)}, error = function(err) {
+  
+  
+  df_13931 <- "https://data.ssb.no/api/v0/no/table/13931"
+  
+  query <- '{
+    "query": [
+      {
+        "code": "UtslpTilLuft",
+        "selection": {
+          "filter": "vs:UtslpKildeA03",
+          "values": [
+            "0.0.0.0",
+            "1.1.1.1",
+            "1.1.1.2",
+            "1.1.1.3",
+            "1.1.1.4",
+            "1.1.1.5",
+            "1.1.1.6",
+            "1.1.2.1",
+            "1.1.2.2",
+            "1.2.1.1",
+            "1.2.1.2",
+            "1.2.2.1",
+            "1.2.2.2",
+            "2.1.1.0",
+            "2.1.2.0",
+            "2.1.3.1",
+            "2.1.3.2",
+            "2.1.3.3",
+            "2.1.4.1",
+            "2.1.4.2",
+            "2.1.5.0",
+            "2.1.9.0",
+            "2.2.1.0",
+            "2.2.2.0",
+            "2.2.3.1",
+            "2.2.3.2",
+            "2.2.3.3",
+            "2.2.3.9",
+            "2.2.4.1",
+            "2.2.4.9",
+            "2.2.5.1",
+            "2.2.5.2",
+            "2.2.5.3",
+            "2.2.5.4",
+            "2.2.9.1",
+            "2.2.9.2",
+            "2.2.9.3",
+            "2.2.9.9",
+            "3.0.0.0",
+            "3.1.1.0",
+            "3.1.2.0",
+            "3.1.3.0",
+            "4.1.1.0",
+            "4.1.2.0",
+            "4.1.3.0",
+            "4.2.0.0",
+            "5.1.1.0",
+            "5.1.2.0",
+            "5.2.1.0",
+            "5.2.2.0",
+            "5.3.1.0",
+            "5.3.2.0",
+            "5.4.1.0",
+            "5.4.2.0",
+            "6.1.0.0",
+            "6.2.1.0",
+            "6.2.2.0",
+            "6.3.1.0",
+            "6.3.2.0",
+            "6.4.1.0",
+            "6.4.2.0",
+            "6.4.3.0",
+            "6.4.4.0",
+            "7.1.1.0",
+            "7.1.2.0",
+            "7.2.1.0",
+            "7.2.9.0",
+            "9.1.0.0",
+            "9.2.1.0",
+            "9.2.2.0",
+            "9.2.3.0",
+            "9.3.1.0",
+            "9.3.2.0",
+            "9.9.1.0",
+            "9.9.2.0",
+            "9.9.3.0",
+            "9.9.4.0",
+            "9.9.5.0",
+            "9.9.6.0",
+            "9.9.9.0"
+          ]
+        }
+      },
+      {
+        "code": "UtslpEnergivare",
+        "selection": {
+          "filter": "item",
+          "values": [
+            "VT0",
+            "VT1",
+            "VT2",
+            "VT3",
+            "VT4",
+            "VT5",
+            "VT6",
+            "VT7",
+            "VT9"
+          ]
+        }
+      },
+      {
+        "code": "UtslpKomp",
+        "selection": {
+          "filter": "item",
+          "values": [
+            "A10",
+            "K11",
+            "K12",
+            "K13",
+            "K80",
+            "K90",
+            "K95"
+          ]
+        }
+      },
+      {
+        "code": "ContentsCode",
+        "selection": {
+          "filter": "item",
+          "values": [
+            "UtslippCO2ekvival",
+            "Utslipp"
+          ]
+        }
+      }
+    ],
+    "response": {
+      "format": "json-stat2"
+    }
+  }'
+
+  
+  df_13931 <- df_13931 %>%
+    POST(body = query, encode = "json")
+
+  df_13931 <<-  df_13931 %>%
+    content("text") %>%
+    fromJSONstat() %>%
+    as_tibble() 
+  
+  
+  
+  write_csv(df_13931, file.path("platform_data", "df_13931.csv"))
+  
+  
+
+})
+
+
+
+
+
+```
+
+
+```{r}
+
+
+
+utslipp_offshore <- df_13931 %>% #kilde str detect "offshore"
+  filter(str_detect(`kilde (aktivitet)`, "offshore"),
+         komponent == "Klimagasser i alt",
+         energiprodukt == "I alt",
+         statistikkvariabel == "Utslipp til luft (1 000 tonn CO2-ekvivalenter, AR5)") %>% 
+  select(-komponent, -energiprodukt, -statistikkvariabel) 
+
+
+
+
+
+
+utslipp_ialt <- df_13931 %>% 
+  filter(`kilde (aktivitet)` == "Alle kilder",
+         komponent == "Klimagasser i alt",
+         energiprodukt == "I alt",
+         statistikkvariabel == "Utslipp til luft (1 000 tonn CO2-ekvivalenter, AR5)") %>% 
+  select(-komponent, -energiprodukt, -statistikkvariabel)
+
+
+utslipp_offshore_total <- utslipp_offshore %>% 
+  group_by(år) %>%
+  summarise(value = sum(value)) %>% 
+  mutate(`kilde (aktivitet)` = "Totalt fra offshore") %>% 
+  select(`kilde (aktivitet)`, år, value)
+  
+
+
+
+havplot <- utslipp_ialt %>% 
+  rbind(utslipp_offshore_total)
+
+
+
+
+plot1 <- havplot %>% 
+  ggplot(aes(x=år, y=value, fill = `kilde (aktivitet)`)) +
+  geom_ribbon(aes(ymin = 0, ymax = value)) +
+  theme(legend.position = "bottom") +
+  scale_fill_manual(values = c("Totalt fra offshore" = "#10405c", "Alle kilder" = "#9daa3a")) +
+  theme_bw() +
+  labs(x = "",
+       y = "Utslipp (1000 tonn CO2-ekvivalenter)",
+       caption = "Kilde: SSB tabell 13931") +
+  theme(legend.position = "bottom", #increase font size
+        legend.text = element_text(size = 15),
+        legend.title = element_blank(),
+        plot.title = element_text(size = 20),
+        axis.title = element_text(size = 15),
+        axis.text = element_text(size = 12),
+        plot.caption = element_text(size = 10))+
+  scale_x_continuous(breaks = seq(1990, 2024, 2), expand=c(0.01,0)) +
+  scale_y_continuous(breaks = seq(0, 60000, 5000)) 
+
+ggsave("dokumentobjekter/figurer/fig_1_1.png", width = 10, height = 6, units = "in", dpi = 300)
+
+
+havplot2 <- utslipp_offshore %>% 
+  #casewhen not naturgass turbin og prosessutslipp "annet"
+  mutate(`kilde (aktivitet)` = case_when(`kilde (aktivitet)` == "Olje- og gassutvinning - offshore - naturgass i turbin m.m. (stasjonær forbrenning)" ~ "Olje- og gassutvinning - offshore - naturgass i turbin m.m. (stasjonær forbrenning)",
+                                         `kilde (aktivitet)` == "Olje- og gassutvinning - oljelasting, offshore (prosessutslipp)" ~ "Olje- og gassutvinning - oljelasting, offshore (prosessutslipp)", `kilde (aktivitet)` == "Olje- og gassutvinning - offshore - diesel flyttbare installasjoner, produksjonsfelt (stasjonær forbrenning)" ~ "Olje- og gassutvinning - offshore - diesel flyttbare installasjoner, produksjonsfelt (stasjonær forbrenning)", `kilde (aktivitet)` == "Olje- og gassutvinning - offshore - diesel flyttbare installasjoner, letefelt (stasjonær forbrenning)" ~ "Olje- og gassutvinning - offshore - diesel flyttbare installasjoner, letefelt (stasjonær forbrenning)", `kilde (aktivitet)` == "Olje- og gassutvinning - offshore - diesel faste installasjoner (stasjonær forbrenning)" ~ "Olje- og gassutvinning - offshore - diesel faste installasjoner (stasjonær forbrenning)",
+                                         TRUE ~ "Annet")) %>% 
+  group_by(år, `kilde (aktivitet)`) %>%
+  summarise(value = sum(value)) %>%
+  ungroup() %>% 
+  mutate(`kilde (aktivitet)` = fct_relevel(`kilde (aktivitet)`, "Olje- og gassutvinning - oljelasting, offshore (prosessutslipp)", "Olje- og gassutvinning - offshore - diesel flyttbare installasjoner, produksjonsfelt (stasjonær forbrenning)", "Olje- og gassutvinning - offshore - diesel flyttbare installasjoner, letefelt (stasjonær forbrenning)", "Annet", "Olje- og gassutvinning - offshore - diesel faste installasjoner (stasjonær forbrenning)", "Olje- og gassutvinning - offshore - naturgass i turbin m.m. (stasjonær forbrenning)"))
+
+
+
+
+
+
+
+
+
+
+
+  
+plot2 <- havplot2 %>%
+  ggplot(aes(x=år, y=value, fill = `kilde (aktivitet)`)) +
+  geom_area() +
+  theme(legend.position = "bottom") +
+  scale_fill_manual(values = c("Olje- og gassutvinning - offshore - naturgass i turbin m.m. (stasjonær forbrenning)" = "#1b79ac",
+            "Olje- og gassutvinning - oljelasting, offshore (prosessutslipp)" = "#4b5320", 
+            "Olje- og gassutvinning - offshore - diesel flyttbare installasjoner, produksjonsfelt (stasjonær forbrenning)" = "#9daa3a",
+            "Olje- og gassutvinning - offshore - diesel flyttbare installasjoner, letefelt (stasjonær forbrenning)" = "#10405c",
+            "Olje- og gassutvinning - offshore - diesel faste installasjoner (stasjonær forbrenning)" = "#82813d",
+        "Annet" = "#C2BBFF"))+
+  theme_bw() +
+  labs(x = "",
+       y = "Utslipp (1000 tonn CO2-ekvivalenter)",
+       caption = "Kilde: SSB tabell 13931") +
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 12),
+        legend.title = element_blank(),
+        plot.title = element_text(size = 20),
+        axis.title = element_text(size = 15),
+        axis.text = element_text(size = 12),
+        plot.caption = element_text(size = 10), 
+        legend.key.size = unit(0.5, "cm"))+
+  guides(fill = guide_legend(ncol = 1))+
+  scale_x_continuous(breaks = seq(1990, 2024, 2), expand=c(0.01,0)) +
+  scale_y_continuous(breaks = seq(0, 12000, 2000))
+
+ggsave("dokumentobjekter/figurer/fig_1_2.png", width = 10, height = 6, units = "in", dpi = 300)
+
+
+rm(plot1, plot2, havplot, havplo2, df_13931)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+
+tryCatch({platform_data <- read_csv(file.path("platform_data", "fclPoint.csv"), show_col_types = FALSE)}, error = function(err) {
+  
+  download.file("https://factpages.sodir.no/downloads/csv/fclPoint.zip", file.path("platform_data", "fclPoint.zip"))
+  
+  unzip(file.path("platform_data", "fclPoint.zip"), exdir = "platform_data")
+  
+  platform_data <<- read_csv(file.path("platform_data", "fclPoint.csv"), show_col_types = FALSE)
+})
+
+
+
+
+
+
+
+
+
+test <- platform_data %>%
+  filter(fclPhase %in% c("IN SERVICE", "FUTURE", "INSTALLATION")) 
+
+
+
+#ÅSGARD TRANSPORT = frakter gass fra Åsgardfeltet i Norskehavet til Kårstø i Rogaland
+
+#OSEBERG TRANSPORTSYSTEM = var den første oljerørledning til terminal i Norge
+
+#MONGSTAD TERMINAL = https://www.equinor.com/energy/mongstad
+
+#NORPIPE OLJE-ANLEGG = et transportsystem for petroleum i Nordsjøen
+
+#ZEEPIPE TERMINAL = a  receiving terminal located in the Zeebrugge port area
+
+#STATPIPE =  er et rørledningssystem som består av i alt fire rørledninger. De frakter gass fra feltene Statfjord og Gullfaks, via prosessanlegget på Kårstø
+#FRANPIPE =  er en gassrørledning som går fra Draupner-krysset i Nordsjøen til mottak
+
+#NORNE GASSTRANSPORT = en gassrørledning for petroleum i Nordsjøen som knytter Norne-feltet i Norskehavet
+
+#TAMPEN LINK = Tampen Link binder det norske transporsystemet for gass sammen med det britiske transportsystemete FLAGS
+
+
+
+
+garbage <- c("OLJERØR", "GASSIMPORT", "GASSRØR", "GASSEKSPORT", "ÅSGARD TRANSPORT", "OSEBERG TRANSPORTSYSTEM", "NORPIPE GASSLEDNING", "NORPIPE OLJELEDNING", "MONGSTAD TERMINAL", "NORPIPE OLJE-ANLEGG", "ZEEPIPE TERMINAL", "STATPIPE", "FRANPIPE", "NORNE GASSTRANSPORT", "TAMPEN LINK")
+  
+
+#OFFSHORE WIND TURBINE
+
+# FPSO = Floating Production Storage and Offloading. et jævla skip
+# MOPUStor wtf https://www.smulders.com/en/mopustor
+# FSU står for Floating Storage Unit , altså flytende lagringsenhet
+
+
+
+#Tension Leg Platforms (TLPs) are bottom founded floating structures which are moored at the seabed by steel tethers connected to driven piles https://www.modec.com/business/service/floater/tlp/
+
+#SPAR ikke eurospar = https://en.wikipedia.org/wiki/Spar_(platform)
+
+
+
+test1 <- test %>% 
+  filter(!fclKind %in% c("SUBSEA STRUCTURE", "FPSO", "LOADING SYSTEM")) %>% 
+  filter(!str_detect(fclBelongsToName, paste(garbage, collapse = "|"))) %>% 
+  filter(str_detect(fclKind, "JACK|CON|SEMISUB|TLP"))
+
+
+
+
+
+
+
+
+
+test1 <- test1 %>% #får bort all anna drit. 7 8 23 24 25 28 30 31 33 34 35 36 43
+  select(5, 6, 7, 8, 9, 19, 23, 24, 25, 28, 30, 31, 33, 34, 35, 36, 43) 
+
+
+
+
+#new column 0, 1 or 2 for unknown, electrified and will be electrified
+
+#GULLFAKS A B OG C er havvind. samme med SNORRE
+
+
+
+
+
+
+#https://www.equinor.com/no/energi/elektrifisering#faq
+elektrifisert <- c("TROLL A", "JOHAN SVERDRUP", "GJØA", "MARTIN LINGE A", "GINA KROG", "VALHALL")
+
+delvis_eller_vil_bli <- c("TROLL B", "TROLL C", "SLEIPNER", "GUDRUN", "OSEBERG", "DRAUGEN", "NJORD", "ÅSGÅRD", "KRISTIN", "GULLFAKS", "SNORRE", "IVAR AASEN", "EDVARD GRIEG", "HOD B", "RINGHORNE", "GRANE")
+
+#https://www.nve.no/konsesjon/konsesjonssaker/konsesjonssak/?id=8846&type=A-1 balder og grane. RINGHORNE e balder apparently
+
+
+# https://www.nrk.no/vestland/ressursrapport-fra-sokkeldirektoratet_-status-for-elektrifiseringa-av-sokkelen-1.17041134
+
+
+
+
+elektrifisert_regex <- paste0("\\b", elektrifisert, "\\b", collapse = "|")
+delvis_eller_vil_bli_regex <- paste0("\\b", delvis_eller_vil_bli, "\\b", collapse = "|")
+
+
+test1 <- test1 %>%
+  mutate(
+    fclName = str_trim(fclName),  #plages
+    elektrifisert = case_when(
+      str_detect(tolower(fclName), tolower(delvis_eller_vil_bli_regex)) ~ 1,
+      str_detect(tolower(fclName), tolower(elektrifisert_regex)) ~ 2,
+      TRUE ~ 0
+    )
+  )
+
+
+test2 <- test1 %>% 
+  filter(elektrifisert == 0)
+
+
+
+
+#write_csv(test2, "test2.csv")
+
+```
+
+```{r}
+
+
+library(sf)
+
+
+
+
+
+aids <- st_as_sf(test1, wkt = "fclPointGeometryWKT", crs = 4326)  
+
+utm_31 <- aids %>% 
+  filter(fclUtmZone == 31) %>% 
+  st_transform(23031)
+
+
+utm_32 <- aids %>% 
+  filter(fclUtmZone == 32) %>% #utm zone drit
+  st_transform(23032)
+
+
+
+
+
+
+lines <- read.csv(file.path("platform_data", "kystlinje_sann_ca.csv"), 
+                  header = TRUE, stringsAsFactors = FALSE)
+
+lines_sf <- st_as_sf(lines, wkt = "WKT", crs = 4326)
+
+# linjer må også igjennom utm
+lines_31 <- st_transform(lines_sf, 23031)
+lines_32 <- st_transform(lines_sf, 23032)
+
+
+
+
+
+
+#dette tar vi bort. vi tar heller å velge ut 5-6 punkter på kysten og regner ut avstand til de. det å drive me det her gir bare chatgpt appendix og ingen + til prosjektet
+
+
+
+#chatgpt help
+utm_31$min_dist <- st_distance(utm_31, lines_31) %>% 
+  apply(1, min)
+
+
+utm_32$min_dist <- st_distance(utm_32, lines_32) %>% 
+  apply(1, min)
+
+
+#kan kombinere nu etter man droppe de koordinatene og omgjør bort fra sf driten
+
+
+
+
+```
+
+
+
+
+
+
+
+```{r}
+library(sf)
+library(leaflet)
+library(stringr)
+
+
+
+
+
+
+test <- test2 %>% 
+  mutate(
+    fclPointGeometryWKT = substr(fclPointGeometryWKT, 8, nchar(fclPointGeometryWKT) - 1),
+    lon = str_extract(fclPointGeometryWKT, "([0-9.-]+) "),
+    lon = str_trim(lon),
+    
+    
+    
+    lat = str_extract(fclPointGeometryWKT, "(?<= )[0-9.-]+"),
+    lat = str_trim(lat),
+    
+    
+    lat = as.numeric(lat),
+    lon = as.numeric(lon))
+
+
+
+
+# test %>%
+#   leaflet() %>%
+#   addTiles() %>%#labels for click
+# 
+#   addCircleMarkers(lng = ~lon, lat = ~lat, radius = 5, color = "red", popup = ~paste("Name: ", fclName))
+
+
+
+
+```
+
+
+
+```{r}
+
+espen_sirnes <- utslipp_offshore_total %>% 
+  rename(Year = år) %>% 
+  left_join(anslag_perspektiv, by = "Year")
+
+
+b2 <- lm(espen_sirnes$value ~ espen_sirnes$Produksjon)$coefficients[2]
+b1 <- lm(espen_sirnes$value ~ espen_sirnes$Produksjon)$coefficients[1]
+
+
+b1 <- as.numeric(b1)
+b2 <- as.numeric(b2)
+
+
+
+
+
+espen <- utslipp_offshore_total %>% 
+          rename(Year = år) %>%  
+          complete(Year = 2025:2061) %>% 
+  arrange(Year)
+
+
+sirnes <- anslag_perspektiv %>% 
+  filter(Year >= 1990) %>% 
+  left_join(espen, by = "Year") %>% 
+  mutate(anslått_co2 = ifelse(Year<=2022, Produksjon*b2+b1, `Anslått produksjon`*b2+b1))
+
+        
+
+```
+ 
+
+ 
+ 
+```{r}
+
+diskontering_rente <- 0.04
+
+
+
+
+excel_greia <- read_excel("platform_data/karbonpriser2024.xlsx")
+
+excel_greia <- excel_greia %>% 
+  select(-1,-2,-3) %>%  #skip first 4 rows and last 10 rows
+  slice(5:20) %>% #clean colnames using boom
+  clean_names() %>% 
+  filter(x4 == "Forventet") %>% 
+  select(-1) %>% #plages
+  mutate_all(as.numeric) %>% 
+  pivot_longer(cols = everything(), names_to = "Year", values_to = "kwh") %>% 
+  mutate(Year = str_remove(Year, "x"), Year = (as.integer(Year)+2020)) %>% 
+  complete(Year = 2025:2100) %>%
+  fill(kwh)  #fyller bare opp til 2100
+
+
+
+
+
+
+
+ombyggingskost = 50*1e6
+utslipp = 8800*0.43*1000
+antall_plattformer = 37
+
+
+
+
+
+
+
+
+per_kabel_mnok <-  500 * 1.212 * 10.77
+
+antall_kabler <- 10
+
+total_kabel <- per_kabel_mnok*antall_kabler*1e6
+
+gj_per_plattform <- total_kabel/antall_plattformer
+
+gj_per_km <- gj_per_plattform/226.2464
+
+
+
+
+
+GJkabelpris <- gj_per_km*antall_plattformer*226.2464
+
+
+#80mw per plattform omregne til MWh
+elec_use_year_mwh = 80 * 24 * 365
+elec_use_year = elec_use_year_mwh * 1000
+
+
+#stømkost faktor. lav høy
+lav_elec_pris = 0.5
+hoy_elec_pris = 1.5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+npv <- function(values, diskontering_rente) {
+  sapply(seq_along(values), function(n) {
+    sum(values[1:n] / ((1 + diskontering_rente) ^ (0:(n - 1))))
+  })
+}
+
+
+
+
+
+priser <- karbonpriser %>% 
+  filter(Year > 2024) %>% #droppe 2023-2024
+  
+  
+  left_join(excel_greia, by = "Year") %>% 
+  
+  left_join(sirnes, by = "Year") %>% 
+  select(-10,-11,-12,-13) %>% 
+  mutate(anslått_co2 = anslått_co2*1000*0.43) %>% 
+  
+  
+  mutate(kwh = kwh+0.3) %>% 
+  
+  rename(petroleum_bane = `3. Petroleum`,
+         lav_bane = `Lav bane`,
+         hoy_bane = `Høy bane (IPCC 1,5°-bane - median)`) %>% 
+  
+  select(-5, -6) %>% #1000 for 1kr per kwh, 500 for 0.5kr, og 1500 for 1.5kr
+  
+  
+  mutate(electricity = kwh*elec_use_year,
+         
+         elec_use = electricity*antall_plattformer*(-1),
+         
+         elec_use_lav = lav_elec_pris*electricity*antall_plattformer*(-1), #0.8 * kwh pris
+         
+         elec_use_hoy = hoy_elec_pris*electricity*antall_plattformer*(-1), # 1.2 * kwh pris
+         
+         sirnes_bane = petroleum_bane * anslått_co2,
+         sirnes_lav = lav_bane * anslått_co2,
+         sirnes_hoy = hoy_bane * anslått_co2,
+         
+         
+         
+         petroleum = petroleum_bane*utslipp,
+         lav_bane = lav_bane*utslipp,
+         hoy_bane = hoy_bane*utslipp,
+         
+         
+
+         
+         
+         
+         inntekt_cost = petroleum + elec_use,
+         
+         inntekt_cost_lav_co2_norm_elec = lav_bane + elec_use, #lav co2prisbane
+         
+         inntekt_cost_lav_co2_lav_elec = lav_bane + elec_use_lav, #lav co2prisbane og lav elektrisitetspris
+         
+         inntekt_cost_lav_co2_hoy_elec = lav_bane + elec_use_hoy, #lav co2prisbane og høy elektrisitetspris
+         
+         
+         inntekt_cost_hoy_co2 = hoy_bane + elec_use, # høy co2prisbane
+         
+         inntekt_cost_hoy_co2_lav_elec = hoy_bane + elec_use_lav, #høy co2prisbane og lav elektrisitetspris
+         
+         inntekt_cost_hoy_co2_hoy_elec = hoy_bane + elec_use_hoy, #høy co2prisbane og høy elektrisitetspris
+
+
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         sirnes_inntekt_cost = sirnes_bane + elec_use,
+         
+         sirnes_inntekt_cost_lav_co2_norm_elec = sirnes_lav + elec_use, #lav co2prisbane
+         
+         sirnes_inntekt_cost_lav_co2_lav_elec = sirnes_lav + elec_use_lav, #lav co2prisbane og lav elektrisitetspris
+         
+         sirnes_inntekt_cost_lav_co2_hoy_elec = sirnes_lav + elec_use_hoy, #lav co2prisbane og høy elektrisitetspris
+         
+         
+         sirnes_inntekt_cost_hoy_co2 = sirnes_hoy + elec_use, # høy co2prisbane
+         
+         sirnes_inntekt_cost_hoy_co2_lav_elec = sirnes_hoy + elec_use_lav, #høy co2prisbane og lav elektrisitetspris
+         
+         sirnes_inntekt_cost_hoy_co2_hoy_elec = sirnes_hoy + elec_use_hoy #høy co2prisbane og høy elektrisitetspris
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         ) %>% 
+         
+         
+         
+
+  
+  
+         mutate(
+           
+         npv_norm_co2_norm_elec = npv(inntekt_cost, diskontering_rente) - (ombyggingskost+total_kabel),
+          
+         npv_lav_co2_norm_elec = npv(inntekt_cost_lav_co2_norm_elec, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         npv_lav_co2_lav_elec = npv(inntekt_cost_lav_co2_lav_elec, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         npv_lav_co2_hoy_elec = npv(inntekt_cost_lav_co2_hoy_elec, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         npv_hoy_co2_norm_elec = npv(inntekt_cost_hoy_co2, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         npv_hoy_co2_lav_elec = npv(inntekt_cost_hoy_co2_lav_elec, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         npv_hoy_co2_hoy_elec = npv(inntekt_cost_hoy_co2_hoy_elec, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         
+         
+         
+         
+
+         
+         
+         
+         
+
+         
+         npv_null_alternativ = npv((petroleum)*(-1), diskontering_rente),
+         
+         npv_null_lav_co2 = npv((lav_bane)*(-1), diskontering_rente),
+         
+         npv_null_hoy_co2 = npv((hoy_bane)*(-1), diskontering_rente),
+         
+         
+         
+         
+         
+         
+         sirnes_npv_norm_co2_norm_elec = npv(sirnes_inntekt_cost, diskontering_rente) - (ombyggingskost+total_kabel),
+          
+         sirnes_npv_lav_co2_norm_elec = npv(sirnes_inntekt_cost_lav_co2_norm_elec, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         sirnes_npv_lav_co2_lav_elec = npv(sirnes_inntekt_cost_lav_co2_lav_elec, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         sirnes_npv_lav_co2_hoy_elec = npv(sirnes_inntekt_cost_lav_co2_hoy_elec, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         sirnes_npv_hoy_co2_norm_elec = npv(sirnes_inntekt_cost_hoy_co2, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         sirnes_npv_hoy_co2_lav_elec = npv(sirnes_inntekt_cost_hoy_co2_lav_elec, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         sirnes_npv_hoy_co2_hoy_elec = npv(sirnes_inntekt_cost_hoy_co2_hoy_elec, diskontering_rente) - (ombyggingskost+total_kabel),
+         
+         
+         
+         
+         
+         
+         
+         sirnes_npv_null_alternativ = npv((sirnes_bane)*(-1), diskontering_rente),
+         
+         sirnes_npv_null_lav_co2 = npv((sirnes_lav)*(-1), diskontering_rente),
+         
+         sirnes_npv_null_hoy_co2 = npv((sirnes_hoy)*(-1), diskontering_rente))
+
+         
+        
+sirnes_priser <- priser %>% 
+   select(1, 41:50) 
+
+sirnes_scenarier <- sirnes_priser %>% 
+  pivot_longer(cols = 2:11, names_to = "Scenario", values_to = "npv_inntekt")
+
+
+priser <- priser %>% 
+   select(1, 31:40) 
+
+
+
+scenarioer <- priser %>% 
+  pivot_longer(cols = 2:11, names_to = "Scenario", values_to = "npv_inntekt")
+
+
+
+
+
+test <- priser %>% 
+  filter(Year <= 2050)
+
+
+
+
+
+# scenarioer %>% 
+#   #filter(Year <= 2050) %>% 
+#   mutate(Year = Year-2025) %>% 
+#   ggplot(aes(x=Year, y=(npv_inntekt)/1e6, color = Scenario)) +
+#   geom_line(linewidth=1.2) +
+#   scale_y_continuous(labels = scales::comma, breaks = seq(-700000, 300000, 100000)) +
+#   scale_x_continuous(breaks = seq(0, 80, 1), expand=c(0,0)) +
+#   labs(x="år frem i tid")
+# 
+# 
+
+
+
+# priser %>%
+#   filter(Year <= 2085) %>% 
+#   mutate(Year = Year-2025) %>% 
+#   ggplot(aes(x=Year, y=(npv_inntekt))) +
+#   geom_line() +
+#   scale_x_continuous(breaks = seq(0, 62, 4), expand=c(0,0))+ 
+#   labs(title = "Medium strømpris, medium CO2 pris",
+#         subtitle = "fast 50m ombygging. \nTester hvor mange år frem i tid vi må se for å finne null eller positiv NPV",
+#        x = "Hvor mange år frem i tid fra 2023 må vi se på",
+#        y = "Millioner kroner",
+#        caption = "Hvert år er en ulik utregning av NPV")
+
+
+  
+  
+```
+
+```{r}
+
+colors <- c(
+  "npv_norm_co2_norm_elec" = "#1b79ac",
+  "npv_lav_co2_norm_elec" = "#1b79ac",
+  "npv_lav_co2_lav_elec" = "#1b79ac",
+  "npv_lav_co2_hoy_elec" = "#1b79ac",
+  "npv_hoy_co2_norm_elec" = "#1b79ac",
+  "npv_hoy_co2_lav_elec" = "#4b5320",
+  "npv_hoy_co2_hoy_elec" = "#1b79ac"
+)
+
+
+
+plotscenarioer <- scenarioer %>% 
+  #filter(Year <= 2050) %>% 
+  filter(!Scenario %in% c("npv_null_alternativ", "npv_null_lav_co2", "npv_null_hoy_co2")) %>% 
+  mutate(Year = Year-2025) %>% 
+  ggplot(aes(x=Year, y=(npv_inntekt)/1e6, fill = Scenario)) +
+  geom_ribbon(aes(ymin = npv_inntekt/1e6-(Year*1000+5000), ymax = npv_inntekt/1e6+(Year*1000+5000)), alpha = 0.5) +
+  #geom_line(linewidth=1.2) + 
+  geom_hline(yintercept = 0, linewidth=1.5) + #vline from x25 to y0
+  geom_segment(aes(x = 25, xend = 25, y = -800000, yend = 0), linewidth=1.5) +
+  
+  scale_y_continuous(labels = scales::comma, breaks = seq(-800000, 400000, 100000), expand=c(0,0)) +
+  scale_x_continuous(breaks = seq(0, 80, 5), expand=c(0,0)) +
+  labs(x="År perspektiv", y="Netto nåverdi i millioner") +
+  scale_fill_manual(values = colors)+
+  theme_bw() +
+  theme(legend.position = "none")
+
+ggsave("dokumentobjekter/figurer/fig_scenarioer.png", width = 10, height = 6, units = "in", dpi = 1000)
+
+```
+
+
+
+```{r}
+
+
+null_alt <- scenarioer %>% 
+  #filter(Year <= 2050) %>% 
+  filter(Scenario %in% c("npv_null_alternativ", "npv_null_lav_co2", "npv_null_hoy_co2")) %>%#renaming the npv_null values 
+  mutate(Scenario = recode(Scenario,
+                           "npv_null_alternativ" = "NNV null alternativ forventet",
+                           "npv_null_lav_co2" = "NNV null alternativ lav CO2",
+                           "npv_null_hoy_co2" = "NNV null alternativ høy CO2")) %>%
+  
+  
+  
+  mutate(Year = Year-2025) %>% 
+  ggplot(aes(x=Year, y=(npv_inntekt)/1e6, color = Scenario)) +
+  geom_line(linewidth=1.5) +
+  scale_y_continuous(labels = scales::comma, breaks = seq(-1000000, 400000, 100000), expand=c(0,0)) +
+  scale_x_continuous(breaks = seq(0, 85, 5), expand=c(0,0)) +
+  labs(x="År perspektiv", y="Netto nåverdi i millioner", fill="Scenario") + 
+  scale_color_manual(values = c("NNV null alternativ forventet" = "#82813d", "NNV null alternativ høy CO2" = "#1b79ac", "NNV null alternativ lav CO2" = "#00824d"))+
+  theme_bw() +
+  guides(color=guide_legend(nrow=1))+
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 15)
+        ) 
+
+ggsave("dokumentobjekter/figurer/fig_null_scenarioer.png", width = 10, height = 6, units = "in", dpi = 1000)
+
+```
+
+
+```{r}
+
+color1s <- c(
+  "sirnes_npv_norm_co2_norm_elec" = "#10405c",
+  "sirnes_npv_lav_co2_norm_elec" = "#10405c",
+  "sirnes_npv_lav_co2_lav_elec" = "#10405c",
+  "sirnes_npv_lav_co2_hoy_elec" = "#10405c",
+  "sirnes_npv_hoy_co2_norm_elec" = "#10405c",
+  "sirnes_npv_hoy_co2_lav_elec" = "#9daa3a",
+  "sirnes_npv_hoy_co2_hoy_elec" = "#10405c"
+)
+
+
+
+sirnes_plot <- sirnes_scenarier %>% 
+  filter(Year <= 2060) %>% 
+  filter(!Scenario %in% c("sirnes_npv_null_alternativ", "sirnes_npv_null_lav_co2", "sirnes_npv_null_hoy_co2")) %>% 
+  mutate(Year = Year-2025) %>% 
+  ggplot(aes(x=Year, y=(npv_inntekt)/1e6, fill = Scenario)) +
+  geom_ribbon(aes(ymin = npv_inntekt/1e6-(Year*1500+5000), ymax = npv_inntekt/1e6+(Year*1500+5000)), alpha = 0.5) +
+  #geom_line(linewidth=1.2) + 
+  geom_hline(yintercept = 0, linewidth=1.5) + #vline from x25 to y0
+  geom_segment(aes(x = 25, xend = 25, y = -800000, yend = 0), linewidth=1.5) +
+  
+  scale_y_continuous(labels = scales::comma, breaks = seq(-800000, 400000, 100000), expand=c(0,0)) +
+  scale_x_continuous(breaks = seq(0, 60, 5), expand=c(0,0)) +
+  labs(x="År perspektiv", y="Netto nåverdi i millioner") +
+  scale_fill_manual(values = color1s)+
+  theme_bw() +
+  theme(legend.position = "none")
+
+ggsave("dokumentobjekter/figurer/sirnes_scenarioer.png", width = 10, height = 6, units = "in", dpi = 1000)
+
+```
+
+
+```{r}
+
+
+
+
+
+sirnes_null_plot <- sirnes_scenarier %>% 
+  filter(Year <= 2060) %>% 
+  filter(Scenario %in% c("sirnes_npv_null_alternativ", "sirnes_npv_null_lav_co2", "sirnes_npv_null_hoy_co2")) %>%#renaming the npv_null values 
+  mutate(Year = Year-2025) %>% 
+  mutate(Scenario = recode(Scenario, "sirnes_npv_null_alternativ" = "Nullalternativ forventet", "sirnes_npv_null_lav_co2" = "Lav CO2 prisbane", "sirnes_npv_null_hoy_co2" = "Høy CO2 prisbane")) %>% 
+  
+  
+  ggplot(aes(x=Year, y=(npv_inntekt)/1e6, color = Scenario)) +
+  geom_line(linewidth=1.5) +
+  scale_y_continuous(labels = scales::comma, breaks = seq(-1000000, 400000, 100000), expand=c(0,0)) +
+  scale_x_continuous(breaks = seq(0, 85, 5), expand=c(0,0)) +
+  labs(x="År perspektiv", y="Netto nåverdi i millioner", fill="Scenario") + 
+  scale_color_manual(values = c("Nullalternativ forventet" = "#82813d", "Høy CO2 prisbane" = "#1b79ac", "Lav CO2 prisbane" = "#00824d"))+
+  theme_bw() +
+  guides(color=guide_legend(nrow=1))+
+  theme(legend.position = "bottom", 
+        legend.text = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 15)
+        ) 
+
+ggsave("dokumentobjekter/figurer/fig_null_sirnes_scenarioer.png", width = 10, height = 6, units = "in", dpi = 1000)
+
+```
+
+
+
+
+
+
+
+# 1. Problembeskrivelse
+
+## 1.1 Bakgrunn:
+
+
+Elektrifisering av den norske sokkelen er ett tiltak for å redusere utslippet av klimagasser, og føre en grønnere produksjon i petroleumssektoren. Tiltaket mener å erstatte energien som brukes til å produsere olje og gass med elektrisitet fra land, noe som kan hjelpe Norge å oppfylle klimaforpliktelser. Til tross for høye kostnader og tekniske utfordringer, kan elektrifisering redusere de samfunnsøkonomiske kostnadene knyttet til klimakvoter og CO2-avgift.
+
+Oljeplattformer bruker i hovedsak olje og gass som energi. Dette er en stor andel av Norges totale klimagassutslipp. Dette gjør det utfordrende å nå internasjonale klimamål, samtidig som det bidrar til global oppvarming med alvorlige konsekvenser for økosystemer og økonomi. Norge har store mål ihht. Parisavtalen, som er en global klimaavtale fra 2015. Den forplikter land til å begrense den globale oppvarmingen til godt under 2, og helst til 1,5 grader, sammenlignet 
+med førindustriell tid. 
+
+Utslipp av klimagasser representerer en markedssvikt der negative eksternaliteter ikke reflekteres i markedets priser. Elektrifisering kan rette opp dette ved å redusere utslippsnivået og tilhørende samfunnskostnader. Økende karbonpriser i EU øker dessuten de samfunnsøkonomiske kostnadene ved fortsatt bruk av fossile energikilder. Elektrifisering kan derfor gjøre tiltaket mer lønnsomt på lang sikt.
+
+Formålet med elektrifisering er å redusere CO2-utslipp fra sokkelen, bidra til grønn omstilling og oppfylle internasjonale klimaforpliktelser. Dette vil bidra til å redusere klimakostnader og Norges samlede utslipp, som i dag utgjør en betydelig andel av klimagassutslippene.
+EU har satt ambisiøse miljømål som en del av sin Green Deal, der målet er å oppnå netto nullutslipp av klimagasser innen 2050. 
+
+```{=tex}
+\begin{figure}[h!]
+\centering 
+\caption{Utslipp til luft fra offshore}
+\includegraphics[width=0.8\textwidth]{dokumentobjekter/figurer/fig_1_2.png}
+\label{fig:sokkel_utslipp}
+\end{figure}
+```
+
+# 1.2. Problembeskrivelse 
+
+## 1.2.1 Utslipp av klimagasser fra sokkelen 
+
+Det slippes ut store mengder CO2 og andre klimagasser fra produksjonen på norsk sokkel. Disse utslippene utgjør en betydelig andel av Norges totale klimagassutslipp og er en stor utfordring for å nå både nasjonale og internasjonale klimamål. Hovedårsaken til utslippene er at sokkelen har et omfattende behov for elektrisk kraft til drift av installasjoner og utstyr. Som vi kan se i \autoref{fig:sokkel_utslipp} så produseres denne strømmen hovedsakelig ved hjelp av å brenne naturgass som slipper ut klimagasser. 
+
+
+### 1.2.2 Markedssvikt 
+
+Dersom produksjonen av strøm på sokkelen hadde tatt med eksternalitetskostnadene som kommer fra utslipp fra co2 så ville den økte prisen på strøm ført til en lavere etterspørsel. Det kan dermed sies at det produseres mer enn det ville gjort. Denne overproduksjonen fører til at det oppstår et dødvektstap over likevektskvantum av CO2-utslipp. 
+
+
+
+## 1.3 Formål
+
+```{=tex}
+\begin{figure}[h]
+\centering
+\caption{Totale utslipp til luft i alt og fra offshore}
+\includegraphics[width=0.8\textwidth]{dokumentobjekter/figurer/fig_1_1.png}
+\label{fig:totale_utslipp}
+\end{figure}
+```
+
+
+### Målet med elektrifisering av sokkelen 
+
+Elektrifisering av sokkelen har som mål å redusere CO2-utslipp fra olje- og gassproduksjon i Norge. Som vi kan se i \autoref{fig:totale_utslipp} står sokkelen for en stor del av Norge's utslipp, så en elektrifisering kan være nødvendig for at Norge skal nå sine klimamål, både nasjonalt og internasjonalt. Norge har forpliktet seg til å kutte klimagassutslipp med minst 55 % innen 2030 og oppnå netto nullutslipp innen 2050. Et annet viktig aspekt er økonomien. Fremover vil det bli stadig dyrere å slippe ut CO2 på grunn av høyere avgifter og priser. Ved å elektrifisere nå kan Norge unngå mange av disse kostnadene, som vil komme hvis vi fortsetter med dagens praksis.
+
+### Hva oppnår vi med elektrifisering?
+
+Ifølge Equinor bidrar elektrifisering til å kutte direkte klimagass utslipp ved å erstatte gasskraftverk på plattformene med strøm fra land. Dette bidrar til lavere utslipp, og det har som mål å gjøre Norge grønnere og bedre forberedt på fremtidens krav. Ved å handle tidlig, kan det være en stor økonomisk gevinst ved at man unngår økte avgifter for utslipp i framtiden. Samtidig bidrar det til å nå de nasjonale og internasjonale klimamålene. @a2021_vi
+
+
+
+# 2 Datagrunnlag 
+
+
+Vi har hentet data fra Sokkeldirektoratet der vi har hentet datasett med alle installasjoner på sokkelen. 
+
+
+#### Avgrensninger
+
+
+Vi ser bare på plattformer som er i drift.
+
+Vi har brukt Innretning datasettet fra sokkeldirektoratet til å definere plattformene. @a2022_factwebsodirno
+
+
+
+Tabellen viser hvilke kriterier som brukes til å definere faste plattformer. Ved å definere det slik ser vi dermed ikke på "FPSO" og andre flytende installasjoner som Goliat nær hammerfest.
+
+```{=tex}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|l|}
+\hline
+\textbf{Kategori} & \textbf{Definerte plattformtyper}\\
+\hline
+CONDEEP & 4 SHAFTS, 3 SHAFTS, MONOSHAFT \\
+\hline
+JACKET & 12 LEGS, 8 LEGS, 4 LEGS, 6 LEGS, TRIPOD \\
+\hline
+TLP (Tension Leg Platform) & STEEL, CONCRETE \\
+\hline
+SEMISUB (Halvt nedsenkbar) & STEEL, CONCRETE \\
+\hline
+JACK-UP & 3 LEGS \\
+\hline
+\end{tabular}
+\caption{Forutsetninger}
+\label{tab:assumptions}
+\end{table}
+```
+
+@nyhus_2024_s
+@ystese_2023_disse
+Vi går ut ifra at de som allerede er elektrifisert helt eller delvis og de som er planlagt elektrifisert er "lavthengende frukt" og ville blitt elektrifisert uansett og er dermed ikke med i våre beregninger. Vi ser på de som ikke er elektrifisert og som ikke er planlagt elektrifisert.
+Vi har da endt opp med 37 plattformer som skal brukes videre i analysen.
+
+
+\clearpage
+
+# 3 Relevante tiltak
+
+## 3.1 Nullalternativet
+
+Nullalternativet for sokkelen tar utgangspunkt i at plattformene som allerede er planlagt elektrifisert, blir elektrifisert som planlagt. Dette betyr at 37 plattformer fortsatt vil benytte fossile energikilder for å dekke sitt energibehov. Nullalternativet beskriver dermed en situasjon der ingen ytterligere elektrifisering blir gjennomført utover de allerede besluttede prosjektene. For å forstå de økonomiske konsekvensene av å ikke elektrifisere de gjenværende plattformene, må vi beregne kostnadene ved å slippe ut CO2 fra disse plattformene. Utslippene fra de 37 plattformene er estimert til å være 3,94 millioner tonn CO2 per år, basert på en produksjon som kan fortsette frem til rundt 2050 – med Parisavtalen som rammeverk for utfasing. I dag er prisen per tonn CO2 omtrent 1724 kroner, men denne prisen forventes å øke betydelig i takt med det grønne skiftet og EU sine klimamål. Regjeringen forventer at prisen vil stige årlig frem mot 2050. Kostnaden ved nullalternativet fra 2025 til 2050 er beregnet til omtrent 148.4 milliarder kroner. I disse beregningene er alle priser i kroner. Prisnivå 2024. Valutakurs er 11,7 kroner/euro benyttet.
+
+
+
+```{=tex}
+
+\begin{table}[h]
+\begin{tabular}{|l|l|ll|}
+\hline
+                                         & \textbf{Lav bane} & \multicolumn{1}{l|}{\textbf{Estimat}} & \textbf{Høy bane} \\ \hline
+\textbf{Priser i norske kroner}          & 701-1752          & \multicolumn{1}{l|}{1724-2410}        & 1893-8658         \\ \hline
+\textbf{CO2-utslipp}   & 3784 tonn        & \multicolumn{1}{l|}{3784 tonn}       & 3784 tonn        \\ \hline
+\textbf{Nåverdi av nullalternativ}       & 65,3 Milliarder   & \multicolumn{1}{l|}{148.4 Milliarder} & 273,2 Milliarder  \\ \hline
+\end{tabular}
+\caption{Nåverdi av nullalternativet for de 37 plattformene.}
+\label{tab:npv_verdier}
+\end{table}
+```
+```{=tex}
+\begin{wrapfigure}{r}{0.5\textwidth}
+\includegraphics[width=0.48\textwidth]{dokumentobjekter/figurer/fig_null_scenarioer.png}
+  \caption{Nullalternativ}
+  \label{fig:null_scenarioanalyse}
+\includegraphics[width=0.48\textwidth]{dokumentobjekter/figurer/fig_null_sirnes_scenarioer.png}
+  \caption{Nullalternativ med anslått co2 utslipp}
+  \label{fig:null_scenarioanalyse_anslag}
+  \vspace{-12mm}
+\end{wrapfigure}
+```
+
+I \autoref{tab:npv_verdier} er det estiimert CO2-avgiften i årene 2025-2050 med lav- og høy prisbane. Tallene er estimert av regjeringen, og den lave banen tar 75% av prisen i det første året, med en kalkulasjonsrente i følgende år. Den høye prisbanen tar utgangspunkt i en CO2-avgift som er nødvendig for at utslippet skal holde seg under FN's klimamål ved å begrense oppvarmingen av kloden til 1,5 grader celsius. I tabellen over ser vi nåverdien av nullalternativet ved estimat at CO2-avgiften koster 148.4 milliarder kroner dersom produksjonen på de 37 plattformene forblir som den er. Ved lav bane er kostnaden 65.3 milliarder kroner, og ved høy bane er kostnaden 273.2 milliarder.
+
+
+
+@finansdepartementet_2023_karbonprisbaner
+
+
+Figurene tar for seg netto nåverdien av nullalternativet i hvert år fra 2025 og utover med den estimerte kostnaden, og høy- og lav prisbane. I \autoref{fig:null_scenarioanalyse} har vi en konstant mengde CO2-utslipp, som baserer seg på tall fra 2024. Produksjonen på sokkelen, er forventet å gradvis reduseres, og det er det tatt hensyn til i \autoref{fig:null_scenarioanalyse_anslag} ved at mengden CO2-utslipp avtar. 
+
+
+
+
+
+
+\clearpage
+
+
+
+
+
+
+
+![](dokumentobjekter/figurer/plattformer.png)
+
+
+
+
+
+Det viste seg å være vanskelig å hente rett kystlinje fra geonorge. \hyperlink{kart}{Så har vi lagd en forenklet kystlinje}, ut fra denne har vi beregnet en gjennomsnittsavstand fra plattform til land på 226 km. Basert på dette kan vi bruke grafen for kostnadsestimering, som indikerer en ca. pris på 500 millioner euro per kabel. For å inkludere en estimert inflasjon, legger vi til 21,2 % på denne kostnaden.
+
+Kabelen vi har tatt utgangspunkt i er en 650MW kabel. Vårt energi behov kan dekkes ved 10 kabler, siden en kabel kan forsyne flere plattformer, kan vi beregne kostnaden per kilometer ved å multiplisere kostnaden med antall kabler som trengs og deretter fordele den på den totale distansen. Når dette fordeles per plattform og konverteres til norske kroner, får vi en estimert kostnad på 8,26 millioner kroner per kilometer kabel per plattform.
+
+Selv om noen plattformer vil ha lavere kabelkostnader og andre vil ha høyere, antar vi at kostnadene vil jevne seg ut på tvers av de 37 plattformene. Dermed anses denne kostnaden som representativ for alle plattformene.
+
+
+![](dokumentobjekter/figurer/kabel.png)
+
+Vi har originalt funnet denne grafen i oppgaven til @waage2020 og fant videre frem til kilden @hardysimgen_2019_technoeconomic.
+
+
+\clearpage
+
+
+
+## 3.2 Antagelser
+
+Vi antar at det er 86 installasjoner som genererer CO2-utslipp, Av disse har vi identifisert 37 plattformer som ikke har planlagt elektrifisering. Videre antar vi at utslippene fra olje- og gassutvinning offshore (turbindrift, stasjonær forbrenning) i 2022, totalt 8800 tusen tonn CO2-ekvivalenter, forblir uendret årlig. De 37 plattformene utgjør omtrent 43% av dette, tilsvarende 3784 tusen tonn CO₂ årlig som ikke kompenseres med kvoter. Utslippsnivået antas å være likt i 2023.
+
+Ombyggingen av plattformene for å tilrettelegge for landstrøm er estimert til 50 millioner kroner per plattform. Dette beløpet inkluderer kostnader knyttet til produksjonsnedetid, transport og montering av komponenter. Det er viktig å merke seg at summen kan variere avhengig av plattformenes eksisterende infrastruktur. Noen plattformer vil ha høyere kostnader, mens andre kan bli rimeligere.
+
+Strømprisen vi bruker i denne analysen er baseert på NVE's rapport på strømpriser i Norge. 
+Vi anslår at strømprisen i Norge vil variere i årene framover. 80 øre/kWh i 2030, noe som er betydelig høyere enn prisene vi har sett før 2021. Vi antar at høyere priser på brensel og CO2 frem mot 2030 vil øke strømprisene i Europa, og at økt utvekslingskapasitet mellom Norden og Europa vil gjøre at norske priser følger europeiske priser tettere. I tillegg har vi forutsatt en lavere pris i Norge mot 2050, på grunn av sterk vekst i strømforbruket som overgår utbyggingen av ny produksjonskapasitet og ender med en pris på 0.42 øre/kWh i 2050. Vi har bruket ett lineært estimat for å fastsette prisene i mellom disse årene.
+[@kirkerud_2023_energiomstillingen, side 61]
+
+Nettleien har vi lag på prisen for strøm, vi har antatt at nettleien vil være 30øre/kwh. Vi antar at nettleien vil holde seg stabil for hele analysen.
+@holstad_2023_rekordhy
+
+Vi estimerer ett strømforbruk per plattform til å være opp til 80MW årlig ut fra ett gjennomsnitt av kapasiteten vi finner fra Energidepartementet på andre plattformer på norsk sokkel. Det er viktig å bemerke seg at kilden oppgir total kapasitet og ikke faktisk strømforbruk.
+@a2024_statsrden
+
+
+For å finne hvor mye strøm vi bruker per plattform per år ganger vi 80MW med 24 timer og 365 dager. Vi ganger dette med vårt 37 plattformer for å finne totalt strømbruk. Dette gir oss 25,9Twh per år. Siden vi har en pris for strøm årlig så kan vi gange dette med prisen for å finne ut hvor mye vi bruker på strøm per år.
+
+
+
+
+# 4 Alternativanalyse 
+
+## 4.1 Nåverdiberegning av elektriifisering
+
+Nåverdi er en måte å finne ut hva penger i fremtiden er verdt i dag. Med andre ord beregner man hvor mye penger du vil ha i dag for at det skal være lik verdien av penger du vil få senere, når vi tar hensyn til renter og inflasjon. For å finne ut hvor mye fremtidige penger er verdt i dag, diskonterer vi dem ved hjelp av en rente.
+
+Vi bruker en diskonteringsrente på fire prosent. Dette er i tråd med Finansdepartementets rundskriv R- 109/21 om Prinsipper og krav ved utarbeidelse av samfunnsøkonomiske analyser.
+
+Fra nullalternativet har vi en pris på CO2 kvoter årlig, vi kan se på disse som en inntekt i analysen og strømprisen som en kostnad for hvert år. Resultatet av disse blir en årlig kontantstrøm som vi kan bruke i nåverdiberegningene. Vi setter investeringskostnaden av kabel og ombygging på plattformene som en investeringskostnad og bruker diskonteringsrenten på 4% for å finne nåverdien av prosjektet.
+
+
+Vi kommer fram til at nåverdien av prosjektet er 187 milliarder kroner.
+
+
+
+## 4.2 Usikkerhetsanalyse
+
+Siden prosjektet er stort og kostbart gjør vi beregninger med flere scenario, vi vet ikke hvordan verden vil endre seg framover, men det vi kan gjøre for å sikre oss er å endre på priser som kan påvirke analysen. De tallene vi anser som sannsynlig kan både øke og synke er klimakvotene og strømprisene. Ved å lage ett anslag på hvor mye de kan øke og synke kan vi estimere ved en høy og lav bane ut fra forventet prising. Vi kan også gjøre dette for nullalternativet for å sjekke om det vil være endring i lønnsomheten ved å ikke elektrifisere sokkelen.
+
+```{=tex}
+\begin{figure}[h]
+\centering
+\caption{Scenarioer for elektrifisering av sokkelen}
+\includegraphics[width=\textwidth]{dokumentobjekter/figurer/fig_scenarioer.png}
+\label{fig:scenarioanalyse}
+\end{figure}
+```
+
+I \autoref{tab:scenarioanalyse} ser vi en beregning av nåverdien for hvert år fra 2025 og fremover, basert på ulike scenarioer for elektrifisering av sokkelen. Y-aksen viser nåverdien av prosjektene, mens x-aksen angir hvor mange år frem i tid som kreves før prosjektene oppnår null eller positiv NPV. Scenariene er differensiert ut fra ulike prisforutsetninger for strøm og CO2-kvoter. Vi har juster prisen på strøm med 50% opp og ned, og CO2-kvoter har vi de samme banene som i nullalternativet.
+
+
+
+```{=tex}
+\begin{table}[h]
+\begin{tabular}{|l|lll|}
+\hline
+                                            & \multicolumn{1}{l|}{\textbf{Lav bane}} & \multicolumn{1}{l|}{\textbf{Estimat}} & \textbf{Høy bane} \\ \hline
+\textbf{Strøm priser}                       & \multicolumn{1}{l|}{34-54 Øre/kwh}     & \multicolumn{1}{l|}{42-68 Øre/kwh}    & 50-82 Øre/kwh     \\ \hline
+\textbf{Nettleie}                           & \multicolumn{3}{l|}{30 Øre/kwh}                                                                    \\ \hline
+\textbf{Antall platformer}                  & \multicolumn{3}{l|}{37 Plattformer}                                                                \\ \hline
+\textbf{Strøm mengde}                       & \multicolumn{3}{l|}{80MW}                                                                          \\ \hline
+\textbf{kabler i lengde (KM)}               & \multicolumn{3}{l|}{226KM (10 kabler) 2 260 Total kabel lengde}                                    \\ \hline
+\textbf{Kabel pris}                         & \multicolumn{3}{l|}{703,4 milliarder}                                                              \\ \hline
+\textbf{Ombyggingskostnad}                  & \multicolumn{3}{l|}{50 Millioner per plattform}                                                    \\ \hline
+\textbf{Nåverdi for elektrifisering (25år)} & \multicolumn{1}{l|}{72,253 Milliarder} & \multicolumn{1}{l|}{187 Milliarder}   & 72,265 Milliarder \\ \hline
+\end{tabular}
+\end{table}
+```
+ 
+Ved å sammenlikne nåverdien av nullalternativet og nåverdi av elektrifisering, ser vi at det koster mye mere å elektrifisere enn å la være. Dette er fordi kostnadene ved elektrifisering er høye, og det vil ta lang tid før prosjektet blir lønnsomt.
+
+Resultatene viser tydelig at det kun er ett scenario hvor det vil være lønnsomt å elektrifisere.
+For nesten alle andre scenarioer forblir nåverdien negativ, selv på lang sikt. Dette indikerer at en betydelig økning i CO2-kvoteprisene er nødvendig for at elektrifisering av sokkelen skal være økonomisk lønnsomt.
+
+
+
+
+
+
+\hyperlink{regresjon}{Vi har tatt lineær regresjon} mellom utslippene mellom 1990 og 2022 fra \autoref{fig:sokkel_utslipp} og de anslåtte produksjonsverdiene fra perspektivmeldingen. @finansdepartementet_2024_meld.  Vi har vi funnet $\hat{y} = \beta_1x + \beta_2+\epsilon_i$ hvor vi har estimert $\hat{\beta_1}$ til å være 39 og $\hat{\beta_2}$ til å være 2396. Ved å bruke den anslåtte produksjonen til finansdepartementet så har vi brukt denne regresjonsmodellen til å lage et alternativ anslag til utslippene fremover til 2060. 
+
+```{=tex}
+\begin{figure}[h]
+\centering
+\caption{Scenarioer for elektrifisering av sokkelen med anslått co2 utslipp}
+\includegraphics[width=\textwidth]{dokumentobjekter/figurer/sirnes_scenarioer.png}
+\label{fig:espens_scenarioanalyse}
+\end{figure}
+```
+
+Det vi kan se er at det er forventet en nedgang i utslippene som gjør det enda mindre lønnsomt å elektrifisere sokkelen. 
+
+## 4.3 Fordelingsvirkninger
+
+### 4.3.1 Samfunnsøknomiske verdien av prissatte virkninger
+
+Elektrifisering av sokkelen vil sannsynligvis ikke gi stor samfunnsøkonomisk verdi. Dette skyldes at kostnadene ved elektrifisering overstiger inntektene som oppnås gjennom reduserte CO2-utslipp. Dette innebærer at elektrifisering representerer en netto kostnad for samfunnet.
+
+Det er imidlertid verdt å fremheve de positive miljøeffektene av elektrifisering, inkludert betydelige reduksjoner i CO2-utslipp og redusert avhengighet av fossile brensler. Likevel vil disse miljøfordelene ikke være tilstrekkelige til å veie opp for de økonomiske kostnadene knyttet til tiltaket.
+
+I tillegg kan elektrifisering av sokkelen føre til høyere strømpriser for norske forbrukere. Dette kan øke husholdningenes levekostnader, spesielt for grupper som allerede har svak økonomi.
+
+
+### 4.3.2 Samfunnsøknomiske verdien av ikke-prissatte virkninger
+Sårbare bunnhabitater kan påvirkes og burde gjøres en vurdering av. Dette er en ikke-prissatt virkning som kan ha stor betydning for miljøet og økosystemet i området. 
+
+
+# 5 Konklusjon
+
+Basert på dagens CO2-kvotepriser konkluderer vi med at elektrifisering av sokkelen ikke er økonomisk forsvarlig. Vi anbefaler derfor at slike prosjekter ikke gjennomføres under de nåværende økonomiske forutsetningene.
+
+
+
+
+
+Elektrifisering av de 37 gjenværende plattformene under dagens forutsetninger fremstår ikke som samfunnsøkonomisk lønnsomt. Tiltaket ville kunne gitt store utslippskutt men de høye investeringskostnadene for kabler og ombygging kombinert med anslag til fremtidig utvikling i strøm og kvotepriser fører til at vi finner at tiltaket ikke vil betale seg selv med dagens anslag. 
+
+
+Vi har funnet at det det er få tilfeller hvor elektrifisering vil være lønnsomt. Det vil kreve lave strømpriser kombinert med høye kvotepriser for at elektrifisering skal være lønnsomt. Inntil videre finner vi at at nullalternativet hvor man unngår elektrifiseringen av de 37 plattformene vil gi lavere samfunnsøkonomiske kostnader. 
+
+
+
+
+
+
+
+
+
+
+
+\clearpage
+
+# Referanser
+
+::: {#refs}
+:::
+
+\clearpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\appendix
+
+\section {Appendix Generell KI bruk}
+
+I løpet av koden så kan det ses mange \# kommentarer der det er skrevet for eks "#fillbetween q1 and q2". Når vi skriver kode i Visual Studio Code og Rstudio så er det en plugin som heter Github Copilot. Når vi skriver slike kommentarer eller bare skriver kode så kan den foresøke å fullføre kodelinjene mens vi skriver de. Noen ganger klarer den det, men andre ikke. Det er vanskelig å dokumentere hvert bruk der den er brukt siden det "går veldig fort" men siden vi ikke har fått på plass en slik dokumentasjon så kan all kode der det er brukt kommentarer antas som at det er brukt Github Copilot. Nærmere info om dette KI verktøyet kan ses på <https://github.com/features/copilot>
+
+
+
+Det er også benyttet ChatGPT til å hjelpe med å beregne distanse fra plattformer til land. Vi plagdes med forskjellige UTM zoner og slikt så det er noen kodelinjer fra rundt kodelinje 650 til 670.
+
+
+
+
+
+
+Det er også brukt chatgpt til å hjelpe med å skrive konklusjon, med sporadisk bruk igjennom oppgaven hvor det er vært en del rydding i tekst og omskriving til å få bedre flyt med mer av en rød tråd igjennom oppgaven.
+
+
+\clearpage
+
+
+
+\section {Appendix kart for distanser}
+
+\hypertarget{kart}{Her er det lagd en forenklet kystlinje}
+
+![](dokumentobjekter/figurer/ennsolenge.png)
+
+
+
+
+
+\clearpage
+
+
+
+
+```{r}
+
+espen_sirnes %>% 
+  ggplot(aes(x=Produksjon, y=value)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) 
+
+
+```
+
+
+
+
+
+\hypertarget{regresjon}{Her er utskriften til regresjonen}
+
+
+
+```{r, results='asis'}
+library(stargazer)
+modell <- lm(espen_sirnes$value ~ espen_sirnes$Produksjon)
+
+stargazer(modell, title = "Regresjonsanalyse", label = "tab:regresjon", type = "latex", header=FALSE, dep.var.caption = "Avhengig variabel", 
+          dep.var.labels = "CO2 utslipp 1000 tonn")
+
+```
+
+
+
