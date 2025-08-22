@@ -1,4 +1,24 @@
 Year 2/Semester 2/SOK-2011/Presentasjon/Trafikkdata_renset.csv
 Year 2/Semester 2/SOK-2011/Presentasjon/Trafikkdata.csv
 
+# Quarto build artifacts
 /.quarto/
+/_site/
+
+# R build artifacts
+*.Rproj.user
+*.RData
+*.Rhistory
+.httr-oauth
+
+# Temporary files
+*~
+.DS_Store
+.Rproj.user
+
+# Node modules (if any)
+node_modules/
+
+# Build outputs
+dist/
+build/

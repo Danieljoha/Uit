@@ -1,0 +1,257 @@
+---
+title: "📈 Year 2: Advanced Theory & Applications"
+subtitle: "Specialized Knowledge & Practical Economic Analysis"
+description: |
+  Second year coursework building on foundations with advanced economic theory,
+  specialized applications, and real-world policy analysis.
+date: last-modified
+author:
+  - name: Daniel Johannessen
+    affiliation: UiT The Arctic University of Norway
+title-block-banner: "#012643"
+title-block-banner-color: white
+format:
+  html: 
+    theme: [cosmo, ../custom.scss]
+    css: ../styles.css
+    toc: true
+    toc-depth: 3
+    page-layout: article
+---
+
+::: {.hero-banner}
+# 📈 Year 2: Advanced Theory & Applications
+## Specialized Economic Knowledge & Practical Skills
+
+> **Building expertise through advanced theory and real-world applications**
+
+This pivotal year deepened economic understanding through advanced theoretical frameworks while developing practical skills in policy analysis, environmental economics, and applied research methods.
+:::
+
+## 🗓️ Academic Year Overview
+
+### 📅 Semester 1 (Fall 2023)
+**Advanced Theoretical Foundations**
+
+| Course Code | Course Name | Focus Area | Advanced Concepts |
+|-------------|-------------|------------|-------------------|
+| **SOK-2008** | Advanced Microeconomics | Market Theory | Game theory, information economics, mechanism design |
+| **SOK-2009** | Advanced Macroeconomics | Economic Growth | DSGE models, monetary policy, fiscal theory |
+
+### 📅 Semester 2 (Spring 2024)
+**Applied Economics & Specialization**
+
+| Course Code | Course Name | Focus Area | Practical Applications |
+|-------------|-------------|------------|----------------------|
+| **SOK-2011** | Environmental Economics | Sustainability | Climate policy, carbon pricing, green economics |
+| **SOK-2012** | Business Economics | Strategic Management | Corporate finance, market strategy, decision analysis |
+| **[SOK-2030](Semester%202/SOK-2030/)** | Applied Economics | Policy Analysis | Econometric applications, program evaluation |
+
+## 🌟 Year Highlights
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### 🎯 Semester 1: Advanced Theory
+**Deep Theoretical Understanding**
+
+Mastered sophisticated economic models and analytical frameworks that form the backbone of modern economic analysis and policy making.
+
+**Key Achievements:**
+- Advanced game theory applications
+- Dynamic stochastic general equilibrium modeling
+- Information economics and market design
+- Advanced monetary and fiscal theory
+
+[📚 Explore Advanced Theory](Semester%201/)
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### 🌍 Semester 2: Real-World Applications
+**Policy Analysis & Practical Skills**
+
+Applied advanced theory to contemporary economic challenges, developing expertise in environmental policy, business strategy, and econometric analysis.
+
+**Key Achievements:**
+- **[Environmental Policy Analysis](Semester%202/SOK-2011/)** - Climate economics research
+- **[Applied Econometrics](Semester%202/SOK-2030/)** - Advanced statistical modeling
+- Business strategy and corporate finance applications
+- Professional presentation and communication skills
+
+[🌍 View Applied Work](Semester%202/)
+:::
+
+:::
+
+## 🔬 Featured Projects
+
+### 🌍 SOK-2011: Environmental Economics Research
+**Climate Policy & Sustainable Development Analysis**
+
+Comprehensive research into environmental economics, climate policy instruments, and sustainable development strategies.
+
+**Research Focus:**
+- **Carbon Pricing Mechanisms**: Analysis of cap-and-trade systems
+- **Climate Policy Evaluation**: Cost-benefit analysis of environmental regulations
+- **Sustainable Development**: Economic aspects of the UN SDGs
+- **Green Economics**: Transition to sustainable economic models
+
+**Technical Skills:**
+- Environmental impact assessment
+- Policy simulation modeling
+- Economic valuation of environmental goods
+- Stakeholder analysis and engagement
+
+[🌱 View Environmental Work](Semester%202/SOK-2011/){.btn .btn-success}
+
+### 📊 SOK-2030: Applied Economics Portfolio
+**Advanced Econometric Analysis & Policy Evaluation**
+
+Sophisticated applied economics projects featuring advanced econometric techniques and professional presentation methods.
+
+**Technical Achievements:**
+- **Advanced Econometrics**: Panel data analysis, instrumental variables
+- **Program Evaluation**: Difference-in-differences, RCT analysis
+- **Policy Impact Assessment**: Causal inference techniques
+- **Professional Presentations**: RevealJS interactive presentations
+
+**Applied Projects:**
+- Labor market policy evaluation
+- Regional economic development analysis
+- Industry competitiveness studies
+- Economic forecasting models
+
+[📈 View Applied Analysis](Semester%202/SOK-2030/){.btn .btn-primary}
+
+### 💼 SOK-2012: Business Economics Applications
+**Strategic Management & Corporate Finance**
+
+Advanced business economics applications focusing on strategic decision-making, market analysis, and corporate financial management.
+
+**Business Skills:**
+- Strategic market analysis
+- Investment decision frameworks
+- Risk assessment and management
+- Corporate valuation methods
+
+[💼 Explore Business Economics](Semester%202/SOK-2012/){.btn .btn-outline-primary}
+
+## 📊 Learning Progression & Integration
+
+```mermaid
+flowchart LR
+    A[Year 1 Foundation] --> B[Advanced Micro]
+    A --> C[Advanced Macro]
+    B --> D[Environmental Econ]
+    C --> D
+    B --> E[Business Economics]
+    C --> E
+    D --> F[Applied Economics]
+    E --> F
+    F --> G[Year 3 Specialization]
+    
+    style A fill:#e1f5fe
+    style B fill:#012643,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#1e3c72,stroke:#fff,stroke-width:2px,color:#fff
+    style D fill:#28a745,stroke:#fff,stroke-width:2px,color:#fff
+    style E fill:#ff6b35,stroke:#fff,stroke-width:2px,color:#fff
+    style F fill:#6f42c1,stroke:#fff,stroke-width:2px,color:#fff
+    style G fill:#fd7e14
+```
+
+## 💡 Advanced Competencies Developed
+
+::: {.outcomes-grid}
+::: {.outcome-card}
+**🎯 Advanced Theory**
+- Game theory and strategic behavior
+- Dynamic macroeconomic models
+- Information economics
+- Market design principles
+:::
+
+::: {.outcome-card}
+**🌍 Policy Analysis**
+- Environmental policy evaluation
+- Climate economics applications
+- Regulatory impact assessment
+- Sustainability frameworks
+:::
+
+::: {.outcome-card}
+**📊 Applied Methods**
+- Advanced econometric techniques
+- Causal inference methods
+- Program evaluation design
+- Policy simulation modeling
+:::
+
+::: {.outcome-card}
+**💼 Business Applications**
+- Strategic decision frameworks
+- Corporate finance analysis
+- Market competitiveness assessment
+- Risk management strategies
+:::
+:::
+
+## 🛠️ Advanced Technology & Methods
+
+| Category | Advanced Tools | Applications |
+|----------|---------------|--------------|
+| **Econometrics** | Advanced R packages, Stata | Panel data, IV estimation, time series |
+| **Modeling** | DSGE frameworks, optimization | Economic forecasting, policy simulation |
+| **Presentation** | RevealJS, Advanced Quarto | Professional presentations, interactive reports |
+| **Research** | Literature synthesis, citation management | Academic research, policy briefs |
+
+## 🎯 Specialization Development
+
+Year 2 marked the beginning of **specialized expertise development**:
+
+### 🌱 Environmental Economics Focus
+- Deep understanding of climate policy instruments
+- Expertise in sustainability economics
+- Knowledge of green transition strategies
+- Environmental valuation techniques
+
+### 📈 Applied Econometrics Strength
+- Advanced statistical modeling capabilities
+- Causal inference and program evaluation
+- Professional data presentation skills
+- Policy-relevant research methods
+
+### 💼 Business Economics Applications
+- Strategic management frameworks
+- Corporate finance analysis
+- Market analysis and competitive strategy
+- Risk assessment and management
+
+## 🏆 Academic Excellence
+
+**Research Quality**: Demonstrated ability to conduct independent research and analysis at an advanced level
+
+**Technical Proficiency**: Mastered sophisticated analytical tools and econometric techniques
+
+**Communication Skills**: Developed professional presentation capabilities and academic writing expertise
+
+**Policy Relevance**: Successfully applied theoretical knowledge to real-world policy challenges
+
+---
+
+::: {.footer-section}
+## 📊 Year 2 Impact
+
+**Theoretical Mastery**: Successfully mastered advanced economic theory across multiple specialized areas
+
+**Applied Expertise**: Developed strong capabilities in environmental economics and applied econometrics
+
+**Professional Skills**: Enhanced presentation, communication, and research methodology abilities
+
+**Specialization Foundation**: Established expertise areas that would inform final year thesis research
+
+*Year 2 completed with distinction, successfully bridging advanced theory with real-world applications.*
+:::
+
+[⬅️ Back to Year 1](../Year%201/index.html){.btn .btn-outline-primary}
+[🏠 Portfolio Home](../index.html){.btn .btn-outline-primary}
+[➡️ Continue to Year 3](../Year%203/index.html){.btn .btn-primary}
