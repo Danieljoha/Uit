@@ -1,0 +1,27 @@
+title: "UiT Bachelor Portfolio - Samfunnsøkonomi med Datavitenskap"
+description: "Portfolio showcasing coursework and projects from Bachelor's in Socioeconomics with Data Science at UiT"
+url: "https://danieljoha.github.io"
+baseurl: "/Uit-Bachelor-Portfolio"
+
+# GitHub Pages settings
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Author information
+author:
+  name: "Daniel Johansen"
+  email: "your.email@example.com"
+
+# Social links
+github_username: danieljoha
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Include PDFs in site
+include:
+  - "*.pdf"
+  - "**/*.pdf"
